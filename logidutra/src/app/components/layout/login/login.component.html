@@ -1,68 +1,35 @@
-<!-- Navbar -->
-<nav class="navbar navbar-expand-lg bg-body-tertiary">
-    <!-- Container wrapper -->
-    <div class="container">
-        <!-- Navbar brand -->
-        <a class="navbar-brand me-2" href="https://mdbgo.com/">
-            <img src="https://mdbootstrap.com/img/logo/mdb-transaprent-noshadows.webp" height="16" alt="" loading="lazy"
-                style="margin-top: -1px;" />
-        </a>
-
-        <!-- Toggle button -->
-        <button class="navbar-toggler cor-padrao" type="button" (click)="buttonsNav.toggle()" aria-expanded="false"
-            aria-label="Toggle navigation">
-            <i class="fas fa-bars"></i>
-        </button>
-
-        <div class="collapse navbar-collapse" id="navbarButtonsExample" mdbCollapse #buttonsNav="mdbCollapse">
-
-            <ul class="navbar-nav me-auto mb-2 mb-lg-0"></ul>
-
-            <div class="d-flex align-items-center cor-padrao">
-                <button type="button" class="btn btn-primary me-3">
-                    Login
-                </button>
-            </div>
-        </div>
-        <!-- Collapsible wrapper -->
-    </div>
-    <!-- Container wrapper -->
-</nav>
-<!-- Navbar -->
-
-<form>
-    <div class="container-login">
-        <div class="centralizar">
-            <mdb-form-control class="mb-4">
-                <input mdbInput type="text" id="usuario" class="form-control" />
-                <label mdbLabel class="form-label" for="usuario">Usuário</label>
-            </mdb-form-control>
-
-            <mdb-form-control class="mb-4">
-                <input mdbInput type="password" id="senha" class="form-control" />
-                <label mdbLabel class="form-label" for="senha">Senha</label>
-            </mdb-form-control>
-
-
-            <!-- 2 column grid layout for inline styling -->
-            <div class="row mb-4">
-                <div class="col d-flex justify-content-center">
-                    <!-- Checkbox -->
-                    <div class="form-check">
-                        <input mdbCheckbox class="form-check-input" type="checkbox" value="" id="form1Example3"
-                            checked />
-                        <label class="form-check-label" for="form1Example3"> Relembrar </label>
+<div class="container">
+    <div class="row topo">
+        <div class="col-lg-4"></div>
+        <div class="col-lg-4">
+            <div class="card centralizar">
+                <div class="card-body">
+                    <img src="Mini_Escrita_DutraMóveis.png" class="img-fluid" alt="Logo Dutra Móveis"/>
+                    <h5 class="card-title mb-3">Autenticação</h5>
+                    <mdb-form-control>
+                        <input mdbInput type="text" id="usuario" class="form-control mb-3"/>
+                        <label mdbLabel class="form-label" for="usuario">Usuário</label>
+                    </mdb-form-control>
+                    <mdb-form-control>
+                        <input mdbInput type="password" id="senha" class="form-control mb-3"/>
+                        <label mdbLabel class="form-label" for="senha">Senha</label>
+                    </mdb-form-control>
+                    <button type="button" class="btn btn-primary mb-3" (click)="logar()">Login</button>
+                    <div class="row mb-4 mt-3">
+                        <div class="col d-flex justify-content-center">
+                            <div class="form-check">
+                                <input mdbCheckbox class="form-check-input" type="checkbox" value="" id="form1Example3"
+                                    checked />
+                                <label class="form-check-label" for="form1Example3"> Lembrar Usuário </label>
+                            </div>
+                        </div>
+                        <div class="col">
+                            <a href="#!">Esqueceu sua senha?</a>
+                        </div>
                     </div>
                 </div>
-
-                <div class="col">
-                    <!-- Simple link -->
-                    <a href="#!">Esqueceu a senha?</a>
-                </div>
             </div>
-
-            <!-- Submit button -->
-            <button mdbRipple type="button" class="btn btn-primary btn-block">Entrar</button>
         </div>
+        <div class="col-lg-4"></div>
     </div>
-</form>
+</div>

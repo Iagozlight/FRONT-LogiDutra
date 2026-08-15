@@ -13,6 +13,14 @@ export class LoginComponent {
   usuario!: string;
   senha!: string;
 
-  logar() { }
+
+  logar() {
+    if (this.usuario === 'admin' && this.senha === 'admin') {
+      
+    } else {
+      alert("Usuario ou Senha incorretos")
+    }
+
+  }
 
 }
