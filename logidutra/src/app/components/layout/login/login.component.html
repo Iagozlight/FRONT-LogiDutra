@@ -7,11 +7,11 @@
                     <img src="Mini_Escrita_DutraMóveis.png" class="img-fluid" alt="Logo Dutra Móveis"/>
                     <h5 class="card-title mb-3">Autenticação</h5>
                     <mdb-form-control>
-                        <input mdbInput type="text" id="usuario" class="form-control mb-3"/>
+                        <input mdbInput type="text" id="usuario" class="form-control mb-3" [(ngModel)]="usuario"/>
                         <label mdbLabel class="form-label" for="usuario">Usuário</label>
                     </mdb-form-control>
                     <mdb-form-control>
-                        <input mdbInput type="password" id="senha" class="form-control mb-3"/>
+                        <input mdbInput type="password" id="senha" class="form-control mb-3" [(ngModel)]="senha"/>
                         <label mdbLabel class="form-label" for="senha">Senha</label>
                     </mdb-form-control>
                     <button type="button" class="btn btn-primary mb-3" (click)="logar()">Login</button>
