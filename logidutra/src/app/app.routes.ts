@@ -8,7 +8,7 @@ export const routes: Routes = [
   { path: 'login', component: RomaneiosListComponent },
   {
     path: '',
-    component: RomaneiosDetailsComponent,
+    component: RomaneiosListComponent,
     children: [
       { path: 'romaneios', component: RomaneiosListComponent },
       { path: 'romaneios/:id', component: RomaneiosDetailsComponent },
