@@ -14,33 +14,34 @@ export class RomaneiosListComponent {
   lista: ItemEntrega[] = [];
 
   constructor() {
-    this.lista.push(new ItemEntrega(1, 'Joao Silva', 'Roupeiro, sofa, comoda', 'Rua Areias, 15-Foz do iguaçu/PR' ));
-    this.lista.push(new ItemEntrega(2, 'Maria santos', 'mesa, cadeiras', 'Rua Lagos , 222 -Foz do iguaçu/PR' ));
-    this.lista.push(new ItemEntrega(3, 'Pedro junior', 'Painel de tv', 'Rua caçamba, 155-Foz do iguaçu/PR' ));
+    this.lista.push(new ItemEntrega(1, 'Joao Silva', 'Roupeiro, sofa, comoda', 'Rua Areias, 15-Foz do iguaçu/PR'));
+    this.lista.push(new ItemEntrega(2, 'Maria santos', 'mesa, cadeiras', 'Rua Lagos , 222 -Foz do iguaçu/PR'));
+    this.lista.push(new ItemEntrega(3, 'Pedro junior', 'Painel de tv', 'Rua caçamba, 155-Foz do iguaçu/PR'));
 
     let entregaNova = history.state.entregaNova;
     let entregaEditada = history.state.entregaEditada;
 
     if (entregaNova) {
-      entregaNova.id = 123;
+      let maiorId = Math.max(...this.lista.map(item => item.id), 0);
+      entregaNova.id = maiorId + 1;
       this.lista.push(entregaNova);
     }
 
-    if(entregaEditada){
+    if (entregaEditada) {
       let index = this.lista.findIndex(item => item.id == entregaEditada.id);
-      if(index >= 0) {
+      if (index >= 0) {
         this.lista[index] = entregaEditada;
       }
     }
   }
 
-    deletar(entrega:ItemEntrega){
-      for (let i = 0; i < this.lista.length; i++){
-        if (this.lista[i].id == entrega.id){
-          this.lista.splice(i, 1);
-          break;
-        }
+  deletar(entrega: ItemEntrega) {
+    for (let i = 0; i < this.lista.length; i++) {
+      if (this.lista[i].id == entrega.id) {
+        this.lista.splice(i, 1);
+        break;
       }
     }
+  }
 
 }
