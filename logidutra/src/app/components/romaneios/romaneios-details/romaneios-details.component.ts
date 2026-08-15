@@ -46,7 +46,8 @@ export class RomaneiosDetailsComponent {
         title: 'Salvo com sucesso',
         icon: 'success',
         confirmButtonText: 'Ok'
-      })
+      });
+      this.router.navigate(['/romaneios'], {state: {entregaNova: this.entrega}})
     }
   }
 
