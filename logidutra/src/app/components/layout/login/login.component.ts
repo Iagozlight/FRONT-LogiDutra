@@ -4,6 +4,7 @@ import { MdbCollapseModule } from 'mdb-angular-ui-kit/collapse';
 import { MdbFormsModule } from 'mdb-angular-ui-kit/forms';
 import { FormsModule } from '@angular/forms';
 
+
 @Component({
   selector: 'app-login',
   imports: [MdbCollapseModule, MdbFormsModule, FormsModule],
@@ -19,9 +20,12 @@ export class LoginComponent {
 
   logar() {
     if (this.usuario === 'admin' && this.senha === 'admin') {
-      this.router.navigate(['/admin']);
-    } else {
-      alert("Usuario ou Senha incorretos")
+      this.router.navigate(['/admin/romaneios']);
+    } else if (this.usuario === 'usuario' && this.senha === 'usuario') {
+      this.router.navigate(['/usuario/romaneios'])
+    }
+     else {
+      alert("Usuario ou Senha incorretos");
     }
 
   }
