@@ -15,6 +15,7 @@ export class LoginComponent {
 
   usuario!: string;
   senha!: string;
+  lembrarUsuario: boolean = false;
 
   router = inject(Router);
 
@@ -27,7 +28,6 @@ export class LoginComponent {
      else {
       alert("Usuario ou Senha incorretos");
     }
-
   }
 
 }

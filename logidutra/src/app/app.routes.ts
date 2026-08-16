@@ -13,4 +13,11 @@ export const routes: Routes = [
     //         { path: 'romaneios', component: RomaneiosListComponent }
     //     ]
     // }
+    // {
+    //     path: 'usuario',
+    //     component: RomaneiosListComponent,
+    //     children: [
+    //         { path: 'romaneios', component: RomaneiosListComponent }
+    //     ]
+    // }
 ];
