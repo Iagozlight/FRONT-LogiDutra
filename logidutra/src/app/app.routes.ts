@@ -17,7 +17,7 @@ export const routes: Routes = [
         children: [
             { path: 'romaneios', component: RomaneiosListComponent }
         ]
-    }
+    },
     {
         path: 'usuario',
         component: RomaneiosListComponent,
