@@ -1,0 +1,34 @@
+<div class="container">
+    <div class="row topo">
+        <div class="col-lg-4"></div>
+        <div class="col-lg-4">
+            <div class="card centralizar">
+                <div class="card-body">
+                    <img src="Mini_Escrita_DutraMóveis.png" class="img-fluid" alt="Logo Dutra Móveis"/>
+                    <h5 class="card-title mb-3">Autenticação</h5>
+                    <mdb-form-control>
+                        <input mdbInput type="text" id="usuario" class="form-control mb-3" [(ngModel)]="usuario"/>
+                        <label mdbLabel class="form-label" for="usuario">Usuário</label>
+                    </mdb-form-control>
+                    <mdb-form-control>
+                        <input mdbInput type="password" id="senha" class="form-control mb-3" [(ngModel)]="senha"/>
+                        <label mdbLabel class="form-label" for="senha">Senha</label>
+                    </mdb-form-control>
+                    <button type="button" class="btn btn-primary mb-3" (click)="logar()">Login</button>
+                    <div class="row mb-4 mt-3">
+                        <div class="col d-flex justify-content-center">
+                            <div class="form-check">
+                                <input mdbCheckbox class="form-check-input" type="checkbox" value="" id="relembrar"
+                                    checked [(ngModel)]="lembrarUsuario" name="lembrarUsuario" />
+                                <label class="form-check-label" for="relembrar"> Lembrar de mim </label>
+                            </div>
+                        </div>
+                        <div class="col">
+                            <a href="recuperar-senha">Esqueceu sua senha?</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
