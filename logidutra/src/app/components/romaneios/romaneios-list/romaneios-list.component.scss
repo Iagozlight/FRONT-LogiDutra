@@ -1,0 +1,29 @@
+.romaneios-container {
+  font-family: 'Georgia', 'Times New Roman', serif;
+  background-color: #f5f2ea;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+
+  table {
+    width: 100%;
+    border: 2px solid #1a1a1a;
+
+    th, td {
+      border-color: #1a1a1a;
+    }
+
+    th {
+      font-size: 13px;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+    }
+
+    td {
+      font-weight: 600;
+    }
+  }
+}
