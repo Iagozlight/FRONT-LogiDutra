@@ -22,10 +22,10 @@ export class RomaneiosListComponent {
 
     let entregaNova = history.state.entregaNova;
     let entregaEditada = history.state.entregaEditada;
+    let nextId = 4;
 
     if (entregaNova) {
-      let maiorId = Math.max(...this.lista.map(item => item.id), 0);
-      entregaNova.id = maiorId + 1;
+      entregaNova.id = nextId + 1;
       this.lista.push(entregaNova);
     }
 

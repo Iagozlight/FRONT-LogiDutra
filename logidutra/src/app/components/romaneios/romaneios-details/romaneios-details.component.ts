@@ -22,10 +22,15 @@ export class RomaneiosDetailsComponent {
 
   constructor(){
     let id = this.route.snapshot.params['id']
+    let entregaRecebida = history.state.entrega;
 
     if (id > 0){
       this.titulo = 'Editar entrega'
-      this.findById(id);
+      if (entregaRecebida) {
+        this.entrega = {...entregaRecebida};
+      } else {
+        this.findById(id);
+      }
     }
   }
 
