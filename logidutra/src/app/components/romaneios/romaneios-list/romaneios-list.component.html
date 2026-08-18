@@ -1,0 +1,41 @@
+<div class="container mt-3">
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="card">
+                <div class="card-body">
+                    <h3>Listagem de entregas</h3>
+                    <div class="direita">
+                        <button type="button" class="btn btn-primary" routerLink="/romaneios/new">Novo</button>
+                    </div>
+                    <br>
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th scope="col">Id</th>
+                                <th scope="col">Cliente</th>
+                                <th scope="col">Item Comprado</th>
+                                <th scope="col">Endereço</th>
+                                <th scope="col" class="direita">Ações</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @for(entrega of lista; track entrega.id){
+                            <tr>
+                                <td>{{entrega.id}}</td>
+                                <td>{{entrega.cliente}}</td>
+                                <td>{{entrega.itemComprado}}</td>
+                                <td>{{entrega.endereco}}</td>
+                                <td class="direita">
+                                    <button type="button" class="btn btn-warning me-2"
+                                        (click)="editar(entrega)">editar</button>
+                                    <button type="button" class="btn btn-danger" (click)="deletar(entrega)">Excluir</button>
+                                </td>
+                            </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
