@@ -13,6 +13,8 @@ import { RouterLink } from '@angular/router';
 export class RomaneiosListComponent {
   lista: ItemEntrega[] = [];
 
+  router = inject(Router);
+
   constructor() {
     this.lista.push(new ItemEntrega(1, 'Joao Silva', 'Roupeiro, sofa, comoda', 'Rua Areias, 15-Foz do iguaçu/PR'));
     this.lista.push(new ItemEntrega(2, 'Maria santos', 'mesa, cadeiras', 'Rua Lagos , 222 -Foz do iguaçu/PR'));
@@ -33,6 +35,10 @@ export class RomaneiosListComponent {
         this.lista[index] = entregaEditada;
       }
     }
+  }
+
+  editar(entrega: ItemEntrega) {
+    this.router.navigate(['/romaneios/edit', entrega.id], { state: { entrega } });
   }
 
   deletar(entrega: ItemEntrega) {

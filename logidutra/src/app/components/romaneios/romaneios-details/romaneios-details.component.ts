@@ -22,6 +22,7 @@ export class RomaneiosDetailsComponent {
 
   constructor(){
     let id = this.route.snapshot.params['id']
+
     if (id > 0){
       this.titulo = 'Editar entrega'
       this.findById(id);

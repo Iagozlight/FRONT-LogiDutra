@@ -27,7 +27,7 @@
                                 <td>{{entrega.endereco}}</td>
                                 <td class="direita">
                                     <button type="button" class="btn btn-warning me-2"
-                                        [routerLink]="['/romaneios/edit', entrega.id]">editar</button>
+                                        (click)="editar(entrega)">editar</button>
                                     <button type="button" class="btn btn-danger" (click)="deletar(entrega)">Excluir</button>
                                 </td>
                             </tr>
