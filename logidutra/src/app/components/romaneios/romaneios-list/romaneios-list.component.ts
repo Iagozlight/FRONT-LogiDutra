@@ -16,9 +16,15 @@ export class RomaneiosListComponent {
   router = inject(Router);
 
   constructor() {
-    this.lista.push(new ItemEntrega(1, 'Joao Silva', 'Roupeiro, sofa, comoda', 'Rua Areias, 15-Foz do iguaçu/PR'));
-    this.lista.push(new ItemEntrega(2, 'Maria santos', 'mesa, cadeiras', 'Rua Lagos , 222 -Foz do iguaçu/PR'));
-    this.lista.push(new ItemEntrega(3, 'Pedro junior', 'Painel de tv', 'Rua caçamba, 155-Foz do iguaçu/PR'));
+    const listaSalva = sessionStorage.getItem('romaneios');
+
+    if (listaSalva) {
+      this.lista = JSON.parse(listaSalva);
+    } else {
+      this.lista.push(new ItemEntrega(1, 'Joao Silva', 'Roupeiro, sofa, comoda', 'Rua Areias, 15-Foz do iguaçu/PR'));
+      this.lista.push(new ItemEntrega(2, 'Maria santos', 'mesa, cadeiras', 'Rua Lagos , 222 -Foz do iguaçu/PR'));
+      this.lista.push(new ItemEntrega(3, 'Pedro junior', 'Painel de tv', 'Rua caçamba, 155-Foz do iguaçu/PR'));
+    }
 
     let entregaNova = history.state.entregaNova;
     let entregaEditada = history.state.entregaEditada;
@@ -35,7 +41,11 @@ export class RomaneiosListComponent {
         this.lista[index] = entregaEditada;
       }
     }
+
+    this.salvarNaSessao();
   }
+
+
 
   editar(entrega: ItemEntrega) {
     this.router.navigate(['/romaneios/edit', entrega.id], { state: { entrega } });
@@ -48,6 +58,12 @@ export class RomaneiosListComponent {
         break;
       }
     }
+
+    this.salvarNaSessao();
+  }
+
+  private salvarNaSessao() {
+    sessionStorage.setItem('romaneios', JSON.stringify(this.lista));
   }
 
 }
