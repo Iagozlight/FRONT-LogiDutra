@@ -28,11 +28,17 @@ export class RomaneiosListComponent {
 
     let entregaNova = history.state.entregaNova;
     let entregaEditada = history.state.entregaEditada;
-    let nextId = 4;
+    let nextId = this.lista.length > 0 ? Math.max(...this.lista.map(item => item.id)) + 1 : 1;
 
     if (entregaNova) {
-      entregaNova.id = nextId + 1;
-      this.lista.push(entregaNova);
+      const onn = this.lista.some(item => item.cliente ===  entregaNova.cliente &&
+        item.endereco === entregaNova.endereco
+      );
+
+      if(!onn) {
+        entregaNova.id = nextId;
+        this.lista.push(entregaNova);
+      }
     }
 
     if (entregaEditada) {

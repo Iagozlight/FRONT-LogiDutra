@@ -5,7 +5,10 @@
                 <div class="card-body">
                     <h3>Listagem de entregas</h3>
                     <div class="direita">
-                        <button type="button" class="btn btn-primary" routerLink="/romaneios/new">Novo</button>
+                        <div class="direita">
+                            <button type="button" class="btn btn-primary" routerLink="/romaneios/new">Novo</button>
+                            <button type="button" class="btn btn-secondary ms-2" routerLink="/login">Login</button>
+                        </div>
                     </div>
                     <br>
                     <table class="table">
@@ -29,6 +32,7 @@
                                     <button type="button" class="btn btn-warning me-2"
                                         (click)="editar(entrega)">editar</button>
                                     <button type="button" class="btn btn-danger" (click)="deletar(entrega)">Excluir</button>
+
                                 </td>
                             </tr>
                             }
