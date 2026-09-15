@@ -2,6 +2,7 @@ import { Component, inject } from '@angular/core';
 import { ItemEntrega } from '../../../models/item-entrega';
 import { CommonModule } from '@angular/common';
 import { Router, RouterLink } from '@angular/router';
+import Swal from 'sweetalert2';
 
 
 @Component({
@@ -58,15 +59,36 @@ export class RomaneiosListComponent {
   }
 
   deletar(entrega: ItemEntrega) {
-    for (let i = 0; i < this.lista.length; i++) {
-      if (this.lista[i].id == entrega.id) {
-        this.lista.splice(i, 1);
-        break;
-      }
-    }
+    Swal.fire({
+      title: 'Tem certeza?',
+      text: 'Essa entrega será excluída.',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'Sim, excluir',
+      cancelButtonText: 'Cancelar'
+    }).then((resultado) => {
 
-    this.salvarNaSessao();
-  }
+    if (resultado.isConfirmed) {
+
+      for (let i = 0; i < this.lista.length; i++) {
+        if (this.lista[i].id == entrega.id) {
+          this.lista.splice(i, 1);
+          break;
+        }
+      }
+
+      this.salvarNaSessao();
+
+      Swal.fire({
+        title: 'Excluído!',
+        text: 'A entrega foi excluída com sucesso.',
+        icon: 'success',
+        confirmButtonText: 'Ok'
+      });
+
+    }
+  });
+}
 
   private salvarNaSessao() {
     sessionStorage.setItem('romaneios', JSON.stringify(this.lista));

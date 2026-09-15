@@ -6,15 +6,15 @@
                     <h3>{{titulo}}</h3>
                     <br>
                     <mdb-form-control>
-                        <input mdbInput type="text" id="cliente" class="form-control mb-3" [(ngModel)]='entrega.cliente' />
+                        <input mdbInput type="text" id="cliente" class="form-control mb-3" [(ngModel)]='entrega.cliente' required/>
                         <label mdbLabel class="form-label" for="cliente">Cliente</label>
                     </mdb-form-control>
                     <mdb-form-control>
-                        <input mdbInput type="text" id="endereco" class="form-control mb-3" [(ngModel)]='entrega.endereco' />
+                        <input mdbInput type="text" id="endereco" class="form-control mb-3" [(ngModel)]='entrega.endereco' required/>
                         <label mdbLabel class="form-label" for="endereco">Endereço</label>
                     </mdb-form-control>
                     <mdb-form-control>
-                        <input mdbInput type="text" id="itemComprado" class="form-control mb-3" [(ngModel)]='entrega.itemComprado' />
+                        <input mdbInput type="text" id="itemComprado" class="form-control mb-3" [(ngModel)]='entrega.itemComprado' required/>
                         <label mdbLabel class="form-label" for="itemComprado">Itens Comprados</label>
                     </mdb-form-control>
                     <br>

@@ -40,21 +40,42 @@ export class RomaneiosDetailsComponent {
   }
 
   salvar(){
-    if(this.entrega.id > 0){
+      if (
+      !this.entrega.cliente.trim() ||
+      !this.entrega.endereco.trim() ||
+      !this.entrega.itemComprado.trim()
+    ) {
+      Swal.fire({
+        title: 'Atenção',
+        text: 'Preencha todos os campos.',
+        icon: 'warning',
+        confirmButtonText: 'Ok'
+      });
+
+      return;
+    }
+
+    if (this.entrega.id > 0) {
       Swal.fire({
         title: 'Editado',
         icon: 'success',
         confirmButtonText: 'Ok'
       });
-      this.router.navigate(['/romaneios'], {state: {entregaEditada: this.entrega}})
+
+      this.router.navigate(['/romaneios'], {
+        state: { entregaEditada: this.entrega }
+      });
+
     } else {
       Swal.fire({
         title: 'Salvo com sucesso',
         icon: 'success',
         confirmButtonText: 'Ok'
       });
-      this.router.navigate(['/romaneios'], {state: {entregaNova: this.entrega}})
+
+      this.router.navigate(['/romaneios'], {
+        state: { entregaNova: this.entrega }
+      });
     }
   }
-
 }
