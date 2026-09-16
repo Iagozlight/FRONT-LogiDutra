@@ -22,9 +22,9 @@ export class RomaneiosListComponent {
     if (listaSalva) {
       this.lista = JSON.parse(listaSalva);
     } else {
-      this.lista.push(new ItemEntrega(1, 'Joao Silva', 'Roupeiro, sofa, comoda', 'Rua Areias, 15-Foz do iguaçu/PR'));
-      this.lista.push(new ItemEntrega(2, 'Maria santos', 'mesa, cadeiras', 'Rua Lagos , 222 -Foz do iguaçu/PR'));
-      this.lista.push(new ItemEntrega(3, 'Pedro junior', 'Painel de tv', 'Rua caçamba, 155-Foz do iguaçu/PR'));
+      this.lista.push(new ItemEntrega(1, 'Joao Silva', 'Roupeiro, sofa, comoda', 'Rua Areias, 15-Foz do iguaçu/PR', 'Renault Master'));
+      this.lista.push(new ItemEntrega(2, 'Maria santos', 'mesa, cadeiras', 'Rua Lagos , 222 -Foz do iguaçu/PR', 'Mercedes-Benz Sprinter'));
+      this.lista.push(new ItemEntrega(3, 'Pedro junior', 'Painel de tv', 'Rua caçamba, 155-Foz do iguaçu/PR', 'Fiat Ducato'));
     }
 
     let entregaNova = history.state.entregaNova;
@@ -61,10 +61,10 @@ export class RomaneiosListComponent {
   deletar(entrega: ItemEntrega) {
     Swal.fire({
       title: 'Tem certeza?',
-      text: 'Essa entrega será excluída.',
+      text: 'Essa entrega vai ser excluída.',
       icon: 'warning',
       showCancelButton: true,
-      confirmButtonText: 'Sim, excluir',
+      confirmButtonText: 'Excluir',
       cancelButtonText: 'Cancelar'
     }).then((resultado) => {
 
@@ -81,7 +81,7 @@ export class RomaneiosListComponent {
 
       Swal.fire({
         title: 'Excluído!',
-        text: 'A entrega foi excluída com sucesso.',
+        text: 'A entrega foi excluída!!!.',
         icon: 'success',
         confirmButtonText: 'Ok'
       });

@@ -18,6 +18,7 @@
                                 <th scope="col">Cliente</th>
                                 <th scope="col">Item Comprado</th>
                                 <th scope="col">Endereço</th>
+                                <th scope="col">Veiculo</th>
                                 <th scope="col" class="direita">Ações</th>
                             </tr>
                         </thead>
@@ -28,6 +29,7 @@
                                 <td>{{entrega.cliente}}</td>
                                 <td>{{entrega.itemComprado}}</td>
                                 <td>{{entrega.endereco}}</td>
+                                <td>{{entrega.veiculo}}</td>
                                 <td class="direita">
                                     <button type="button" class="btn btn-warning me-2"
                                         (click)="editar(entrega)">editar</button>
