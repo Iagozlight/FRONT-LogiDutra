@@ -1,0 +1,50 @@
+<nav class="custom-navbar-bg-color navbar navbar-expand-lg bg-body-tertiary">
+  <!-- Container wrapper -->
+  <div class="container-fluid">
+    <nav class="custom-navbar-bg-color navbar bg-body-tertiary shadow-none">
+        <div class="container shadow-0">
+            <a class="navbar-brand" href="#">
+                <img src="logidutra.svg" height="60" alt=""
+                    loading="lazy" />
+            </a>
+        </div>
+    </nav>
+
+    <!-- Toggle button -->
+    <button
+      class="navbar-toggler"
+      type="button"
+      (click)="leftAligned.toggle()"
+      aria-controls="navbarLeftAlignExample"
+      aria-expanded="false"
+      aria-label="Toggle navigation"
+    >
+      <i class="fas fa-bars"></i>
+    </button>
+
+    <!-- Collapsible wrapper -->
+    <div
+      class="collapse navbar-collapse"
+      id="navbarLeftAlignExample"
+      mdbCollapse
+      #leftAligned="mdbCollapse"
+    >
+      <!-- Left links -->
+      <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+        <li class="nav-item">
+          <a class="nav-link active" aria-current="page" href="#"><img src="romaneio-logo.svg" height="40px">ROMANEIOS</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="#"><img src="cadastros-icone.svg" height="40px">CADASTROS</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="#"><img src="usuarios-icone.svg" height="40px">USUARIOS</a>
+        </li>
+
+      </ul>
+      <!-- Left links -->
+    </div>
+    <!-- Collapsible wrapper -->
+  </div>
+  <!-- Container wrapper -->
+</nav>
