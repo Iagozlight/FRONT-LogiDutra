@@ -14,6 +14,9 @@ import Swal from 'sweetalert2';
 export class RomaneiosListComponent {
   lista: ItemEntrega[] = [];
 
+  paginaAtual = 1;
+  MaxPag = 6;
+
   router = inject(Router);
 
   constructor() {
@@ -53,6 +56,32 @@ export class RomaneiosListComponent {
   }
 
 
+  get listaPaginada(): ItemEntrega[] {
+    const inicio = (this.paginaAtual -1) * this.MaxPag;
+    return this.lista.slice(inicio, inicio + this.MaxPag);
+  }
+
+  get totalPaginas(): number {
+    return Math.ceil(this.lista.length / this.MaxPag) || 1;
+  }
+
+  get paginas(): number[] {
+    return Array.from({ length: this.totalPaginas }, (_, i) => i + 1);
+  }
+
+  irParaPagina(pagina: number) {
+    if (pagina >= 1 && pagina <= this.totalPaginas) {
+      this.paginaAtual = pagina;
+    }
+  }
+
+  paginaAnterior(): void {
+    this.irParaPagina(this.paginaAtual - 1);
+  }
+
+  paginaProxima(): void {
+    this.irParaPagina(this.paginaAtual + 1);
+  }
 
   editar(entrega: ItemEntrega) {
     this.router.navigate(['/romaneios/edit', entrega.id], { state: { entrega } });

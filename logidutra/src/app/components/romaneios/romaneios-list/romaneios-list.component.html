@@ -11,7 +11,9 @@
                         </div>
                     </div>
                     <br>
+
                     <table class="table">
+
                         <thead>
                             <tr>
                                 <th scope="col">Id</th>
@@ -23,7 +25,7 @@
                             </tr>
                         </thead>
                         <tbody>
-                            @for(entrega of lista; track entrega.id){
+                            @for(entrega of listaPaginada; track entrega.id){
                             <tr>
                                 <td>{{entrega.id}}</td>
                                 <td>{{entrega.cliente}}</td>
@@ -31,15 +33,31 @@
                                 <td>{{entrega.endereco}}</td>
                                 <td>{{entrega.veiculo}}</td>
                                 <td class="direita">
-                                    <button type="button" class="btn btn-warning me-2"
-                                        (click)="editar(entrega)">editar</button>
+                                    <button type="button" class="btn btn-warning me-2"(click)="editar(entrega)">editar</button>
                                     <button type="button" class="btn btn-danger" (click)="deletar(entrega)">Excluir</button>
-
                                 </td>
                             </tr>
                             }
                         </tbody>
+
                     </table>
+                    <nav aria-label="Page navigation example">
+                        <ul class="pagination justify-content-center">
+                            <a class="page-link" href="#" tabindex="-1" aria-disabled="true">Previous</a>
+                            <li class="page-item disabled"></li>
+
+                            @for(pagina of paginas; track pagina) {
+                                <li class="page-item" [class.active]="pagina === paginaAtual">
+                                    <a class="page-link" href="#" (click)="$event.preventDefault(); irParaPagina(pagina)">{{pagina}}</a>
+                                </li>
+                            }
+
+                            <li class="page-item" [class.disabled]="paginaAtual === totalPaginas">
+                                <a class="page-link" href="#" (click)="$event.preventDefault(); paginaProxima()">Next</a>
+                            </li>
+
+                        </ul>
+                    </nav>
                 </div>
             </div>
         </div>
