@@ -34,12 +34,56 @@
         <li class="nav-item">
           <a class="nav-link active" aria-current="page" href="#"><img src="romaneio-logo.svg" height="40px">ROMANEIOS</a>
         </li>
-        <li class="nav-item">
-          <a class="nav-link" href="#"><img src="cadastros-icone.svg" height="40px">CADASTROS</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="#"><img src="usuarios-icone.svg" height="40px">USUARIOS</a>
-        </li>
+
+        <li mdbDropdown class="nav-item dropdown">
+        <a
+          class="nav-link dropdown-toggle"
+          id="navbarDropdownMenuLink"
+          role="button"
+          mdbDropdownToggle
+          aria-expanded="false"
+        >
+          <img src="cadastros-icone.svg" height="40px">CADASTROS
+        </a>
+        <ul mdbDropdownMenu class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+          <li>
+            <a class="dropdown-item" href="#">Usuarios</a>
+          </li>
+          <li>
+            <a class="dropdown-item" href="#">Motoristas</a>
+          </li>
+          <li>
+            <a class="dropdown-item" href="#">Veiculos</a>
+          </li>
+          <li>
+            <a class="dropdown-item" href="#">Clientes</a>
+          </li>
+        </ul>
+      </li>
+
+      <li mdbDropdown class="nav-item dropdown me-3 ms-3">
+        <a
+          class="nav-link dropdown-toggle"
+          id="navbarDropdownMenuLink"
+          role="button"
+          mdbDropdownToggle
+          aria-expanded="false"
+        >
+          <img
+            src="https://mdbootstrap.com/img/Photos/Avatars/img (31).webp"
+            class="rounded-circle"
+            height="50"
+            alt=""
+            loading="lazy"
+          />
+          Username
+        </a>
+        <ul mdbDropdownMenu class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+          <li>
+            <a class="dropdown-item" href="#">Logout</a>
+          </li>
+        </ul>
+      </li>
 
       </ul>
       <!-- Left links -->
