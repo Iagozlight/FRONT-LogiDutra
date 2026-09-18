@@ -7,6 +7,7 @@ import { TelaPrincipalComponent } from './components/layout/tela-principal/tela-
 import { UsuariosComponent } from './components/cadastros/usuarios/usuarios.component';
 import { MotoristasComponent } from './components/cadastros/motoristas/motoristas.component';
 import { VeiculosComponent } from './components/cadastros/veiculos/veiculos.component';
+import { UsuarioCadastroComponent } from './components/cadastros/usuario-cadastro/usuario-cadastro.component';
 
 export const routes: Routes = [
     { path: '', redirectTo: 'login', pathMatch: 'full' },
@@ -24,6 +25,7 @@ export const routes: Routes = [
                 path: 'cadastros',
                 children: [
                     { path: 'usuarios', component: UsuariosComponent },
+                    { path: 'usuarios/novo', component: UsuarioCadastroComponent },
                     { path: 'motoristas', component: MotoristasComponent },
                     { path: 'veiculos', component: VeiculosComponent }
                 ]
@@ -39,6 +41,7 @@ export const routes: Routes = [
                 path: 'cadastros',
                 children: [
                     { path: 'usuarios', component: UsuariosComponent },
+                    { path: 'usuarios/novo', component: UsuarioCadastroComponent },
                     { path: 'motoristas', component: MotoristasComponent },
                     { path: 'veiculos', component: VeiculosComponent }
                 ]

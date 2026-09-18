@@ -2,14 +2,14 @@ export class usuario {
     id!: number;
     nome!: string;
     senha!: string;
-    email!: string;
-    admin!: boolean;
+    idade!: number;
+    role!: string;
 
-    constructor(id: number, nome: string, senha: string, email: string, admin: boolean) {
+    constructor(id: number, nome: string, senha: string, idade: number, role: string) {
         this.id = id;
         this.nome = nome;
         this.senha = senha;
-        this.email = email;
-        this.admin = admin;
+        this.idade = idade;
+        this.role = role;
     }
 }
