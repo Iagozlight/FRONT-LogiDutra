@@ -8,6 +8,7 @@ import { UsuariosComponent } from './components/cadastros/usuarios/usuarios.comp
 import { MotoristasComponent } from './components/cadastros/motoristas/motoristas.component';
 import { VeiculosComponent } from './components/cadastros/veiculos/veiculos.component';
 import { UsuarioCadastroComponent } from './components/cadastros/usuario-cadastro/usuario-cadastro.component';
+import { NovoUsuarioComponent } from './components/cadastros/novo-usuario/novo-usuario.component';
 
 export const routes: Routes = [
     { path: '', redirectTo: 'login', pathMatch: 'full' },
@@ -26,6 +27,7 @@ export const routes: Routes = [
                 children: [
                     { path: 'usuarios', component: UsuariosComponent },
                     { path: 'usuarios/novo', component: UsuarioCadastroComponent },
+                    { path: 'novo-usuario', component: NovoUsuarioComponent },
                     { path: 'motoristas', component: MotoristasComponent },
                     { path: 'veiculos', component: VeiculosComponent }
                 ]
@@ -42,6 +44,7 @@ export const routes: Routes = [
                 children: [
                     { path: 'usuarios', component: UsuariosComponent },
                     { path: 'usuarios/novo', component: UsuarioCadastroComponent },
+                    { path: 'novo-usuario', component: NovoUsuarioComponent },
                     { path: 'motoristas', component: MotoristasComponent },
                     { path: 'veiculos', component: VeiculosComponent }
                 ]

@@ -7,7 +7,6 @@
                     <div class="direita">
                         <div class="direita">
                             <button type="button" class="btn btn-primary" routerLink="/romaneios/new">Novo</button>
-                            <button type="button" class="btn btn-secondary ms-2" routerLink="/login">Login</button>
                         </div>
                     </div>
                     <br>
@@ -43,7 +42,7 @@
                     </table>
                     <nav aria-label="Page navigation example">
                         <ul class="pagination justify-content-center">
-                            <a class="page-link" href="#" tabindex="-1" aria-disabled="true">Previous</a>
+                            <a class="page-link" routerLink="/romaneios" tabindex="-1">Previous</a>
                             <li class="page-item disabled"></li>
 
                             @for(pagina of paginas; track pagina) {
