@@ -3,6 +3,7 @@ import { Router } from '@angular/router';
 import { MdbCollapseModule } from 'mdb-angular-ui-kit/collapse';
 import { MdbFormsModule } from 'mdb-angular-ui-kit/forms';
 import { FormsModule } from '@angular/forms';
+import { usuario } from '../../../models/usuarios';
 
 
 @Component({
@@ -16,18 +17,27 @@ export class LoginComponent {
   usuario!: string;
   senha!: string;
   lembrarUsuario: boolean = false;
+  usuarios: usuario[] = [usuario.padrao()];
 
   router = inject(Router);
 
   logar() {
-    if (this.usuario === 'admin' && this.senha === 'admin') {
-      this.router.navigate(['/admin/romaneios']);
-    } else if (this.usuario === 'usuario' && this.senha === 'usuario') {
-      this.router.navigate(['/usuario/romaneios'])
+    const usuariosSalvos = sessionStorage.getItem('usuarios');
+    const usuarios = usuariosSalvos ? JSON.parse(usuariosSalvos) as usuario[] : [];
+    const todosUsuarios = [...usuarios, ...this.usuarios].filter(
+      (usuarioAtual, indice, lista) => lista.findIndex(item => item.nome === usuarioAtual.nome) === indice
+    );
+    const usuarioEncontrado = todosUsuarios.find(
+      usuario => usuario.nome === this.usuario && usuario.senha === this.senha
+    );
+
+    if (!usuarioEncontrado) {
+      alert('Usuario ou Senha incorretos');
+      return;
     }
-     else {
-      alert("Usuario ou Senha incorretos");
-    }
+
+    const rota = usuarioEncontrado.role === 'Admin' ? '/admin/romaneios' : '/usuario/romaneios';
+    this.router.navigate([rota]);
   }
 
 }

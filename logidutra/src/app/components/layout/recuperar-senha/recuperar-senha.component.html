@@ -10,6 +10,14 @@
                         <input mdbInput type="text" id="usuario" class="form-control mb-3" [(ngModel)]="usuario"/>
                         <label mdbLabel class="form-label" for="usuario">Usuário</label>
                     </mdb-form-control>
+                    <mdb-form-control>
+                        <input mdbInput type="password" id="novaSenha" class="form-control mb-3" [(ngModel)]="novaSenha"/>
+                        <label mdbLabel class="form-label" for="novaSenha">Nova senha</label>
+                    </mdb-form-control>
+                    <mdb-form-control>
+                        <input mdbInput type="password" id="confirmarSenha" class="form-control mb-3" [(ngModel)]="confirmarSenha"/>
+                        <label mdbLabel class="form-label" for="confirmarSenha">Confirmar nova senha</label>
+                    </mdb-form-control>
                     <button type="button" class="btn btn-primary mb-3" (click)="enviarRecuperacao()">Enviar</button>
                 </div>
             </div>
