@@ -1,29 +1,29 @@
-<div class="container mt-3">
-    <div class="row">
-        <div class="col-lg-12">
-            <div class="card">
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-lg-5">
+            <div class="card mt-4">
                 <div class="card-body">
-                    <h3>{{titulo}}</h3>
-                    <br>
+                    <h3 class="mb-4">{{titulo}}</h3>
+
                     <mdb-form-control>
-                        <input mdbInput type="text" id="cliente" class="form-control mb-3" [(ngModel)]='entrega.cliente' required/>
+                        <input mdbInput type="text" id="cliente" class="form-control mb-3" [(ngModel)]="entrega.cliente" />
                         <label mdbLabel class="form-label" for="cliente">Cliente</label>
                     </mdb-form-control>
                     <mdb-form-control>
-                        <input mdbInput type="text" id="endereco" class="form-control mb-3" [(ngModel)]='entrega.endereco' required/>
+                        <input mdbInput type="text" id="endereco" class="form-control mb-3" [(ngModel)]="entrega.endereco" />
                         <label mdbLabel class="form-label" for="endereco">Endereço</label>
                     </mdb-form-control>
                     <mdb-form-control>
-                        <input mdbInput type="text" id="itemComprado" class="form-control mb-3" [(ngModel)]='entrega.itemComprado' required/>
+                        <input mdbInput type="text" id="itemComprado" class="form-control mb-3" [(ngModel)]="entrega.itemComprado" />
                         <label mdbLabel class="form-label" for="itemComprado">Itens Comprados</label>
                     </mdb-form-control>
                     <mdb-form-control>
-                        <input mdbInput type="text" id="veiculo" class="form-control mb-3" [(ngModel)]='entrega.veiculo' required/>
+                        <input mdbInput type="text" id="veiculo" class="form-control mb-3" [(ngModel)]="entrega.veiculo" />
                         <label mdbLabel class="form-label" for="veiculo">Veiculo</label>
                     </mdb-form-control>
-                    <br>
-                    <button type="button" class="btn btn-primary" (click)="salvar()">Salvar</button>
-                    <button type="button" class="btn btn-secondary" routerLink="/romaneios">Voltar</button>
+
+                    <button type="button" class="btn btn-cadastro me-2" (click)="salvar()">Salvar</button>
+                    <button type="button" class="btn btn-secondary" (click)="voltar()">Voltar</button>
                 </div>
             </div>
         </div>

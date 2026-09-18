@@ -1,12 +1,11 @@
 :host {
     display: block;
-    min-height: 100vh;
-    width: 100%;
+    height: 100vh;
+    width: 100vw;
 }
 
-:host {
+.container {
     background-color: #bb8041;
-
     background-image:
         linear-gradient(
             90deg,
@@ -40,91 +39,21 @@
             #8a5a2d 100%
         );
 
-    background-size: 100% 100%;
+    background-size: 100% 100%, 100% 100%, 100% 100%, 100% 100%;
+    min-height: 100vh;
+    width: 100vw;
+    max-width: 100vw !important;
+    margin: 0;
+    padding: 0;
 }
 
-.card {
-    width: 100%;
-    max-width: 650px;
-    margin: 40px auto;
-    border: none;
-    border-radius: 16px;
-    background-color: #ffffff;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.20);
+.btn-cadastro {
+    background-color: #8a5a2d;
+    color: #d8b07a;
 }
 
-.card-body {
-    padding: 35px;
-}
-
-.card h3 {
-    margin: 0 0 30px;
-    color: #333;
-    font-size: 26px;
-    font-weight: 600;
-}
-
-mdb-form-control {
-    display: block;
-    margin-bottom: 25px;
-}
-
-.form-control {
-    height: 52px;
-    border: 2px solid #dee2e6;
-    border-radius: 10px;
-    padding: 12px 15px;
-    font-size: 16px;
-    background-color: #fff;
-    transition: all 0.25s ease;
-}
-
-.form-control:hover {
-    border-color: #b8c2cc;
-}
-
-.form-control:focus {
-    border-color: #0d6efd;
-    box-shadow: 0 0 0 4px rgba(13, 110, 253, 0.12);
-    outline: none;
-}
-
-.form-label {
-    color: #6c757d;
-    font-size: 15px;
-    font-weight: 500;
-}
-
-mdb-form-control:focus-within .form-label {
-    color: #0d6efd;
-}
-
-.btn-primary {
-    border: none;
-    border-radius: 10px;
-    padding: 12px 28px;
-    font-size: 16px;
-    font-weight: 500;
-    transition: all 0.2s ease;
-}
-
-.btn-primary:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 5px 15px rgba(13, 110, 253, 0.3);
-}
-
-.btn-primary:active {
-    transform: translateY(0);
-}
-
-@media (max-width: 768px) {
-    .card {
-        width: calc(100% - 30px);
-        margin: 20px auto;
-    }
-
-    .card-body {
-        padding: 25px;
-    }
+.btn-cadastro:hover {
+    background-color: #6f4724;
+    color: #d8b07a;
 }
 

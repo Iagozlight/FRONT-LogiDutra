@@ -39,6 +39,10 @@ export class RomaneiosDetailsComponent {
     this.entrega = entregaRetornada;
   }
 
+  voltar() {
+    this.router.navigate(['/romaneios']);
+  }
+
   salvar(){
       if (
       !this.entrega.cliente.trim() ||
