@@ -47,13 +47,13 @@
         </a>
         <ul mdbDropdownMenu class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
           <li>
-            <a class="dropdown-item" href="#">Usuarios</a>
+            <a class="dropdown-item" [routerLink]="['cadastros', 'usuarios']">Usuarios</a>
           </li>
           <li>
-            <a class="dropdown-item" href="#">Motoristas</a>
+            <a class="dropdown-item" [routerLink]="['cadastros', 'motoristas']">Motoristas</a>
           </li>
           <li>
-            <a class="dropdown-item" href="#">Veiculos</a>
+            <a class="dropdown-item" [routerLink]="['cadastros', 'veiculos']">Veiculos</a>
           </li>
         </ul>
       </li>

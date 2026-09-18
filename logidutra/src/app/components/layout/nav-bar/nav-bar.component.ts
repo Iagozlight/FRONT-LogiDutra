@@ -1,10 +1,11 @@
 import { Component } from '@angular/core';
+import { RouterLink } from '@angular/router';
 import { MdbCollapseModule } from 'mdb-angular-ui-kit/collapse';
 import { MdbDropdownModule } from 'mdb-angular-ui-kit/dropdown'
 
 @Component({
   selector: 'app-nav-bar',
-  imports: [MdbCollapseModule, MdbDropdownModule],
+  imports: [MdbCollapseModule, MdbDropdownModule, RouterLink],
   templateUrl: './nav-bar.component.html',
   styleUrl: './nav-bar.component.scss'
 })
