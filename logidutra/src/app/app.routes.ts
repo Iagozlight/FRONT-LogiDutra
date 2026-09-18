@@ -5,8 +5,8 @@ import { LoginComponent } from './components/layout/login/login.component';
 import { RecuperarSenhaComponent } from './components/layout/recuperar-senha/recuperar-senha.component';
 import { TelaPrincipalComponent } from './components/layout/tela-principal/tela-principal.component';
 import { UsuariosComponent } from './components/cadastros/usuarios/usuarios.component';
-import { MotoristasComponent } from './components/cadastros/motoristas/motoristas.component';
 import { VeiculosComponent } from './components/cadastros/veiculos/veiculos.component';
+import { VeiculosCadastroComponent } from './components/cadastros/veiculos-cadastro/veiculos-cadastro.component';
 import { UsuarioCadastroComponent } from './components/cadastros/usuario-cadastro/usuario-cadastro.component';
 
 export const routes: Routes = [
@@ -27,8 +27,8 @@ export const routes: Routes = [
                     { path: 'usuarios', component: UsuariosComponent },
                     { path: 'usuarios/novo', component: UsuarioCadastroComponent },
                     { path: 'novo-usuario', component: UsuarioCadastroComponent },
-                    { path: 'motoristas', component: MotoristasComponent },
-                    { path: 'veiculos', component: VeiculosComponent }
+                    { path: 'veiculos', component: VeiculosComponent },
+                    { path: 'novo-veiculo', component: VeiculosCadastroComponent }
                 ]
             }
         ]
@@ -44,8 +44,8 @@ export const routes: Routes = [
                     { path: 'usuarios', component: UsuariosComponent },
                     { path: 'usuarios/novo', component: UsuarioCadastroComponent },
                     { path: 'novo-usuario', component: UsuarioCadastroComponent },
-                    { path: 'motoristas', component: MotoristasComponent },
-                    { path: 'veiculos', component: VeiculosComponent }
+                    { path: 'veiculos', component: VeiculosComponent },
+                    { path: 'novo-veiculo', component: VeiculosCadastroComponent }
                 ]
             }
         ]

@@ -1,9 +1,10 @@
 import { Component } from '@angular/core';
+import { RouterLink } from '@angular/router';
 import { veiculo } from '../../../models/veiculos';
 
 @Component({
   selector: 'app-veiculos',
-  imports: [],
+  imports: [RouterLink],
   templateUrl: './veiculos.component.html',
   styleUrl: './veiculos.component.scss'
 })
