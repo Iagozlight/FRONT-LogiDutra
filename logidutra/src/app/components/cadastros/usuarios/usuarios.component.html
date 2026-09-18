@@ -7,7 +7,7 @@
 
                         <h3 class="mb-0">Usuários cadastrados</h3>
 
-                        <button type="button" class="btn btn-cadastro" routerLink="novo">Novo Usuário</button>
+                        <button type="button" class="btn btn-cadastro" routerLink="../novo-usuario">Novo Usuário</button>
                     </div>
                     <div class="table-responsive">
 
@@ -23,7 +23,7 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                @for (usuario of usuarios; track usuario.id) {
+                                @for (usuario of usuariosPaginados; track usuario.id) {
                                     <tr>
                                         <th scope="row">{{ usuario.id }}</th>
                                         <td>{{ usuario.nome }}</td>
@@ -35,6 +35,23 @@
                             </tbody>
                         </table>
                     </div>
+                    <nav aria-label="Navegação de usuários">
+                        <ul class="pagination justify-content-center">
+                            <li class="page-item" [class.disabled]="paginaAtual === 1">
+                                <a class="page-link" href="#" (click)="$event.preventDefault(); paginaAnterior()">Previous</a>
+                            </li>
+
+                            @for (pagina of paginas; track pagina) {
+                                <li class="page-item" [class.active]="pagina === paginaAtual">
+                                    <a class="page-link" href="#" (click)="$event.preventDefault(); irParaPagina(pagina)">{{pagina}}</a>
+                                </li>
+                            }
+
+                            <li class="page-item" [class.disabled]="paginaAtual === totalPaginas">
+                                <a class="page-link" href="#" (click)="$event.preventDefault(); paginaProxima()">Next</a>
+                            </li>
+                        </ul>
+                    </nav>
                 </div>
             </div>
         </div>
