@@ -1,0 +1,52 @@
+<div class="container">
+	<div class="row justify-content-center">
+		<div class="col-lg-10">
+			<div class="card mt-4">
+				<div class="card-body">
+					<div class="d-flex justify-content-between align-items-center mb-3">
+						<h3 class="mb-0">Veículos cadastrados</h3>
+					</div>
+					<div class="table-responsive">
+						<table class="table table-hover align-middle mb-0">
+							<thead>
+								<tr>
+									<th scope="col">Id</th>
+									<th scope="col">Marca</th>
+									<th scope="col">Modelo</th>
+									<th scope="col">Placa</th>
+									<th scope="col">Disponibilidade</th>
+								</tr>
+							</thead>
+							<tbody>
+								@for (veiculo of veiculosPaginados; track veiculo.id) {
+									<tr>
+										<th scope="row">{{ veiculo.id }}</th>
+										<td>{{ veiculo.marca }}</td>
+										<td>{{ veiculo.modelo }}</td>
+										<td>{{ veiculo.placa }}</td>
+										<td>{{ veiculo.disponibilidade }}</td>
+									</tr>
+								    }
+							    </tbody>
+						</table>
+					    </div>
+					<nav aria-label="Navegação de veículos">
+						<ul class="pagination justify-content-center">
+							<li class="page-item" [class.disabled]="paginaAtual === 1">
+								<a class="page-link" href="#" (click)="$event.preventDefault(); paginaAnterior()">Previous</a>
+							</li>
+							@for (pagina of paginas; track pagina) {
+								<li class="page-item" [class.active]="pagina === paginaAtual">
+									<a class="page-link" href="#" (click)="$event.preventDefault(); irParaPagina(pagina)">{{ pagina }}</a>
+								</li>
+							    }
+							<li class="page-item" [class.disabled]="paginaAtual === totalPaginas">
+								<a class="page-link" href="#" (click)="$event.preventDefault(); paginaProxima()">Next</a>
+							</li>
+						</ul>
+					</nav>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
