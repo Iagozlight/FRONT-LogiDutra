@@ -2,33 +2,42 @@
     <div class="row justify-content-center">
         <div class="col-lg-5">
             <div class="card mt-4">
+
                 <div class="card-body">
+
                     <h3 class="mb-4">Cadastro de usuário</h3>
 
                     <mdb-form-control>
                         <input mdbInput type="text" id="nome" class="form-control mb-3" [(ngModel)]="usuario.nome" />
-                        <label mdbLabel class="form-label" for="nome">Nome</label>
+                        <label mdbLabel class="form-label" for="nome"> Nome </label>
                     </mdb-form-control>
-
                     <mdb-form-control>
                         <input mdbInput type="password" id="senha" class="form-control mb-3" [(ngModel)]="usuario.senha" />
                         <label mdbLabel class="form-label" for="senha">Senha</label>
                     </mdb-form-control>
 
                     <mdb-form-control>
-                        <input mdbInput type="number" id="idade" class="form-control mb-3" [(ngModel)]="usuario.idade" />
+                        <input mdbInput type="number" min="0" step="1" id="idade" class="form-control mb-3" [(ngModel)]="usuario.idade" />
                         <label mdbLabel class="form-label" for="idade">Idade</label>
                     </mdb-form-control>
 
                     <mdb-form-control>
-                        <input mdbInput type="text" id="role" class="form-control mb-3" [(ngModel)]="usuario.role" />
+                        <select mdbInput id="role" class="form-control mb-3" [(ngModel)]="usuario.role">
+                            <option value="None">None</option>
+                            <option value="Admin">Admin</option>
+                            <option value="Motorista">Motorista</option>
+                        </select>
                         <label mdbLabel class="form-label" for="role">Role</label>
                     </mdb-form-control>
 
                     <button type="button" class="btn btn-cadastro me-2">Cadastrar</button>
                     <button type="button" class="btn btn-secondary" routerLink="../">Voltar</button>
+
+
                 </div>
+
             </div>
+
         </div>
     </div>
 </div>
