@@ -15,7 +15,7 @@ export class RomaneiosDetailsComponent {
 
   titulo = 'cadastrar nova entrega'
 
-  entrega = new ItemEntrega(0, '', '', '');
+  entrega = new ItemEntrega(0, '', '', '', '');
 
   route = inject(ActivatedRoute);
   router = inject(Router);
@@ -35,26 +35,47 @@ export class RomaneiosDetailsComponent {
   }
 
   findById(id: number){
-    let entregaRetornada: ItemEntrega = new ItemEntrega(id, 'Joao silva', 'Roupeiro, sofa, comoda', 'Rua das flores, 123')
+    let entregaRetornada: ItemEntrega = new ItemEntrega(id, 'Joao silva', 'Roupeiro, sofa, comoda', 'Rua das flores, 123', 'Caminhao')
     this.entrega = entregaRetornada;
   }
 
   salvar(){
-    if(this.entrega.id > 0){
+      if (
+      !this.entrega.cliente.trim() ||
+      !this.entrega.endereco.trim() ||
+      !this.entrega.itemComprado.trim()
+    ) {
+      Swal.fire({
+        title: 'Atenção',
+        text: 'Preencha todos os campos.',
+        icon: 'warning',
+        confirmButtonText: 'Ok'
+      });
+
+      return;
+    }
+
+    if (this.entrega.id > 0) {
       Swal.fire({
         title: 'Editado',
         icon: 'success',
         confirmButtonText: 'Ok'
       });
-      this.router.navigate(['/romaneios'], {state: {entregaEditada: this.entrega}})
+
+      this.router.navigate(['/romaneios'], {
+        state: { entregaEditada: this.entrega }
+      });
+
     } else {
       Swal.fire({
-        title: 'Salvo com sucesso',
+        title: 'Salvo!!!',
         icon: 'success',
         confirmButtonText: 'Ok'
       });
-      this.router.navigate(['/romaneios'], {state: {entregaNova: this.entrega}})
+
+      this.router.navigate(['/romaneios'], {
+        state: { entregaNova: this.entrega }
+      });
     }
   }
-
 }

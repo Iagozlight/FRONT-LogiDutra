@@ -6,19 +6,24 @@
                     <h3>{{titulo}}</h3>
                     <br>
                     <mdb-form-control>
-                        <input mdbInput type="text" id="cliente" class="form-control mb-3" [(ngModel)]='entrega.cliente' />
+                        <input mdbInput type="text" id="cliente" class="form-control mb-3" [(ngModel)]='entrega.cliente' required/>
                         <label mdbLabel class="form-label" for="cliente">Cliente</label>
                     </mdb-form-control>
                     <mdb-form-control>
-                        <input mdbInput type="text" id="endereco" class="form-control mb-3" [(ngModel)]='entrega.endereco' />
+                        <input mdbInput type="text" id="endereco" class="form-control mb-3" [(ngModel)]='entrega.endereco' required/>
                         <label mdbLabel class="form-label" for="endereco">Endereço</label>
                     </mdb-form-control>
                     <mdb-form-control>
-                        <input mdbInput type="text" id="itemComprado" class="form-control mb-3" [(ngModel)]='entrega.itemComprado' />
+                        <input mdbInput type="text" id="itemComprado" class="form-control mb-3" [(ngModel)]='entrega.itemComprado' required/>
                         <label mdbLabel class="form-label" for="itemComprado">Itens Comprados</label>
+                    </mdb-form-control>
+                    <mdb-form-control>
+                        <input mdbInput type="text" id="veiculo" class="form-control mb-3" [(ngModel)]='entrega.veiculo' required/>
+                        <label mdbLabel class="form-label" for="veiculo">Veiculo</label>
                     </mdb-form-control>
                     <br>
                     <button type="button" class="btn btn-primary" (click)="salvar()">Salvar</button>
+                    <button type="button" class="btn btn-secondary" routerLink="/romaneios">Voltar</button>
                 </div>
             </div>
         </div>
