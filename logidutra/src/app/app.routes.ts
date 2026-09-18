@@ -4,6 +4,10 @@ import { RomaneiosDetailsComponent } from './components/romaneios/romaneios-deta
 import { LoginComponent } from './components/layout/login/login.component';
 import { RecuperarSenhaComponent } from './components/layout/recuperar-senha/recuperar-senha.component';
 import { TelaPrincipalComponent } from './components/layout/tela-principal/tela-principal.component';
+import { UsuariosComponent } from './components/cadastros/usuarios/usuarios.component';
+import { VeiculosComponent } from './components/cadastros/veiculos/veiculos.component';
+import { VeiculosCadastroComponent } from './components/cadastros/veiculos-cadastro/veiculos-cadastro.component';
+import { UsuarioCadastroComponent } from './components/cadastros/usuario-cadastro/usuario-cadastro.component';
 
 export const routes: Routes = [
     { path: '', redirectTo: 'login', pathMatch: 'full' },
@@ -16,14 +20,34 @@ export const routes: Routes = [
         path: 'admin',
         component: TelaPrincipalComponent,
         children: [
-            { path: 'romaneios', component: RomaneiosListComponent }
+            { path: 'romaneios', component: RomaneiosListComponent },
+            {
+                path: 'cadastros',
+                children: [
+                    { path: 'usuarios', component: UsuariosComponent },
+                    { path: 'usuarios/novo', component: UsuarioCadastroComponent },
+                    { path: 'novo-usuario', component: UsuarioCadastroComponent },
+                    { path: 'veiculos', component: VeiculosComponent },
+                    { path: 'novo-veiculo', component: VeiculosCadastroComponent }
+                ]
+            }
         ]
     },
     {
         path: 'usuario',
         component: TelaPrincipalComponent,
         children: [
-            { path: 'romaneios', component: RomaneiosListComponent }
+            { path: 'romaneios', component: RomaneiosListComponent },
+            {
+                path: 'cadastros',
+                children: [
+                    { path: 'usuarios', component: UsuariosComponent },
+                    { path: 'usuarios/novo', component: UsuarioCadastroComponent },
+                    { path: 'novo-usuario', component: UsuarioCadastroComponent },
+                    { path: 'veiculos', component: VeiculosComponent },
+                    { path: 'novo-veiculo', component: VeiculosCadastroComponent }
+                ]
+            }
         ]
     }
 ];
