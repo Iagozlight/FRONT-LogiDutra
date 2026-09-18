@@ -20,9 +20,14 @@ export const routes: Routes = [
         component: TelaPrincipalComponent,
         children: [
             { path: 'romaneios', component: RomaneiosListComponent },
-            { path: 'cadastros/usuarios', component: UsuariosComponent },
-            { path: 'cadastros/motoristas', component: MotoristasComponent },
-            { path: 'cadastros/veiculos', component: VeiculosComponent }
+            {
+                path: 'cadastros',
+                children: [
+                    { path: 'usuarios', component: UsuariosComponent },
+                    { path: 'motoristas', component: MotoristasComponent },
+                    { path: 'veiculos', component: VeiculosComponent }
+                ]
+            }
         ]
     },
     {
@@ -30,9 +35,14 @@ export const routes: Routes = [
         component: TelaPrincipalComponent,
         children: [
             { path: 'romaneios', component: RomaneiosListComponent },
-            { path: 'cadastros/usuarios', component: UsuariosComponent },
-            { path: 'cadastros/motoristas', component: MotoristasComponent },
-            { path: 'cadastros/veiculos', component: VeiculosComponent }
+            {
+                path: 'cadastros',
+                children: [
+                    { path: 'usuarios', component: UsuariosComponent },
+                    { path: 'motoristas', component: MotoristasComponent },
+                    { path: 'veiculos', component: VeiculosComponent }
+                ]
+            }
         ]
     }
 ];

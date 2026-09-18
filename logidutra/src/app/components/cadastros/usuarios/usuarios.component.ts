@@ -9,4 +9,5 @@ import { Router } from '@angular/router';
 })
 export class UsuariosComponent {
   router = inject(Router);
+  usuarios: any[] = [];
 }
