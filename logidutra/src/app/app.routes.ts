@@ -3,6 +3,7 @@ import { RomaneiosListComponent } from './components/romaneios/romaneios-list/ro
 import { RomaneiosDetailsComponent } from './components/romaneios/romaneios-details/romaneios-details.component';
 import { LoginComponent } from './components/layout/login/login.component';
 import { RecuperarSenhaComponent } from './components/layout/recuperar-senha/recuperar-senha.component';
+import { TelaPrincipalComponent } from './components/layout/tela-principal/tela-principal.component';
 
 export const routes: Routes = [
     { path: '', redirectTo: 'login', pathMatch: 'full' },
@@ -13,14 +14,14 @@ export const routes: Routes = [
     { path: 'recuperar-senha', component: RecuperarSenhaComponent },
     {
         path: 'admin',
-        component: RomaneiosListComponent,
+        component: TelaPrincipalComponent,
         children: [
             { path: 'romaneios', component: RomaneiosListComponent }
         ]
     },
     {
         path: 'usuario',
-        component: RomaneiosListComponent,
+        component: TelaPrincipalComponent,
         children: [
             { path: 'romaneios', component: RomaneiosListComponent }
         ]
