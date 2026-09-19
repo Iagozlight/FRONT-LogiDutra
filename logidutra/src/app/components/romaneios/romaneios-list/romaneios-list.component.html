@@ -20,6 +20,7 @@
                                 <th scope="col">Item Comprado</th>
                                 <th scope="col">Endereço</th>
                                 <th scope="col">Veiculo</th>
+                                <th scope="col">Motorista</th>
                                 <th scope="col" class="direita">Ações</th>
                             </tr>
                         </thead>
@@ -31,9 +32,10 @@
                                 <td>{{entrega.itemComprado}}</td>
                                 <td>{{entrega.endereco}}</td>
                                 <td>{{entrega.veiculo}}</td>
+                                <td>{{entrega.motorista || 'Não informado'}}</td>
                                 <td class="direita">
-                                    <button type="button" class="btn btn-warning me-2"(click)="editar(entrega)">editar</button>
-                                    <button type="button" class="btn btn-danger" (click)="deletar(entrega)">Excluir</button>
+                                    <button type="button" class="btn btn-editar me-2" (click)="editar(entrega)">Editar</button>
+                                    <button type="button" class="btn btn-excluir" (click)="deletar(entrega)">Excluir</button>
                                 </td>
                             </tr>
                             }

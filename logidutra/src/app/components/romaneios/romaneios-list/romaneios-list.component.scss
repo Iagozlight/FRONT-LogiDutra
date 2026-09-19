@@ -93,6 +93,31 @@
   color: #fff;
 }
 
+.table .btn-editar,
+.table .btn-excluir {
+  border: 1px solid transparent;
+  font-weight: 600;
+}
+
+.table .btn-editar {
+  background-color: #d8b07a;
+  color: #6f4724;
+}
+
+.table .btn-editar:hover {
+  background-color: #c99a5d;
+  color: #fff;
+}
+
+.table .btn-excluir {
+  background-color: #a94442;
+  color: #fff;
+}
+
+.table .btn-excluir:hover {
+  background-color: #842f2d;
+}
+
 .table .btn-warning:hover {
   transform: translateY(-1px);
 }

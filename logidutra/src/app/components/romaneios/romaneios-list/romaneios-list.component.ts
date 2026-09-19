@@ -1,5 +1,5 @@
 import { Component, inject } from '@angular/core';
-import { ItemEntrega } from '../../../models/item-entrega';
+import { ClienteEntrega, ItemEntrega } from '../../../models/item-entrega';
 import { CommonModule } from '@angular/common';
 import { Router, RouterLink } from '@angular/router';
 import Swal from 'sweetalert2';
@@ -25,9 +25,17 @@ export class RomaneiosListComponent {
     if (listaSalva) {
       this.lista = JSON.parse(listaSalva);
     } else {
-      this.lista.push(new ItemEntrega(1, 'Joao Silva', 'Roupeiro, sofa, comoda', 'Rua Areias, 15-Foz do iguaçu/PR', 'Renault Master'));
-      this.lista.push(new ItemEntrega(2, 'Maria santos', 'mesa, cadeiras', 'Rua Lagos , 222 -Foz do iguaçu/PR', 'Mercedes-Benz Sprinter'));
-      this.lista.push(new ItemEntrega(3, 'Pedro junior', 'Painel de tv', 'Rua caçamba, 155-Foz do iguaçu/PR', 'Fiat Ducato'));
+      this.lista = [
+        this.criarRomaneio(1, 'Joao Silva', 'Rua Areias, 15 - Foz do Iguacu/PR', [
+          ['Roupeiro', 1], ['Sofa', 1], ['Comoda', 2]
+        ], 'Renault Master', 'Carlos Mendes'),
+        this.criarRomaneio(2, 'Maria Santos', 'Rua Lagos, 222 - Foz do Iguacu/PR', [
+          ['Mesa', 1], ['Cadeiras', 6]
+        ], 'Mercedes-Benz Sprinter', 'Rafael Souza'),
+        this.criarRomaneio(3, 'Pedro Junior', 'Rua Cacamba, 155 - Foz do Iguacu/PR', [
+          ['Painel de TV', 1]
+        ], 'Fiat Ducato', 'Marcos Oliveira')
+      ];
     }
 
     let entregaNova = history.state.entregaNova;
@@ -53,6 +61,28 @@ export class RomaneiosListComponent {
     }
 
     this.salvarNaSessao();
+  }
+
+  private criarRomaneio(
+    id: number,
+    nomeCliente: string,
+    endereco: string,
+    produtos: [string, number][],
+    veiculo: string,
+    motorista: string
+  ): ItemEntrega {
+    const entrega = new ItemEntrega(id, nomeCliente, '', endereco, veiculo, motorista);
+    const produtosFormatados = produtos.map(([nome, quantidade]) => ({ nome, quantidade }));
+    const cliente: ClienteEntrega = {
+      nome: nomeCliente,
+      endereco,
+      produtos: produtosFormatados,
+      finalizado: true
+    };
+    entrega.clientes = [cliente];
+    entrega.produtos = produtosFormatados;
+    entrega.itemComprado = produtosFormatados.map(produto => `${produto.nome} (${produto.quantidade}x)`).join(', ');
+    return entrega;
   }
 
 

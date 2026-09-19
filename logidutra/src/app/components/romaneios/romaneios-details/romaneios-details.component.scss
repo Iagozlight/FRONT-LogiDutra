@@ -57,3 +57,125 @@
     color: #d8b07a;
 }
 
+.field-group {
+    margin-bottom: 25px;
+}
+
+.clientes-lista {
+    display: grid;
+    gap: 18px;
+    margin-bottom: 18px;
+}
+
+.cliente-card {
+    padding: 20px;
+    border: 1px solid #e3c9aa;
+    border-radius: 10px;
+    background-color: #fffaf4;
+    box-shadow: 0 3px 10px rgba(111, 71, 36, 0.08);
+}
+
+.cliente-card-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 18px;
+}
+
+.cliente-card-header h4 {
+    margin: 0;
+    color: #6f4724;
+    font-size: 18px;
+    font-weight: 600;
+}
+
+.btn-adicionar-cliente {
+    width: 100%;
+    border: 1px dashed #8a5a2d;
+    color: #6f4724;
+    background-color: #f8ead9;
+}
+
+.btn-adicionar-cliente:hover {
+    background-color: #f1dcc1;
+}
+
+.btn-remover-cliente {
+    padding: 4px 10px;
+    border: 1px solid #d7aaa8;
+    color: #842f2d;
+    background-color: #fff;
+    font-size: 13px;
+}
+
+.cliente-finalizado {
+    padding: 8px 10px;
+    border-radius: 5px;
+    color: #386641;
+    background-color: #e8f3e5;
+    font-size: 13px;
+}
+
+.cliente-finalizado.incompleto {
+    color: #8a5a2d;
+    background-color: #fff1dc;
+}
+
+.cliente-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+}
+
+.btn-finalizar {
+    color: #fff;
+    background-color: #386641;
+    font-size: 13px;
+}
+
+.btn-finalizar:hover {
+    color: #fff;
+    background-color: #2d5234;
+}
+
+.field-group .form-label {
+    display: block;
+    margin-bottom: 8px;
+    color: #6c757d;
+    font-size: 15px;
+    font-weight: 500;
+}
+
+.tag-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.quantidade-input {
+    max-width: 92px;
+}
+
+.tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 10px;
+    border-radius: 6px;
+    background-color: #f1e3d2;
+    color: #6f4724;
+    font-size: 14px;
+}
+
+.tag button {
+    border: 0;
+    padding: 0;
+    background: transparent;
+    color: #6f4724;
+    font-size: 18px;
+    line-height: 1;
+    cursor: pointer;
+}
+

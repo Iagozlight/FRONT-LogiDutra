@@ -1,12 +1,12 @@
 import { Component, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { ActivatedRoute, Router, RouterLink } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { MdbFormsModule } from 'mdb-angular-ui-kit/forms';
 import { usuario } from '../../../models/usuarios';
 
 @Component({
   selector: 'app-usuario-cadastro',
-  imports: [MdbFormsModule, FormsModule, RouterLink],
+  imports: [MdbFormsModule, FormsModule],
   templateUrl: './usuario-cadastro.component.html',
   styleUrl: './usuario-cadastro.component.scss'
 })
@@ -38,6 +38,10 @@ export class UsuarioCadastroComponent {
     this.usuario.Disp = false;
     usuarios.push(this.usuario);
     sessionStorage.setItem('usuarios', JSON.stringify(usuarios));
-    this.router.navigate(['../usuarios'], { relativeTo: this.rotaAtual });
+    this.router.navigate(['/admin/cadastros/usuarios']);
+  }
+
+  voltar() {
+    this.router.navigate(['/admin/cadastros/usuarios']);
   }
 }
