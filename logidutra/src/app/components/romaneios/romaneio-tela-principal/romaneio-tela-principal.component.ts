@@ -1,12 +1,13 @@
 import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 import { Component, inject } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { ClienteEntrega, ItemEntrega, ProdutoEntrega } from '../../../models/item-entrega';
+import { ClienteEntrega, ItemEntrega, ProdutoEntrega, StatusRomaneio } from '../../../models/item-entrega';
 import { veiculo } from '../../../models/veiculos';
 
 @Component({
   selector: 'app-romaneio-tela-principal',
-  imports: [CommonModule],
+  imports: [CommonModule, FormsModule],
   templateUrl: './romaneio-tela-principal.component.html',
   styleUrl: './romaneio-tela-principal.component.scss'
 })
@@ -27,6 +28,10 @@ export class RomaneioTelaPrincipalComponent {
       const romaneiosSalvos = sessionStorage.getItem('romaneios');
       const romaneios: ItemEntrega[] = romaneiosSalvos ? JSON.parse(romaneiosSalvos) : [];
       this.entrega = romaneios.find(romaneio => romaneio.id === id) ?? null;
+    }
+
+    if ((this.entrega?.status as string) === 'Programado') {
+      this.entrega.status = 'Preparado';
     }
 
     this.carregarVeiculo();
@@ -53,5 +58,21 @@ export class RomaneioTelaPrincipalComponent {
 
   voltar() {
     this.router.navigate(['/admin/romaneios']);
+  }
+
+  alterarStatus(status: StatusRomaneio) {
+    if (!this.entrega) {
+      return;
+    }
+
+    this.entrega.status = status;
+    const romaneiosSalvos = sessionStorage.getItem('romaneios');
+    const romaneios: ItemEntrega[] = romaneiosSalvos ? JSON.parse(romaneiosSalvos) : [];
+    const indice = romaneios.findIndex(romaneio => romaneio.id === this.entrega?.id);
+
+    if (indice >= 0) {
+      romaneios[indice] = this.entrega;
+      sessionStorage.setItem('romaneios', JSON.stringify(romaneios));
+    }
   }
 }

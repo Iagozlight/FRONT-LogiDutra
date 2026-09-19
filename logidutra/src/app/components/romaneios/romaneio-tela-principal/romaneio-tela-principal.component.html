@@ -1,49 +1,187 @@
 <main class="romaneio-tela">
-    <section class="painel-resumo">
-        @if (entrega) {
-            <div class="painel-cabecalho">
-                <div>
-                    <h1>Romaneio #{{entrega.id}}</h1>
-                </div>
-                <button type="button" class="btn btn-voltar" (click)="voltar()">Voltar</button>
+
+    @if (entrega) {
+
+        <header class="romaneio-header">
+            <div class="romaneio-titulo">
+                <span class="romaneio-label">Romaneio</span>
+                <h1>#{{ entrega.id }}</h1>
             </div>
 
-            <div class="painel-conteudo">
-                <div class="clientes">
-                    @for (cliente of clientes; track $index) {
-                        <article class="cliente-item">
-                            <div class="cliente-cabecalho">
-                                <h2>{{cliente.nome}}</h2>
-                                <span>{{cliente.produtos.length}} entrega(s)</span>
-                            </div>
-                            <p class="endereco"><strong>Endereço:</strong> {{cliente.endereco}}</p>
-                            <ul>
-                                @for (produto of cliente.produtos; track $index) {
-                                    <li>
-                                        <span>{{produto.nome}}</span>
-                                        <strong>{{produto.quantidade}}x</strong>
-                                    </li>
-                                }
-                            </ul>
-                        </article>
-                    }
-                </div>
+            <div class="romaneio-acoes">
+                <label class="status-controle">
+                    <span>Status</span>
+                    <select [(ngModel)]="entrega.status" (ngModelChange)="alterarStatus($event)">
+                        <option value="Em andamento">Em andamento</option>
+                        <option value="Preparado">Preparado</option>
+                        <option value="Encerrado">Encerrado</option>
+                    </select>
+                </label>
 
-                <aside class="veiculo-item">
-                    <h2>Veículo da entrega</h2>
-                    <div class="veiculo-dados">
-                        <div><span>Marca</span><strong>{{veiculoSelecionado?.marca || 'Não informado'}}</strong></div>
-                        <div><span>Modelo</span><strong>{{veiculoSelecionado?.modelo || entrega.veiculo || 'Não informado'}}</strong></div>
-                        <div><span>Placa</span><strong>{{veiculoSelecionado?.placa || 'Não informado'}}</strong></div>
-                        <div><span>Motorista</span><strong>{{entrega.motorista || 'Não informado'}}</strong></div>
+                <button
+                    type="button"
+                    class="btn-voltar"
+                    (click)="voltar()">
+                    Voltar
+                </button>
+            </div>
+        </header>
+
+        <div class="romaneio-layout">
+
+            <section class="clientes-card">
+
+                <div class="card-header">
+                    <div>
+                        <span class="section-label">Rota de entrega</span>
+                        <h2>Clientes</h2>
                     </div>
-                </aside>
-            </div>
-        } @else {
-            <div class="estado-vazio">
+
+                    <span class="clientes-total">
+                        {{ clientes.length }} cliente(s)
+                    </span>
+                </div>
+
+                <div class="clientes-lista">
+
+                    @for (cliente of clientes; track $index) {
+
+                        <article class="cliente-card">
+
+                            <div class="cliente-header">
+                                <div class="cliente-info">
+                                    <span class="cliente-numero">
+                                        Cliente {{ $index + 1 }}
+                                    </span>
+
+                                    <h3>{{ cliente.nome }}</h3>
+                                </div>
+
+                                <span class="cliente-entregas">
+                                    {{ cliente.produtos.length }}
+                                    {{ cliente.produtos.length === 1 ? 'entrega' : 'entregas' }}
+                                </span>
+                            </div>
+
+                            <div class="cliente-endereco">
+                                <span>Endereço</span>
+                                <p>{{ cliente.endereco }}</p>
+                            </div>
+
+                            <div class="produtos-lista">
+
+                                @for (produto of cliente.produtos; track $index) {
+
+                                    <div class="produto-item">
+                                        <span class="produto-nome">
+                                            {{ produto.nome }}
+                                        </span>
+
+                                        <span class="produto-quantidade">
+                                            {{ produto.quantidade }}x
+                                        </span>
+                                    </div>
+
+                                }
+
+                            </div>
+
+                        </article>
+
+                    }
+
+                </div>
+
+            </section>
+
+            <aside class="romaneio-sidebar">
+
+                <section class="mapa-card">
+
+                    <div class="mapa-header">
+                        <div>
+                            <span class="section-label">Localização</span>
+                            <h2>Mapa da rota</h2>
+                        </div>
+                    </div>
+
+                    <div class="mapa-placeholder">
+                        <span>GPS</span>
+                        <p>Mapa será exibido aqui</p>
+                    </div>
+
+                </section>
+
+                <section class="veiculo-card">
+
+                    <div class="card-header">
+                        <div>
+                            <span class="section-label">Transporte</span>
+                            <h2>Veículo</h2>
+                        </div>
+                    </div>
+
+                    <div class="veiculo-grid">
+
+                        <div class="veiculo-dado">
+                            <span>Marca</span>
+                            <strong>
+                                {{ veiculoSelecionado?.marca || 'Não informado' }}
+                            </strong>
+                        </div>
+
+                        <div class="veiculo-dado">
+                            <span>Modelo</span>
+                            <strong>
+                                {{ veiculoSelecionado?.modelo || entrega.veiculo || 'Não informado' }}
+                            </strong>
+                        </div>
+
+                        <div class="veiculo-dado">
+                            <span>Placa</span>
+                            <strong>
+                                {{ veiculoSelecionado?.placa || 'Não informado' }}
+                            </strong>
+                        </div>
+
+                        <div class="veiculo-dado">
+                            <span>Motorista</span>
+                            <strong>
+                                {{ entrega.motorista || 'Não informado' }}
+                            </strong>
+                        </div>
+
+                    </div>
+
+                </section>
+
+            </aside>
+
+        </div>
+
+    } @else {
+
+        <section class="estado-vazio">
+
+            <div>
+                <span class="section-label">Romaneio</span>
+
                 <h1>Romaneio não encontrado</h1>
-                <button type="button" class="btn btn-voltar" (click)="voltar()">Voltar para romaneios</button>
+
+                <p>
+                    Não foi possível encontrar os dados desta entrega.
+                </p>
+
+                <button
+                    type="button"
+                    class="btn-voltar"
+                    (click)="voltar()">
+                    Voltar para romaneios
+                </button>
             </div>
-        }
-    </section>
+
+        </section>
+
+    }
+
 </main>

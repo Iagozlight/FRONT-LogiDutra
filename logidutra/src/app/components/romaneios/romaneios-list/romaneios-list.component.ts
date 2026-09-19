@@ -27,7 +27,7 @@ export class RomaneiosListComponent {
       this.lista = JSON.parse(listaSalva);
       this.lista.forEach(entrega => {
         entrega.clientes = entrega.clientes || [];
-        entrega.status = entrega.status || 'Programado';
+        entrega.status = entrega.status === 'Programado' ? 'Preparado' : (entrega.status || 'Preparado');
       });
     } else {
       this.lista = [
@@ -36,7 +36,7 @@ export class RomaneiosListComponent {
         ], 'Renault Master', 'Carlos Mendes', 'Em andamento'),
         this.criarRomaneio(2, 'Maria Santos', 'Rua Lagos, 222 - Foz do Iguacu/PR', [
           ['Mesa', 1], ['Cadeiras', 6]
-        ], 'Mercedes-Benz Sprinter', 'Rafael Souza', 'Programado'),
+        ], 'Mercedes-Benz Sprinter', 'Rafael Souza', 'Preparado'),
         this.criarRomaneio(3, 'Pedro Junior', 'Rua Cacamba, 155 - Foz do Iguacu/PR', [
           ['Painel de TV', 1]
         ], 'Fiat Ducato', 'Marcos Oliveira', 'Encerrado')
@@ -54,7 +54,7 @@ export class RomaneiosListComponent {
 
       if(!onn) {
         entregaNova.id = nextId;
-        entregaNova.status = entregaNova.status || 'Programado';
+        entregaNova.status = entregaNova.status || 'Preparado';
         this.lista.push(entregaNova);
       }
     }
