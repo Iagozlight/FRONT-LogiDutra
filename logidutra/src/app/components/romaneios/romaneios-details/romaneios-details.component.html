@@ -1,24 +1,80 @@
-<div class="container mt-3">
-    <div class="row">
-        <div class="col-lg-12">
-            <div class="card">
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-lg-5">
+            <div class="card mt-4">
                 <div class="card-body">
-                    <h3>{{titulo}}</h3>
-                    <br>
+                    <h3 class="mb-4">{{titulo}}</h3>
+
+                    <div class="clientes-lista">
+                        @for (cliente of clientes; track $index) {
+                            <section class="cliente-card">
+                                <div class="cliente-card-header">
+                                    <h4>Cliente {{ $index + 1 }}</h4>
+                                    @if (clientes.length > 1) {
+                                        <button type="button" class="btn btn-remover-cliente" (click)="removerCliente($index)">Remover</button>
+                                    }
+                                </div>
+
+                                <mdb-form-control>
+                                    <input mdbInput type="text" [id]="'cliente-' + $index" class="form-control mb-3" [(ngModel)]="cliente.nome" (ngModelChange)="cliente.finalizado = false" placeholder="Nome do cliente" />
+                                    <label mdbLabel class="form-label" [for]="'cliente-' + $index">Cliente</label>
+                                </mdb-form-control>
+
+                                <mdb-form-control>
+                                    <input mdbInput type="text" [id]="'endereco-' + $index" class="form-control mb-3" [(ngModel)]="cliente.endereco" (ngModelChange)="cliente.finalizado = false" placeholder="Endereço de entrega" />
+                                    <label mdbLabel class="form-label" [for]="'endereco-' + $index">Endereço</label>
+                                </mdb-form-control>
+
+                                <div class="field-group">
+                                    <label class="form-label" [for]="'produto-' + $index">Produtos deste cliente</label>
+                                    <div class="input-group mb-2">
+                                        <input #produtoInput mdbInput type="text" [id]="'produto-' + $index" class="form-control" (keyup.enter)="adicionarProduto(cliente, produtoInput.value, quantidadeInput.valueAsNumber); produtoInput.value = ''" placeholder="Nome do produto" />
+                                        <input #quantidadeInput mdbInput type="number" min="1" step="1" value="1" class="form-control quantidade-input" aria-label="Quantidade" />
+                                        <button type="button" class="btn btn-outline-secondary" (click)="adicionarProduto(cliente, produtoInput.value, quantidadeInput.valueAsNumber); produtoInput.value = ''; quantidadeInput.value = '1'">Adicionar</button>
+                                    </div>
+                                    <div class="tag-list">
+                                        @for (produto of cliente.produtos; track $index) {
+                                            <span class="tag">{{produto.nome}} ({{produto.quantidade}}x) <button type="button" (click)="removerProduto(cliente, $index)" aria-label="Remover produto">&times;</button></span>
+                                        }
+                                    </div>
+                                </div>
+
+                                <div class="cliente-footer">
+                                    <div class="cliente-finalizado" [class.incompleto]="!cliente.finalizado">
+                                        {{ cliente.finalizado ? 'Cliente finalizado' : 'Preencha os dados e finalize este cliente' }}
+                                    </div>
+                                    @if (!cliente.finalizado) {
+                                        <button type="button" class="btn btn-finalizar" (click)="finalizarCliente(cliente)">Finalizar cliente</button>
+                                    }
+                                </div>
+                            </section>
+                        }
+                    </div>
+
+                    <button type="button" class="btn btn-adicionar-cliente mb-4" (click)="adicionarCliente()">+ Adicionar outro cliente</button>
+
                     <mdb-form-control>
-                        <input mdbInput type="text" id="cliente" class="form-control mb-3" [(ngModel)]='entrega.cliente' />
-                        <label mdbLabel class="form-label" for="cliente">Cliente</label>
+                        <select mdbInput id="veiculo" class="form-control mb-3" [(ngModel)]="veiculoSelecionado">
+                            <option value="">Selecione um veículo</option>
+                            @for (veiculo of veiculos; track veiculo.id) {
+                                <option [value]="veiculo.placa">{{veiculo.marca}} {{veiculo.modelo}} - {{veiculo.placa}}</option>
+                            }
+                        </select>
+                        <label mdbLabel class="form-label" for="veiculo">Veículo</label>
                     </mdb-form-control>
+
                     <mdb-form-control>
-                        <input mdbInput type="text" id="endereco" class="form-control mb-3" [(ngModel)]='entrega.endereco' />
-                        <label mdbLabel class="form-label" for="endereco">Endereço</label>
+                        <select mdbInput id="motorista" class="form-control mb-3" [(ngModel)]="motoristaSelecionado">
+                            <option value="">Selecione um motorista</option>
+                            @for (motorista of motoristas; track motorista.id) {
+                                <option [value]="motorista.nome">{{motorista.nome}}</option>
+                            }
+                        </select>
+                        <label mdbLabel class="form-label" for="motorista">Motorista</label>
                     </mdb-form-control>
-                    <mdb-form-control>
-                        <input mdbInput type="text" id="itemComprado" class="form-control mb-3" [(ngModel)]='entrega.itemComprado' />
-                        <label mdbLabel class="form-label" for="itemComprado">Itens Comprados</label>
-                    </mdb-form-control>
-                    <br>
-                    <button type="button" class="btn btn-primary" (click)="salvar()">Salvar</button>
+
+                    <button type="button" class="btn btn-cadastro me-2" (click)="salvar()">Salvar</button>
+                    <button type="button" class="btn btn-secondary" (click)="voltar()">Voltar</button>
                 </div>
             </div>
         </div>

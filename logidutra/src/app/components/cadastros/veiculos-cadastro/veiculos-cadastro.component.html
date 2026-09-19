@@ -1,0 +1,29 @@
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-lg-5">
+            <div class="card mt-4">
+                <div class="card-body">
+                    <h3 class="mb-4">Cadastro de veículo</h3>
+
+                    <mdb-form-control>
+                        <input mdbInput type="text" id="marca" class="form-control mb-3" [(ngModel)]="veiculo.marca" />
+                        <label mdbLabel class="form-label" for="marca">Marca</label>
+                    </mdb-form-control>
+
+                    <mdb-form-control>
+                        <input mdbInput type="text" id="modelo" class="form-control mb-3" [(ngModel)]="veiculo.modelo" />
+                        <label mdbLabel class="form-label" for="modelo">Modelo</label>
+                    </mdb-form-control>
+
+                    <mdb-form-control>
+                        <input mdbInput type="text" id="placa" class="form-control mb-3" [(ngModel)]="veiculo.placa" />
+                        <label mdbLabel class="form-label" for="placa">Placa</label>
+                    </mdb-form-control>
+
+                    <button type="button" class="btn btn-cadastro me-2" (click)="cadastrar()">Cadastrar</button>
+                    <button type="button" class="btn btn-secondary" routerLink="../veiculos">Voltar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
