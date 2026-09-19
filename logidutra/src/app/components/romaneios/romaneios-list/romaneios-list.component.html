@@ -6,7 +6,7 @@
                     <h3>Listagem de entregas</h3>
                     <div class="direita">
                         <div class="direita">
-                            <button type="button" class="btn btn-cadastro" routerLink="/romaneios/new">Novo</button>
+                            <button type="button" class="btn btn-cadastro" routerLink="/admin/romaneios/new">Novo</button>
                         </div>
                     </div>
                     <br>
@@ -26,7 +26,7 @@
                         </thead>
                         <tbody>
                             @for(entrega of listaPaginada; track entrega.id){
-                            <tr>
+                            <tr class="romaneio-row" (click)="abrirRomaneio(entrega)" tabindex="0" (keydown.enter)="abrirRomaneio(entrega)">
                                 <td>{{entrega.id}}</td>
                                 <td>{{entrega.cliente}}</td>
                                 <td>{{entrega.itemComprado}}</td>
@@ -34,8 +34,8 @@
                                 <td>{{entrega.veiculo}}</td>
                                 <td>{{entrega.motorista || 'Não informado'}}</td>
                                 <td class="direita">
-                                    <button type="button" class="btn btn-editar me-2" (click)="editar(entrega)">Editar</button>
-                                    <button type="button" class="btn btn-excluir" (click)="deletar(entrega)">Excluir</button>
+                                    <button type="button" class="btn btn-editar me-2" (click)="$event.stopPropagation(); editar(entrega)">Editar</button>
+                                    <button type="button" class="btn btn-excluir" (click)="$event.stopPropagation(); deletar(entrega)">Excluir</button>
                                 </td>
                             </tr>
                             }

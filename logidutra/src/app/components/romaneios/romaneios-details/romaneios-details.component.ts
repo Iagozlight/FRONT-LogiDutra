@@ -122,7 +122,7 @@ export class RomaneiosDetailsComponent {
   }
 
   voltar() {
-    this.router.navigate(['/romaneios']);
+    this.router.navigate(['/admin/romaneios']);
   }
 
   salvar(){
@@ -164,7 +164,7 @@ export class RomaneiosDetailsComponent {
         confirmButtonText: 'Ok'
       });
 
-      this.router.navigate(['/romaneios'], {
+      this.router.navigate(['/admin/romaneios'], {
         state: { entregaEditada: this.entrega }
       });
 
@@ -175,7 +175,7 @@ export class RomaneiosDetailsComponent {
         confirmButtonText: 'Ok'
       });
 
-      this.router.navigate(['/romaneios'], {
+      this.router.navigate(['/admin/romaneios'], {
         state: { entregaNova: this.entrega }
       });
     }

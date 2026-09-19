@@ -8,6 +8,7 @@ import { UsuariosComponent } from './components/cadastros/usuarios/usuarios.comp
 import { VeiculosComponent } from './components/cadastros/veiculos/veiculos.component';
 import { VeiculosCadastroComponent } from './components/cadastros/veiculos-cadastro/veiculos-cadastro.component';
 import { UsuarioCadastroComponent } from './components/cadastros/usuario-cadastro/usuario-cadastro.component';
+import { RomaneioTelaPrincipalComponent } from './components/romaneios/romaneio-tela-principal/romaneio-tela-principal.component';
 
 export const routes: Routes = [
     { path: '', redirectTo: 'login', pathMatch: 'full' },
@@ -21,6 +22,9 @@ export const routes: Routes = [
         component: TelaPrincipalComponent,
         children: [
             { path: 'romaneios', component: RomaneiosListComponent },
+            { path: 'romaneios/new', component: RomaneiosDetailsComponent },
+            { path: 'romaneios/edit/:id', component: RomaneiosDetailsComponent },
+            { path: 'romaneios/:id', component: RomaneioTelaPrincipalComponent },
             {
                 path: 'cadastros',
                 children: [
@@ -38,6 +42,7 @@ export const routes: Routes = [
         component: TelaPrincipalComponent,
         children: [
             { path: 'romaneios', component: RomaneiosListComponent },
+            { path: 'romaneios/:id', component: RomaneioTelaPrincipalComponent },
             {
                 path: 'cadastros',
                 children: [

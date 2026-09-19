@@ -1,0 +1,145 @@
+:host {
+    display: block;
+    min-height: calc(100vh - 76px);
+}
+
+.romaneio-tela {
+    min-height: calc(100vh - 76px);
+    padding: 34px;
+    background-color: #c98d4a;
+}
+
+.painel-resumo {
+    position: relative;
+    max-width: 1180px;
+    min-height: 620px;
+    margin: 0 auto;
+    padding: 34px;
+    border-radius: 12px;
+    background-color: rgba(255, 255, 255, 0.12);
+}
+
+.painel-cabecalho {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 24px;
+    padding-right: 400px;
+}
+
+h1 {
+    margin: 8px 0 0;
+    color: #3e291a;
+    font-size: 32px;
+}
+
+.painel-resumo::after {
+    content: '';
+    position: absolute;
+    top: 24px;
+    right: 24px;
+    width: 360px;
+    height: 220px;
+    border: 8px solid #fff;
+    background-color: #fff;
+}
+
+.btn-voltar {
+    position: relative;
+    z-index: 1;
+    border: 0;
+    color: #fff;
+    background-color: #8a5a2d;
+}
+
+.btn-voltar:hover {
+    color: #fff;
+    background-color: #6f4724;
+}
+
+.clientes {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 18px;
+}
+
+.cliente-item {
+    padding: 22px;
+    border: 1px solid rgba(111, 71, 36, 0.22);
+    border-radius: 8px;
+    background-color: #fff;
+}
+
+.cliente-cabecalho {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+}
+
+.cliente-cabecalho h2 {
+    margin: 0;
+    color: #3e291a;
+    font-size: 20px;
+}
+
+.cliente-cabecalho span {
+    color: #8a5a2d;
+    font-size: 13px;
+    font-weight: 600;
+}
+
+.endereco {
+    min-height: 42px;
+    margin: 12px 0 18px;
+    color: #6c757d;
+}
+
+ul {
+    display: grid;
+    gap: 8px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+li {
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+    padding-top: 8px;
+    border-top: 1px solid #eee;
+    color: #4c3828;
+}
+
+li strong {
+    color: #8a5a2d;
+}
+
+.estado-vazio {
+    display: grid;
+    place-items: center;
+    min-height: 520px;
+    text-align: center;
+}
+
+@media (max-width: 768px) {
+    .romaneio-tela {
+        padding: 18px;
+    }
+
+    .painel-resumo {
+        padding: 22px;
+    }
+
+    .painel-cabecalho {
+        padding-right: 0;
+    }
+
+    .painel-resumo::after {
+        top: 84px;
+        right: 22px;
+        width: calc(100% - 44px);
+        height: 140px;
+    }
+}

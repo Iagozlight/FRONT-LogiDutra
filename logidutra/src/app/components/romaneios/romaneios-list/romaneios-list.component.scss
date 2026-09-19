@@ -79,6 +79,15 @@
   background-color: #f8f9fa;
 }
 
+.table tbody .romaneio-row {
+  cursor: pointer;
+}
+
+.table tbody .romaneio-row:focus-visible {
+  outline: 3px solid #c98d4a;
+  outline-offset: -3px;
+}
+
 .table .btn {
   border: none;
   border-radius: 6px;

@@ -1,0 +1,37 @@
+<main class="romaneio-tela">
+    <section class="painel-resumo">
+        @if (entrega) {
+            <div class="painel-cabecalho">
+                <div>
+                    <h1>Romaneio #{{entrega.id}}</h1>
+                </div>
+                <button type="button" class="btn btn-voltar" (click)="voltar()">Voltar</button>
+            </div>
+
+            <div class="clientes">
+                @for (cliente of clientes; track $index) {
+                    <article class="cliente-item">
+                        <div class="cliente-cabecalho">
+                            <h2>{{cliente.nome}}</h2>
+                            <span>{{cliente.produtos.length}} produto(s)</span>
+                        </div>
+                        <p class="endereco">{{cliente.endereco}}</p>
+                        <ul>
+                            @for (produto of cliente.produtos; track $index) {
+                                <li>
+                                    <span>{{produto.nome}}</span>
+                                    <strong>{{produto.quantidade}}x</strong>
+                                </li>
+                            }
+                        </ul>
+                    </article>
+                }
+            </div>
+        } @else {
+            <div class="estado-vazio">
+                <h1>Romaneio não encontrado</h1>
+                <button type="button" class="btn btn-voltar" (click)="voltar()">Voltar para romaneios</button>
+            </div>
+        }
+    </section>
+</main>

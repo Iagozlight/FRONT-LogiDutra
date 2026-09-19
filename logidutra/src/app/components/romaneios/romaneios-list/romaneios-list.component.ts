@@ -1,7 +1,7 @@
 import { Component, inject } from '@angular/core';
 import { ClienteEntrega, ItemEntrega } from '../../../models/item-entrega';
 import { CommonModule } from '@angular/common';
-import { Router, RouterLink } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import Swal from 'sweetalert2';
 
 
@@ -18,6 +18,7 @@ export class RomaneiosListComponent {
   MaxPag = 6;
 
   router = inject(Router);
+  route = inject(ActivatedRoute);
 
   constructor() {
     const listaSalva = sessionStorage.getItem('romaneios');
@@ -114,7 +115,14 @@ export class RomaneiosListComponent {
   }
 
   editar(entrega: ItemEntrega) {
-    this.router.navigate(['/romaneios/edit', entrega.id], { state: { entrega } });
+    this.router.navigate(['/admin/romaneios/edit', entrega.id], { state: { entrega } });
+  }
+
+  abrirRomaneio(entrega: ItemEntrega) {
+    this.router.navigate([entrega.id], {
+      relativeTo: this.route,
+      state: { entrega }
+    });
   }
 
   deletar(entrega: ItemEntrega) {
