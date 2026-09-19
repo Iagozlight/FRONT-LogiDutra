@@ -6,7 +6,9 @@
                     <h3>Listagem de entregas</h3>
                     <div class="direita">
                         <div class="direita">
-                            <button type="button" class="btn btn-primary" routerLink="/romaneios/new">Novo</button>
+                            @if (authService.ehAdmin) {
+                                <button type="button" class="btn btn-cadastro" routerLink="/admin/romaneios/new">Novo</button>
+                            }
                         </div>
                     </div>
                     <br>
@@ -16,24 +18,43 @@
                         <thead>
                             <tr>
                                 <th scope="col">Id</th>
-                                <th scope="col">Cliente</th>
-                                <th scope="col">Item Comprado</th>
-                                <th scope="col">Endereço</th>
-                                <th scope="col">Veiculo</th>
+                                <th scope="col">Motorista</th>
+                                <th scope="col">Veículo</th>
+                                <th scope="col">Quantidade de entregas</th>
+                                <th scope="col">Status</th>
                                 <th scope="col" class="direita">Ações</th>
                             </tr>
                         </thead>
                         <tbody>
                             @for(entrega of listaPaginada; track entrega.id){
-                            <tr>
+                            <tr class="romaneio-row" (click)="abrirRomaneio(entrega)" tabindex="0" (keydown.enter)="abrirRomaneio(entrega)">
                                 <td>{{entrega.id}}</td>
-                                <td>{{entrega.cliente}}</td>
-                                <td>{{entrega.itemComprado}}</td>
-                                <td>{{entrega.endereco}}</td>
-                                <td>{{entrega.veiculo}}</td>
+                                <td>{{entrega.motorista || 'Não informado'}}</td>
+                                <td>{{entrega.veiculo || 'Não informado'}}</td>
+                                <td>{{entrega.clientes.length || 0}}</td>
+                                <td><span class="status" [class]="'status-' + entrega.status.toLowerCase().replace(' ', '-')">{{entrega.status}}</span></td>
                                 <td class="direita">
-                                    <button type="button" class="btn btn-warning me-2"(click)="editar(entrega)">editar</button>
-                                    <button type="button" class="btn btn-danger" (click)="deletar(entrega)">Excluir</button>
+                                    @if (ehSeuRomaneio(entrega)) {
+                                        <span class="seu-romaneio">SEU ROMANEIO</span>
+                                    }
+                                    @if (authService.ehAdmin) {
+                                        <button type="button" class="btn btn-editar me-2" (click)="$event.stopPropagation(); editar(entrega)">Editar</button>
+                                    }
+                                    @if (authService.ehAdmin) {
+                                        <span class="status-controle me-2">
+                                            <button type="button" class="btn btn-status" (click)="$event.stopPropagation(); alternarMenuStatus(entrega)">Status</button>
+                                            @if (statusMenuAberto === entrega.id) {
+                                                <span class="status-menu" (click)="$event.stopPropagation()">
+                                                    <button type="button" (click)="alterarStatus(entrega, 'Em andamento')">Em andamento</button>
+                                                    <button type="button" (click)="alterarStatus(entrega, 'Preparado')">Preparado</button>
+                                                    <button type="button" (click)="alterarStatus(entrega, 'Encerrado')">Encerrado</button>
+                                                </span>
+                                            }
+                                        </span>
+                                    }
+                                    @if (authService.ehAdmin) {
+                                        <button type="button" class="btn btn-excluir" (click)="$event.stopPropagation(); deletar(entrega)">Excluir</button>
+                                    }
                                 </td>
                             </tr>
                             }

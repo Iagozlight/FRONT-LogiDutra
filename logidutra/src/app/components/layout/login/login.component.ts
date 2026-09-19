@@ -4,6 +4,8 @@ import { MdbCollapseModule } from 'mdb-angular-ui-kit/collapse';
 import { MdbFormsModule } from 'mdb-angular-ui-kit/forms';
 import { FormsModule } from '@angular/forms';
 import { usuario } from '../../../models/usuarios';
+import { AuthService } from '../../../services/auth.service';
+import { UsuarioService } from '../../../services/usuario.service';
 
 
 @Component({
@@ -20,13 +22,11 @@ export class LoginComponent {
   usuarios: usuario[] = [usuario.padrao()];
 
   router = inject(Router);
+  authService = inject(AuthService);
+  usuarioService = inject(UsuarioService);
 
   logar() {
-    const usuariosSalvos = sessionStorage.getItem('usuarios');
-    const usuarios = usuariosSalvos ? JSON.parse(usuariosSalvos) as usuario[] : [];
-    const todosUsuarios = [...usuarios, ...this.usuarios].filter(
-      (usuarioAtual, indice, lista) => lista.findIndex(item => item.nome === usuarioAtual.nome) === indice
-    );
+    const todosUsuarios = this.usuarioService.listarComPadrao();
     const usuarioEncontrado = todosUsuarios.find(
       usuario => usuario.nome === this.usuario && usuario.senha === this.senha
     );
@@ -36,6 +36,7 @@ export class LoginComponent {
       return;
     }
 
+    this.authService.entrar(usuarioEncontrado);
     const rota = usuarioEncontrado.role === 'Admin' ? '/admin/romaneios' : '/usuario/romaneios';
     this.router.navigate([rota]);
   }

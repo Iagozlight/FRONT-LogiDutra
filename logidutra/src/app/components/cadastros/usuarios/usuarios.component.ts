@@ -1,6 +1,7 @@
 import { Component, inject } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
 import { usuario } from '../../../models/usuarios';
+import { UsuarioService } from '../../../services/usuario.service';
 
 @Component({
   selector: 'app-usuarios',
@@ -13,15 +14,10 @@ export class UsuariosComponent {
   usuarios: usuario[] = [];
   paginaAtual = 1;
   MaxPag = 6;
+  usuarioService = inject(UsuarioService);
 
   constructor() {
-    const usuariosSalvos = sessionStorage.getItem('usuarios');
-    const usuariosSalvosLista: usuario[] = usuariosSalvos ? JSON.parse(usuariosSalvos) : [];
-    const usuarioPadrao = usuario.padrao();
-
-    this.usuarios = [...usuariosSalvosLista, usuarioPadrao].filter(
-      (usuarioAtual, indice, lista) => lista.findIndex(item => item.nome === usuarioAtual.nome) === indice
-    );
+    this.usuarios = this.usuarioService.listarComPadrao();
   }
 
 

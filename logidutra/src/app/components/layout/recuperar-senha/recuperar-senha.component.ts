@@ -1,7 +1,8 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { MdbFormsModule } from 'mdb-angular-ui-kit/forms';
 import { usuario } from '../../../models/usuarios';
+import { UsuarioService } from '../../../services/usuario.service';
 
 @Component({
   selector: 'app-recuperar-senha',
@@ -10,6 +11,7 @@ import { usuario } from '../../../models/usuarios';
   styleUrl: './recuperar-senha.component.scss'
 })
 export class RecuperarSenhaComponent {
+  usuarioService = inject(UsuarioService);
 
   usuario!: string;
   novaSenha!: string;
@@ -31,9 +33,7 @@ export class RecuperarSenhaComponent {
       return;
     }
 
-    const usuariosSalvos = sessionStorage.getItem('usuarios');
-    const usuariosSalvosLista = usuariosSalvos ? JSON.parse(usuariosSalvos) as usuario[] : [];
-    const usuarios = [usuario.padrao(), ...usuariosSalvosLista];
+    const usuarios = this.usuarioService.listarComPadrao();
     const usuarioEncontrado = usuarios.find(
       usuarioAtual => usuarioAtual.nome === this.usuario.trim()
     );
@@ -47,7 +47,7 @@ export class RecuperarSenhaComponent {
     const usuariosAtualizados = usuarios.filter(
       (usuarioAtual, indice, lista) => lista.findIndex(item => item.nome === usuarioAtual.nome) === indice
     );
-    sessionStorage.setItem('usuarios', JSON.stringify(usuariosAtualizados));
+    this.usuarioService.salvar(usuariosAtualizados.filter(usuarioAtual => usuarioAtual.nome !== usuario.padrao().nome));
     alert('Senha atualizada com sucesso!');
   }
 
