@@ -6,6 +6,10 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { usuario } from '../../../models/usuarios';
 import { veiculo } from '../../../models/veiculos';
 import Swal from 'sweetalert2';
+import { AuthService } from '../../../services/auth.service';
+import { UsuarioService } from '../../../services/usuario.service';
+import { VeiculoService } from '../../../services/veiculo.service';
+import { RomaneioService } from '../../../services/romaneio.service';
 
 @Component({
   selector: 'app-romaneios-details',
@@ -26,6 +30,10 @@ export class RomaneiosDetailsComponent {
 
   route = inject(ActivatedRoute);
   router = inject(Router);
+  authService = inject(AuthService);
+  usuarioService = inject(UsuarioService);
+  veiculoService = inject(VeiculoService);
+  romaneioService = inject(RomaneioService);
 
   constructor(){
     this.carregarOpcoes();
@@ -45,10 +53,8 @@ export class RomaneiosDetailsComponent {
   }
 
   private carregarOpcoes() {
-    const veiculosSalvos = sessionStorage.getItem('veiculos');
-    const usuariosSalvos = sessionStorage.getItem('usuarios');
-    this.veiculos = veiculosSalvos ? JSON.parse(veiculosSalvos) : [];
-    const usuarios: usuario[] = usuariosSalvos ? JSON.parse(usuariosSalvos) : [];
+    this.veiculos = this.veiculoService.listar();
+    const usuarios: usuario[] = this.usuarioService.listar();
     this.motoristas = usuarios.filter(usuarioAtual => usuarioAtual.role === 'Motorista');
   }
 
@@ -117,12 +123,11 @@ export class RomaneiosDetailsComponent {
   }
 
   findById(id: number){
-    let entregaRetornada: ItemEntrega = new ItemEntrega(id, 'Joao silva', 'Roupeiro, sofa, comoda', 'Rua das flores, 123', 'Caminhao')
-    this.entrega = entregaRetornada;
+    this.entrega = this.romaneioService.buscarPorId(id) ?? new ItemEntrega(id, '', '', '', '');
   }
 
   voltar() {
-    this.router.navigate(['/admin/romaneios']);
+    this.router.navigate([this.authService.ehAdmin ? '/admin/romaneios' : '/usuario/romaneios']);
   }
 
   salvar(){
@@ -158,53 +163,36 @@ export class RomaneiosDetailsComponent {
     this.atualizarDisponibilidade(veiculoAnterior);
 
     if (this.entrega.id > 0) {
+      this.romaneioService.atualizar(this.entrega);
       Swal.fire({
         title: 'Editado',
         icon: 'success',
         confirmButtonText: 'Ok'
       });
 
-      this.router.navigate(['/admin/romaneios'], {
-        state: { entregaEditada: this.entrega }
+      this.router.navigate([this.authService.ehAdmin ? '/admin/romaneios' : '/usuario/romaneios'], {
+        state: {}
       });
 
     } else {
+      this.romaneioService.adicionar(this.entrega);
       Swal.fire({
         title: 'Salvo!!!',
         icon: 'success',
         confirmButtonText: 'Ok'
       });
 
-      this.router.navigate(['/admin/romaneios'], {
-        state: { entregaNova: this.entrega }
+      this.router.navigate([this.authService.ehAdmin ? '/admin/romaneios' : '/usuario/romaneios'], {
+        state: {}
       });
     }
   }
 
   private atualizarDisponibilidade(veiculoAnterior: string) {
-    const veiculosSalvos = sessionStorage.getItem('veiculos');
-    if (veiculosSalvos) {
-      const veiculos: veiculo[] = JSON.parse(veiculosSalvos);
-      veiculos.forEach(veiculoAtual => {
-        if (veiculoAtual.placa === veiculoAnterior) {
-          veiculoAtual.disponibilidade = false;
-        }
-        if (veiculoAtual.placa === this.veiculoSelecionado) {
-          veiculoAtual.disponibilidade = true;
-        }
-      });
-      sessionStorage.setItem('veiculos', JSON.stringify(veiculos));
+    if (veiculoAnterior && veiculoAnterior !== this.veiculoSelecionado) {
+      this.veiculoService.atualizarDisponibilidade(veiculoAnterior, false);
     }
-
-    const usuariosSalvos = sessionStorage.getItem('usuarios');
-    if (usuariosSalvos) {
-      const usuarios: usuario[] = JSON.parse(usuariosSalvos);
-      usuarios.forEach(usuarioAtual => {
-        if (usuarioAtual.nome === this.motoristaSelecionado) {
-          usuarioAtual.Disp = true;
-        }
-      });
-      sessionStorage.setItem('usuarios', JSON.stringify(usuarios));
-    }
+    this.veiculoService.atualizarDisponibilidade(this.veiculoSelecionado, true);
+    this.usuarioService.atualizarDisponibilidade(this.motoristaSelecionado, true);
   }
 }

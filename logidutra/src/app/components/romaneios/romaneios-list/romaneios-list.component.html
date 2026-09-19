@@ -6,7 +6,9 @@
                     <h3>Listagem de entregas</h3>
                     <div class="direita">
                         <div class="direita">
-                            <button type="button" class="btn btn-cadastro" routerLink="/admin/romaneios/new">Novo</button>
+                            @if (authService.ehAdmin) {
+                                <button type="button" class="btn btn-cadastro" routerLink="/admin/romaneios/new">Novo</button>
+                            }
                         </div>
                     </div>
                     <br>
@@ -32,8 +34,27 @@
                                 <td>{{entrega.clientes.length || 0}}</td>
                                 <td><span class="status" [class]="'status-' + entrega.status.toLowerCase().replace(' ', '-')">{{entrega.status}}</span></td>
                                 <td class="direita">
-                                    <button type="button" class="btn btn-editar me-2" (click)="$event.stopPropagation(); editar(entrega)">Editar</button>
-                                    <button type="button" class="btn btn-excluir" (click)="$event.stopPropagation(); deletar(entrega)">Excluir</button>
+                                    @if (ehSeuRomaneio(entrega)) {
+                                        <span class="seu-romaneio">SEU ROMANEIO</span>
+                                    }
+                                    @if (authService.ehAdmin) {
+                                        <button type="button" class="btn btn-editar me-2" (click)="$event.stopPropagation(); editar(entrega)">Editar</button>
+                                    }
+                                    @if (authService.ehAdmin) {
+                                        <span class="status-controle me-2">
+                                            <button type="button" class="btn btn-status" (click)="$event.stopPropagation(); alternarMenuStatus(entrega)">Status</button>
+                                            @if (statusMenuAberto === entrega.id) {
+                                                <span class="status-menu" (click)="$event.stopPropagation()">
+                                                    <button type="button" (click)="alterarStatus(entrega, 'Em andamento')">Em andamento</button>
+                                                    <button type="button" (click)="alterarStatus(entrega, 'Preparado')">Preparado</button>
+                                                    <button type="button" (click)="alterarStatus(entrega, 'Encerrado')">Encerrado</button>
+                                                </span>
+                                            }
+                                        </span>
+                                    }
+                                    @if (authService.ehAdmin) {
+                                        <button type="button" class="btn btn-excluir" (click)="$event.stopPropagation(); deletar(entrega)">Excluir</button>
+                                    }
                                 </td>
                             </tr>
                             }

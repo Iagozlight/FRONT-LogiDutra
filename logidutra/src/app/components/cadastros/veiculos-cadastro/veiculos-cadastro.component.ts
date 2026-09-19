@@ -3,6 +3,7 @@ import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { MdbFormsModule } from 'mdb-angular-ui-kit/forms';
 import { veiculo } from '../../../models/veiculos';
+import { VeiculoService } from '../../../services/veiculo.service';
 
 @Component({
   selector: 'app-veiculos-cadastro',
@@ -14,6 +15,7 @@ export class VeiculosCadastroComponent {
   router = inject(Router);
   rotaAtual = inject(ActivatedRoute);
   veiculo = new veiculo(0, '', '', '');
+  veiculoService = inject(VeiculoService);
 
   cadastrar() {
     if (!this.veiculo.marca.trim() || !this.veiculo.modelo.trim() || !this.veiculo.placa.trim()) {
@@ -21,8 +23,7 @@ export class VeiculosCadastroComponent {
       return;
     }
 
-    const veiculosSalvos = sessionStorage.getItem('veiculos');
-    const veiculos: veiculo[] = veiculosSalvos ? JSON.parse(veiculosSalvos) : [];
+    const veiculos = this.veiculoService.listar();
     const placa = this.veiculo.placa.trim().toUpperCase();
 
     if (veiculos.some(veiculoAtual => veiculoAtual.placa.toUpperCase() === placa)) {
@@ -39,8 +40,7 @@ export class VeiculosCadastroComponent {
     this.veiculo.modelo = this.veiculo.modelo.trim();
     this.veiculo.placa = placa;
     this.veiculo.disponibilidade = false;
-    veiculos.push(this.veiculo);
-    sessionStorage.setItem('veiculos', JSON.stringify(veiculos));
+    this.veiculoService.adicionar(this.veiculo);
     this.router.navigate(['../veiculos'], { relativeTo: this.rotaAtual });
   }
 }

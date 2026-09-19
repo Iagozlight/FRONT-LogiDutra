@@ -1,8 +1,10 @@
 import { Component, inject } from '@angular/core';
-import { ClienteEntrega, ItemEntrega, StatusRomaneio } from '../../../models/item-entrega';
+import { ItemEntrega, StatusRomaneio } from '../../../models/item-entrega';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import Swal from 'sweetalert2';
+import { AuthService } from '../../../services/auth.service';
+import { RomaneioService } from '../../../services/romaneio.service';
 
 
 @Component({
@@ -16,32 +18,15 @@ export class RomaneiosListComponent {
 
   paginaAtual = 1;
   MaxPag = 6;
+  statusMenuAberto: number | null = null;
 
   router = inject(Router);
   route = inject(ActivatedRoute);
+  authService = inject(AuthService);
+  romaneioService = inject(RomaneioService);
 
   constructor() {
-    const listaSalva = sessionStorage.getItem('romaneios');
-
-    if (listaSalva) {
-      this.lista = JSON.parse(listaSalva);
-      this.lista.forEach(entrega => {
-        entrega.clientes = entrega.clientes || [];
-        entrega.status = entrega.status === 'Programado' ? 'Preparado' : (entrega.status || 'Preparado');
-      });
-    } else {
-      this.lista = [
-        this.criarRomaneio(1, 'Joao Silva', 'Rua Areias, 15 - Foz do Iguacu/PR', [
-          ['Roupeiro', 1], ['Sofa', 1], ['Comoda', 2]
-        ], 'Renault Master', 'Carlos Mendes', 'Em andamento'),
-        this.criarRomaneio(2, 'Maria Santos', 'Rua Lagos, 222 - Foz do Iguacu/PR', [
-          ['Mesa', 1], ['Cadeiras', 6]
-        ], 'Mercedes-Benz Sprinter', 'Rafael Souza', 'Preparado'),
-        this.criarRomaneio(3, 'Pedro Junior', 'Rua Cacamba, 155 - Foz do Iguacu/PR', [
-          ['Painel de TV', 1]
-        ], 'Fiat Ducato', 'Marcos Oliveira', 'Encerrado')
-      ];
-    }
+    this.lista = this.romaneioService.listar();
 
     let entregaNova = history.state.entregaNova;
     let entregaEditada = history.state.entregaEditada;
@@ -53,43 +38,19 @@ export class RomaneiosListComponent {
       );
 
       if(!onn) {
-        entregaNova.id = nextId;
         entregaNova.status = entregaNova.status || 'Preparado';
-        this.lista.push(entregaNova);
+        this.romaneioService.adicionar(entregaNova);
       }
     }
 
     if (entregaEditada) {
       let index = this.lista.findIndex(item => item.id == entregaEditada.id);
       if (index >= 0) {
-        this.lista[index] = entregaEditada;
+        this.romaneioService.atualizar(entregaEditada);
       }
     }
 
-    this.salvarNaSessao();
-  }
-
-  private criarRomaneio(
-    id: number,
-    nomeCliente: string,
-    endereco: string,
-    produtos: [string, number][],
-    veiculo: string,
-    motorista: string
-    ,status: StatusRomaneio
-  ): ItemEntrega {
-    const entrega = new ItemEntrega(id, nomeCliente, '', endereco, veiculo, motorista, status);
-    const produtosFormatados = produtos.map(([nome, quantidade]) => ({ nome, quantidade }));
-    const cliente: ClienteEntrega = {
-      nome: nomeCliente,
-      endereco,
-      produtos: produtosFormatados,
-      finalizado: true
-    };
-    entrega.clientes = [cliente];
-    entrega.produtos = produtosFormatados;
-    entrega.itemComprado = produtosFormatados.map(produto => `${produto.nome} (${produto.quantidade}x)`).join(', ');
-    return entrega;
+    this.lista = this.romaneioService.listar();
   }
 
 
@@ -121,6 +82,9 @@ export class RomaneiosListComponent {
   }
 
   editar(entrega: ItemEntrega) {
+    if (!this.authService.ehAdmin) {
+      return;
+    }
     this.router.navigate(['/admin/romaneios/edit', entrega.id], { state: { entrega } });
   }
 
@@ -131,7 +95,30 @@ export class RomaneiosListComponent {
     });
   }
 
+  alterarStatus(entrega: ItemEntrega, status: StatusRomaneio) {
+    entrega.status = status;
+    this.statusMenuAberto = null;
+    this.romaneioService.atualizarStatus(entrega.id, status);
+  }
+
+  alternarMenuStatus(entrega: ItemEntrega) {
+    this.statusMenuAberto = this.statusMenuAberto === entrega.id ? null : entrega.id;
+  }
+
+  ehSeuRomaneio(entrega: ItemEntrega): boolean {
+    const usuarioAtual = this.authService.usuarioAtual;
+    return usuarioAtual?.role === 'Motorista' &&
+      this.normalizarNome(usuarioAtual.nome) === this.normalizarNome(entrega.motorista);
+  }
+
+  private normalizarNome(nome: string): string {
+    return nome.trim().toLocaleLowerCase();
+  }
+
   deletar(entrega: ItemEntrega) {
+    if (!this.authService.ehAdmin) {
+      return;
+    }
     Swal.fire({
       title: 'Tem certeza?',
       text: 'Essa entrega vai ser excluída.',
@@ -143,14 +130,8 @@ export class RomaneiosListComponent {
 
     if (resultado.isConfirmed) {
 
-      for (let i = 0; i < this.lista.length; i++) {
-        if (this.lista[i].id == entrega.id) {
-          this.lista.splice(i, 1);
-          break;
-        }
-      }
-
-      this.salvarNaSessao();
+      this.romaneioService.excluir(entrega.id);
+      this.lista = this.romaneioService.listar();
 
       Swal.fire({
         title: 'Excluído!',
@@ -162,9 +143,5 @@ export class RomaneiosListComponent {
     }
   });
 }
-
-  private salvarNaSessao() {
-    sessionStorage.setItem('romaneios', JSON.stringify(this.lista));
-  }
 
 }

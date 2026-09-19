@@ -4,6 +4,9 @@ import { Component, inject } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ClienteEntrega, ItemEntrega, ProdutoEntrega, StatusRomaneio } from '../../../models/item-entrega';
 import { veiculo } from '../../../models/veiculos';
+import { AuthService } from '../../../services/auth.service';
+import { RomaneioService } from '../../../services/romaneio.service';
+import { VeiculoService } from '../../../services/veiculo.service';
 
 @Component({
   selector: 'app-romaneio-tela-principal',
@@ -14,6 +17,9 @@ import { veiculo } from '../../../models/veiculos';
 export class RomaneioTelaPrincipalComponent {
   private route = inject(ActivatedRoute);
   private router = inject(Router);
+  readonly authService: AuthService = inject(AuthService);
+  private romaneioService = inject(RomaneioService);
+  private veiculoService = inject(VeiculoService);
 
   entrega: ItemEntrega | null = null;
   veiculoSelecionado: veiculo | null = null;
@@ -23,14 +29,12 @@ export class RomaneioTelaPrincipalComponent {
     const id = Number(this.route.snapshot.paramMap.get('id'));
 
     if (entregaRecebida) {
-      this.entrega = entregaRecebida;
+      this.entrega = this.romaneioService.normalizar(entregaRecebida);
     } else {
-      const romaneiosSalvos = sessionStorage.getItem('romaneios');
-      const romaneios: ItemEntrega[] = romaneiosSalvos ? JSON.parse(romaneiosSalvos) : [];
-      this.entrega = romaneios.find(romaneio => romaneio.id === id) ?? null;
+      this.entrega = this.romaneioService.buscarPorId(id) ?? null;
     }
 
-    if ((this.entrega?.status as string) === 'Programado') {
+    if (this.entrega && (this.entrega.status as string) === 'Programado') {
       this.entrega.status = 'Preparado';
     }
 
@@ -42,37 +46,23 @@ export class RomaneioTelaPrincipalComponent {
       return;
     }
 
-    const veiculosSalvos = sessionStorage.getItem('veiculos');
-    const veiculos: veiculo[] = veiculosSalvos ? JSON.parse(veiculosSalvos) : [];
-    this.veiculoSelecionado = veiculos.find(veiculoAtual => veiculoAtual.placa === this.entrega?.veiculo) ?? null;
+    this.veiculoSelecionado = this.veiculoService.buscarPorPlaca(this.entrega.veiculo) ?? null;
   }
 
   get clientes(): ClienteEntrega[] {
-    return (this.entrega?.clientes ?? []).map(cliente => ({
-      ...cliente,
-      produtos: (cliente.produtos as unknown as Array<ProdutoEntrega | string>).map(produto =>
-        typeof produto === 'string' ? { nome: produto, quantidade: 1 } : { ...produto, quantidade: produto.quantidade || 1 }
-      )
-    }));
+    return this.entrega?.clientes ?? [];
   }
 
   voltar() {
-    this.router.navigate(['/admin/romaneios']);
+    this.router.navigate([this.authService.ehAdmin ? '/admin/romaneios' : '/usuario/romaneios']);
   }
 
   alterarStatus(status: StatusRomaneio) {
-    if (!this.entrega) {
+    if (!this.authService.ehAdmin || !this.entrega) {
       return;
     }
 
     this.entrega.status = status;
-    const romaneiosSalvos = sessionStorage.getItem('romaneios');
-    const romaneios: ItemEntrega[] = romaneiosSalvos ? JSON.parse(romaneiosSalvos) : [];
-    const indice = romaneios.findIndex(romaneio => romaneio.id === this.entrega?.id);
-
-    if (indice >= 0) {
-      romaneios[indice] = this.entrega;
-      sessionStorage.setItem('romaneios', JSON.stringify(romaneios));
-    }
+    this.romaneioService.atualizarStatus(this.entrega.id, status);
   }
 }

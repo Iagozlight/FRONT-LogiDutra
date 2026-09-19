@@ -9,14 +9,16 @@
             </div>
 
             <div class="romaneio-acoes">
-                <label class="status-controle">
-                    <span>Status</span>
-                    <select [(ngModel)]="entrega.status" (ngModelChange)="alterarStatus($event)">
-                        <option value="Em andamento">Em andamento</option>
-                        <option value="Preparado">Preparado</option>
-                        <option value="Encerrado">Encerrado</option>
-                    </select>
-                </label>
+                @if (authService.ehAdmin) {
+                    <label class="status-controle">
+                        <span>Status</span>
+                        <select [(ngModel)]="entrega.status" (ngModelChange)="alterarStatus($event)">
+                            <option value="Em andamento">Em andamento</option>
+                            <option value="Preparado">Preparado</option>
+                            <option value="Encerrado">Encerrado</option>
+                        </select>
+                    </label>
+                }
 
                 <button
                     type="button"
