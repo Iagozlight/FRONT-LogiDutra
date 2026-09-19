@@ -8,24 +8,36 @@
                 <button type="button" class="btn btn-voltar" (click)="voltar()">Voltar</button>
             </div>
 
-            <div class="clientes">
-                @for (cliente of clientes; track $index) {
-                    <article class="cliente-item">
-                        <div class="cliente-cabecalho">
-                            <h2>{{cliente.nome}}</h2>
-                            <span>{{cliente.produtos.length}} produto(s)</span>
-                        </div>
-                        <p class="endereco">{{cliente.endereco}}</p>
-                        <ul>
-                            @for (produto of cliente.produtos; track $index) {
-                                <li>
-                                    <span>{{produto.nome}}</span>
-                                    <strong>{{produto.quantidade}}x</strong>
-                                </li>
-                            }
-                        </ul>
-                    </article>
-                }
+            <div class="painel-conteudo">
+                <div class="clientes">
+                    @for (cliente of clientes; track $index) {
+                        <article class="cliente-item">
+                            <div class="cliente-cabecalho">
+                                <h2>{{cliente.nome}}</h2>
+                                <span>{{cliente.produtos.length}} entrega(s)</span>
+                            </div>
+                            <p class="endereco"><strong>Endereço:</strong> {{cliente.endereco}}</p>
+                            <ul>
+                                @for (produto of cliente.produtos; track $index) {
+                                    <li>
+                                        <span>{{produto.nome}}</span>
+                                        <strong>{{produto.quantidade}}x</strong>
+                                    </li>
+                                }
+                            </ul>
+                        </article>
+                    }
+                </div>
+
+                <aside class="veiculo-item">
+                    <h2>Veículo da entrega</h2>
+                    <div class="veiculo-dados">
+                        <div><span>Marca</span><strong>{{veiculoSelecionado?.marca || 'Não informado'}}</strong></div>
+                        <div><span>Modelo</span><strong>{{veiculoSelecionado?.modelo || entrega.veiculo || 'Não informado'}}</strong></div>
+                        <div><span>Placa</span><strong>{{veiculoSelecionado?.placa || 'Não informado'}}</strong></div>
+                        <div><span>Motorista</span><strong>{{entrega.motorista || 'Não informado'}}</strong></div>
+                    </div>
+                </aside>
             </div>
         } @else {
             <div class="estado-vazio">

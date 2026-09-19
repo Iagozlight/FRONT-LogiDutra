@@ -127,6 +127,31 @@
   background-color: #842f2d;
 }
 
+.status {
+  display: inline-block;
+  min-width: 108px;
+  padding: 6px 10px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 700;
+  text-align: center;
+}
+
+.status-em-andamento {
+  color: #7a4a00;
+  background-color: #ffe6a8;
+}
+
+.status-encerrado {
+  color: #24552b;
+  background-color: #ccebd1;
+}
+
+.status-programado {
+  color: #245078;
+  background-color: #cfe5f5;
+}
+
 .table .btn-warning:hover {
   transform: translateY(-1px);
 }

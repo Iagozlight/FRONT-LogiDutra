@@ -1,5 +1,5 @@
 import { Component, inject } from '@angular/core';
-import { ClienteEntrega, ItemEntrega } from '../../../models/item-entrega';
+import { ClienteEntrega, ItemEntrega, StatusRomaneio } from '../../../models/item-entrega';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import Swal from 'sweetalert2';
@@ -25,17 +25,21 @@ export class RomaneiosListComponent {
 
     if (listaSalva) {
       this.lista = JSON.parse(listaSalva);
+      this.lista.forEach(entrega => {
+        entrega.clientes = entrega.clientes || [];
+        entrega.status = entrega.status || 'Programado';
+      });
     } else {
       this.lista = [
         this.criarRomaneio(1, 'Joao Silva', 'Rua Areias, 15 - Foz do Iguacu/PR', [
           ['Roupeiro', 1], ['Sofa', 1], ['Comoda', 2]
-        ], 'Renault Master', 'Carlos Mendes'),
+        ], 'Renault Master', 'Carlos Mendes', 'Em andamento'),
         this.criarRomaneio(2, 'Maria Santos', 'Rua Lagos, 222 - Foz do Iguacu/PR', [
           ['Mesa', 1], ['Cadeiras', 6]
-        ], 'Mercedes-Benz Sprinter', 'Rafael Souza'),
+        ], 'Mercedes-Benz Sprinter', 'Rafael Souza', 'Programado'),
         this.criarRomaneio(3, 'Pedro Junior', 'Rua Cacamba, 155 - Foz do Iguacu/PR', [
           ['Painel de TV', 1]
-        ], 'Fiat Ducato', 'Marcos Oliveira')
+        ], 'Fiat Ducato', 'Marcos Oliveira', 'Encerrado')
       ];
     }
 
@@ -50,6 +54,7 @@ export class RomaneiosListComponent {
 
       if(!onn) {
         entregaNova.id = nextId;
+        entregaNova.status = entregaNova.status || 'Programado';
         this.lista.push(entregaNova);
       }
     }
@@ -71,8 +76,9 @@ export class RomaneiosListComponent {
     produtos: [string, number][],
     veiculo: string,
     motorista: string
+    ,status: StatusRomaneio
   ): ItemEntrega {
-    const entrega = new ItemEntrega(id, nomeCliente, '', endereco, veiculo, motorista);
+    const entrega = new ItemEntrega(id, nomeCliente, '', endereco, veiculo, motorista, status);
     const produtosFormatados = produtos.map(([nome, quantidade]) => ({ nome, quantidade }));
     const cliente: ClienteEntrega = {
       nome: nomeCliente,

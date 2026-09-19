@@ -10,6 +10,8 @@ export interface ProdutoEntrega {
     quantidade: number;
 }
 
+export type StatusRomaneio = 'Em andamento' | 'Encerrado' | 'Programado';
+
 export class ItemEntrega {
     id!: number;
     cliente!: string;
@@ -17,16 +19,18 @@ export class ItemEntrega {
     endereco!: string;
     veiculo!: string;
     motorista!: string;
+    status: StatusRomaneio = 'Programado';
     clientes: ClienteEntrega[] = [];
     produtos: ProdutoEntrega[] = [];
 
-    constructor(id: number, cliente: string, itemComprado: string, endereco: string, veiculo: string, motorista: string = '') {
+    constructor(id: number, cliente: string, itemComprado: string, endereco: string, veiculo: string, motorista: string = '', status: StatusRomaneio = 'Programado') {
         this.id = id;
         this.cliente = cliente;
         this.itemComprado = itemComprado;
         this.endereco = endereco;
         this.veiculo = veiculo;
         this.motorista = motorista;
+        this.status = status;
         this.clientes = cliente ? [{ nome: cliente, endereco, produtos: itemComprado ? [{ nome: itemComprado, quantidade: 1 }] : [], finalizado: true }] : [];
         this.produtos = itemComprado ? [{ nome: itemComprado, quantidade: 1 }] : [];
     }
