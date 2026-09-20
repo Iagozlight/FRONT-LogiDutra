@@ -2,6 +2,16 @@
   margin-top: 30px;
 }
 
+.btn-cadastro {
+  background-color: #8a5a2d;
+  color: #d8b07a;
+}
+
+.btn-cadastro:hover {
+  background-color: #6f4724;
+  color: #d8b07a;
+}
+
 .card {
   border: none;
   border-radius: 12px;
@@ -69,6 +79,15 @@
   background-color: #f8f9fa;
 }
 
+.table tbody .romaneio-row {
+  cursor: pointer;
+}
+
+.table tbody .romaneio-row:focus-visible {
+  outline: 3px solid #c98d4a;
+  outline-offset: -3px;
+}
+
 .table .btn {
   border: none;
   border-radius: 6px;
@@ -81,6 +100,113 @@
 
 .table .btn-warning {
   color: #fff;
+}
+
+.table .btn-editar,
+.table .btn-status,
+.table .btn-excluir {
+  border: 1px solid transparent;
+  font-weight: 600;
+}
+
+.table .btn-status {
+  border-color: #c9a875;
+  background-color: #fff8ed;
+  color: #6f4724;
+  cursor: pointer;
+}
+
+.seu-romaneio {
+  display: inline-block;
+  margin-right: 10px;
+  color: #2f7d32;
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  white-space: nowrap;
+}
+
+.table .btn-status:hover {
+  background-color: #f1dcc1;
+}
+
+.status-controle {
+  position: relative;
+  display: inline-block;
+}
+
+.status-menu {
+  position: absolute;
+  z-index: 10;
+  top: calc(100% + 6px);
+  right: 0;
+  display: grid;
+  min-width: 150px;
+  padding: 5px;
+  border: 1px solid #e1d2c1;
+  border-radius: 7px;
+  background: #fff;
+  box-shadow: 0 7px 18px rgba(52, 39, 28, 0.16);
+}
+
+.status-menu button {
+  padding: 8px 10px;
+  border: 0;
+  border-radius: 4px;
+  background: transparent;
+  color: #6f4724;
+  font-size: 12px;
+  font-weight: 600;
+  text-align: left;
+  white-space: nowrap;
+}
+
+.status-menu button:hover {
+  background: #f5eee7;
+}
+
+.table .btn-editar {
+  background-color: #d8b07a;
+  color: #6f4724;
+}
+
+.table .btn-editar:hover {
+  background-color: #c99a5d;
+  color: #fff;
+}
+
+.table .btn-excluir {
+  background-color: #a94442;
+  color: #fff;
+}
+
+.table .btn-excluir:hover {
+  background-color: #842f2d;
+}
+
+.status {
+  display: inline-block;
+  min-width: 108px;
+  padding: 6px 10px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 700;
+  text-align: center;
+}
+
+.status-em-andamento {
+  color: #7a4a00;
+  background-color: #ffe6a8;
+}
+
+.status-encerrado {
+  color: #24552b;
+  background-color: #ccebd1;
+}
+
+.status-preparado {
+  color: #245078;
+  background-color: #cfe5f5;
 }
 
 .table .btn-warning:hover {

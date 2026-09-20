@@ -8,21 +8,25 @@ import { UsuariosComponent } from './components/cadastros/usuarios/usuarios.comp
 import { VeiculosComponent } from './components/cadastros/veiculos/veiculos.component';
 import { VeiculosCadastroComponent } from './components/cadastros/veiculos-cadastro/veiculos-cadastro.component';
 import { UsuarioCadastroComponent } from './components/cadastros/usuario-cadastro/usuario-cadastro.component';
+import { RomaneioTelaPrincipalComponent } from './components/romaneios/romaneio-tela-principal/romaneio-tela-principal.component';
+import { adminGuard, authGuard } from './guards/auth.guard';
 
 export const routes: Routes = [
     { path: '', redirectTo: 'login', pathMatch: 'full' },
-    { path: 'romaneios', component: RomaneiosListComponent },
-    { path: 'romaneios/new', component: RomaneiosDetailsComponent },
-    { path: 'romaneios/edit/:id', component: RomaneiosDetailsComponent },
     { path: 'login', component: LoginComponent },
     { path: 'recuperar-senha', component: RecuperarSenhaComponent },
     {
         path: 'admin',
         component: TelaPrincipalComponent,
+        canActivate: [authGuard, adminGuard],
         children: [
             { path: 'romaneios', component: RomaneiosListComponent },
+            { path: 'romaneios/new', component: RomaneiosDetailsComponent },
+            { path: 'romaneios/edit/:id', component: RomaneiosDetailsComponent },
+            { path: 'romaneios/:id', component: RomaneioTelaPrincipalComponent },
             {
                 path: 'cadastros',
+                canActivate: [adminGuard],
                 children: [
                     { path: 'usuarios', component: UsuariosComponent },
                     { path: 'usuarios/novo', component: UsuarioCadastroComponent },
@@ -36,10 +40,13 @@ export const routes: Routes = [
     {
         path: 'usuario',
         component: TelaPrincipalComponent,
+        canActivate: [authGuard],
         children: [
             { path: 'romaneios', component: RomaneiosListComponent },
+            { path: 'romaneios/:id', component: RomaneioTelaPrincipalComponent },
             {
                 path: 'cadastros',
+                canActivate: [adminGuard],
                 children: [
                     { path: 'usuarios', component: UsuariosComponent },
                     { path: 'usuarios/novo', component: UsuarioCadastroComponent },

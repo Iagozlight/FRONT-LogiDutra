@@ -32,11 +32,12 @@
       <!-- Left links -->
       <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
         <li class="nav-item active d-flex align-items-center">
-          <a class="nav-link" aria-current="page" routerLink="/admin/romaneios">
+          <a class="nav-link" aria-current="page" [routerLink]="authService.ehAdmin ? '/admin/romaneios' : '/usuario/romaneios'">
             <img src="romaneio-logo.svg" height="40px">ROMANEIOS
           </a>
         </li>
 
+        @if (authService.ehAdmin) {
         <li mdbDropdown class="nav-item dropdown d-flex align-items-center">
         <a
           class="nav-link dropdown-toggle"
@@ -49,13 +50,14 @@
         </a>
         <ul mdbDropdownMenu class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
           <li>
-            <a class="dropdown-item" [routerLink]="['cadastros', 'usuarios']">Usuarios</a>
+            <a class="dropdown-item" routerLink="/admin/cadastros/usuarios">Usuarios</a>
           </li>
           <li>
-            <a class="dropdown-item" [routerLink]="['cadastros', 'veiculos']">Veiculos</a>
+            <a class="dropdown-item" routerLink="/admin/cadastros/veiculos">Veiculos</a>
           </li>
         </ul>
       </li>
+      }
 
       <li mdbDropdown class="nav-item dropdown me-3 ms-3">
         <a
@@ -72,11 +74,11 @@
             alt=""
             loading="lazy"
           />
-          Username
+          {{authService.usuarioAtual?.nome || 'Usuário'}}
         </a>
         <ul mdbDropdownMenu class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
           <li>
-            <a class="dropdown-item" href="#">Logout</a>
+            <a class="dropdown-item" href="#" (click)="$event.preventDefault(); sair()">Logout</a>
           </li>
         </ul>
       </li>

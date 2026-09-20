@@ -1,6 +1,7 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { veiculo } from '../../../models/veiculos';
+import { VeiculoService } from '../../../services/veiculo.service';
 
 @Component({
   selector: 'app-veiculos',
@@ -12,10 +13,10 @@ export class VeiculosComponent {
   veiculos: veiculo[] = [];
   paginaAtual = 1;
   MaxPag = 6;
+  veiculoService = inject(VeiculoService);
 
   constructor() {
-    const veiculosSalvos = sessionStorage.getItem('veiculos');
-    this.veiculos = veiculosSalvos ? JSON.parse(veiculosSalvos) : [];
+    this.veiculos = this.veiculoService.listar();
   }
 
   get veiculosPaginados(): veiculo[] {
