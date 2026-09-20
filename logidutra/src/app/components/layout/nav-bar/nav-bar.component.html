@@ -41,14 +41,14 @@
         <li mdbDropdown class="nav-item dropdown d-flex align-items-center">
         <a
           class="nav-link dropdown-toggle"
-          id="navbarDropdownMenuLink"
+          id="navbarDropdownCadastros"
           role="button"
           mdbDropdownToggle
           aria-expanded="false"
         >
           <img src="cadastros-icone.svg" height="40px">CADASTROS
         </a>
-        <ul mdbDropdownMenu class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+        <ul mdbDropdownMenu class="dropdown-menu" aria-labelledby="navbarDropdownCadastros">
           <li>
             <a class="dropdown-item" routerLink="/admin/cadastros/usuarios">Usuarios</a>
           </li>
@@ -62,7 +62,7 @@
       <li mdbDropdown class="nav-item dropdown me-3 ms-3">
         <a
           class="nav-link dropdown-toggle"
-          id="navbarDropdownMenuLink"
+          id="navbarDropdownUsuario"
           role="button"
           mdbDropdownToggle
           aria-expanded="false"
@@ -76,7 +76,7 @@
           />
           {{authService.usuarioAtual?.nome || 'Usuário'}}
         </a>
-        <ul mdbDropdownMenu class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+        <ul mdbDropdownMenu class="dropdown-menu" aria-labelledby="navbarDropdownUsuario">
           <li>
             <a class="dropdown-item" href="#" (click)="$event.preventDefault(); sair()">Logout</a>
           </li>
