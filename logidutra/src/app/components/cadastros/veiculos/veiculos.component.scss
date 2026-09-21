@@ -7,3 +7,47 @@
 	background-color: #6f4724;
 	color: #d8b07a;
 }
+
+.modal-backdrop-custom {
+	position: fixed;
+	z-index: 1050;
+	inset: 0;
+	display: grid;
+	place-items: center;
+	padding: 20px;
+	background: rgba(34, 25, 18, 0.55);
+}
+
+.modal-custom {
+	width: min(100%, 520px);
+	max-height: calc(100vh - 40px);
+	overflow: auto;
+	border: 1px solid #e4ddd6;
+	border-radius: 12px;
+	background: #fff;
+	box-shadow: 0 18px 50px rgba(34, 25, 18, 0.25);
+}
+
+.modal-custom-header,
+.modal-custom-footer {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 12px;
+	padding: 18px 22px;
+	border-bottom: 1px solid #eee9e4;
+}
+
+.modal-custom-header h3 {
+	margin: 0;
+}
+
+.modal-custom-body {
+	padding: 22px;
+}
+
+.modal-custom-footer {
+	justify-content: flex-end;
+	border-top: 1px solid #eee9e4;
+	border-bottom: 0;
+}

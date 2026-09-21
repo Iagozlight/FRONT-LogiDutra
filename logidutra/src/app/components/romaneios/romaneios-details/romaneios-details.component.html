@@ -1,80 +1,148 @@
-<div class="container">
-    <div class="row justify-content-center">
-        <div class="col-lg-5">
-            <div class="card mt-4">
+<div class="container d-flex justify-content-center align-items-center py-3">
+    <div class="row w-100 justify-content-center">
+        <div class="col-lg-8 col-xl-6">
+            <div class="card shadow-sm">
+                <div class="card-header bg-white d-flex justify-content-between align-items-center py-3 border-bottom">
+                    <h3 class="card-title mb-0">{{ titulo }}</h3>
+                    <button type="button" class="btn btn-outline-secondary btn-sm" (click)="voltar()">
+                        <i class="bi bi-arrow-left me-1"></i>Voltar
+                    </button>
+                </div>
+
                 <div class="card-body">
-                    <h3 class="mb-4">{{titulo}}</h3>
+                    @if (carregando) {
+                        <div class="text-center py-4 text-muted">
+                            <div class="spinner-border spinner-border-sm me-2" role="status"></div>
+                            Carregando romaneio...
+                        </div>
+                    }
 
-                    <div class="clientes-lista">
-                        @for (cliente of clientes; track $index) {
-                            <section class="cliente-card">
-                                <div class="cliente-card-header">
-                                    <h4>Cliente {{ $index + 1 }}</h4>
-                                    @if (clientes.length > 1) {
-                                        <button type="button" class="btn btn-remover-cliente" (click)="removerCliente($index)">Remover</button>
-                                    }
-                                </div>
+                    @if (erro) {
+                        <div class="alert alert-danger mb-3" role="alert">
+                            {{ erro }}
+                        </div>
+                    }
 
-                                <mdb-form-control>
-                                    <input mdbInput type="text" [id]="'cliente-' + $index" class="form-control mb-3" [(ngModel)]="cliente.nome" (ngModelChange)="cliente.finalizado = false" placeholder="Nome do cliente" />
-                                    <label mdbLabel class="form-label" [for]="'cliente-' + $index">Cliente</label>
-                                </mdb-form-control>
+                    <div class="cliente-card mb-4">
+                        <div class="cliente-card-header">
+                            <h4>Cadastro do Cliente</h4>
+                        </div>
 
-                                <mdb-form-control>
-                                    <input mdbInput type="text" [id]="'endereco-' + $index" class="form-control mb-3" [(ngModel)]="cliente.endereco" (ngModelChange)="cliente.finalizado = false" placeholder="Endereço de entrega" />
-                                    <label mdbLabel class="form-label" [for]="'endereco-' + $index">Endereço</label>
-                                </mdb-form-control>
+                        <div class="row g-2 mb-3">
+                            <div class="col-md-6">
+                                <label class="form-label" for="clienteNome">Nome</label>
+                                <input id="clienteNome" class="form-control" type="text" [(ngModel)]="clienteEmCadastro.nome" placeholder="Nome completo" />
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label" for="clienteTelefone">Telefone</label>
+                                <input id="clienteTelefone" class="form-control" type="tel" [(ngModel)]="clienteEmCadastro.telefone" placeholder="(00) 00000-0000" />
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label" for="clienteCpf">CPF</label>
+                                <input id="clienteCpf" class="form-control" type="text" [(ngModel)]="clienteEmCadastro.cpf" placeholder="000.000.000-00" />
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label" for="clienteCep">CEP</label>
+                                <input id="clienteCep" class="form-control" type="text" [(ngModel)]="clienteEmCadastro.cep" placeholder="00000-000" />
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label" for="clienteLogradouro">Logradouro</label>
+                                <input id="clienteLogradouro" class="form-control" type="text" [(ngModel)]="clienteEmCadastro.logradouro" placeholder="Rua, Avenida..." />
+                            </div>
+                            <div class="col-md-3">
+                                <label class="form-label" for="clienteBairro">Bairro</label>
+                                <input id="clienteBairro" class="form-control" type="text" [(ngModel)]="clienteEmCadastro.bairro" />
+                            </div>
+                            <div class="col-md-3">
+                                <label class="form-label" for="clienteCidade">Cidade</label>
+                                <input id="clienteCidade" class="form-control" type="text" [(ngModel)]="clienteEmCadastro.cidade" />
+                            </div>
+                        </div>
 
-                                <div class="field-group">
-                                    <label class="form-label" [for]="'produto-' + $index">Produtos deste cliente</label>
-                                    <div class="input-group mb-2">
-                                        <input #produtoInput mdbInput type="text" [id]="'produto-' + $index" class="form-control" (keyup.enter)="adicionarProduto(cliente, produtoInput.value, quantidadeInput.valueAsNumber); produtoInput.value = ''" placeholder="Nome do produto" />
-                                        <input #quantidadeInput mdbInput type="number" min="1" step="1" value="1" class="form-control quantidade-input" aria-label="Quantidade" />
-                                        <button type="button" class="btn btn-outline-secondary" (click)="adicionarProduto(cliente, produtoInput.value, quantidadeInput.valueAsNumber); produtoInput.value = ''; quantidadeInput.value = '1'">Adicionar</button>
+                        <div class="field-group mb-3">
+                            <label class="form-label">Produtos do Cliente</label>
+                            <div class="input-group mb-2">
+                                <input class="form-control" type="text" [(ngModel)]="nomeProdutoCliente" placeholder="Nome do produto" (keyup.enter)="adicionarProdutoCliente()" />
+                                <input class="form-control quantidade-input" type="number" min="1" step="1" [(ngModel)]="quantidadeProdutoCliente" placeholder="Qtd" />
+                                <button type="button" class="btn btn-outline-secondary" (click)="adicionarProdutoCliente()">Adicionar</button>
+                            </div>
+
+                            <div class="tag-list">
+                                @for (produto of clienteEmCadastro.produtos; track $index) {
+                                    <span class="tag">
+                                        {{ produto.nome }} ({{ produto.quantidade }}x)
+                                        <button type="button" (click)="removerProdutoCliente($index)" aria-label="Remover produto">&times;</button>
+                                    </span>
+                                } @empty {
+                                    <small class="text-muted italic">Nenhum produto adicionado para este cliente.</small>
+                                }
+                            </div>
+                        </div>
+
+                        <button type="button" class="btn btn-adicionar-cliente mb-3" (click)="adicionarCliente()">
+                            + Adicionar Cliente à Lista
+                        </button>
+
+                        <div class="clientes-lista">
+                            @for (cliente of clientesPendentes; track $index) {
+                                <div class="list-group-item d-flex justify-content-between align-items-center rounded p-2 bg-white border">
+                                    <div>
+                                        <div class="fw-bold text-dark">{{ cliente.dados.nome }}</div>
+                                        <small class="text-muted">{{ cliente.dados.telefone }} • {{ cliente.dados.cidade }} • {{ cliente.produtos.length }} item(ns)</small>
                                     </div>
-                                    <div class="tag-list">
-                                        @for (produto of cliente.produtos; track $index) {
-                                            <span class="tag">{{produto.nome}} ({{produto.quantidade}}x) <button type="button" (click)="removerProduto(cliente, $index)" aria-label="Remover produto">&times;</button></span>
-                                        }
-                                    </div>
+                                    <button type="button" class="btn btn-remover-cliente rounded" (click)="removerCliente($index)">Remover</button>
                                 </div>
-
-                                <div class="cliente-footer">
-                                    <div class="cliente-finalizado" [class.incompleto]="!cliente.finalizado">
-                                        {{ cliente.finalizado ? 'Cliente finalizado' : 'Preencha os dados e finalize este cliente' }}
-                                    </div>
-                                    @if (!cliente.finalizado) {
-                                        <button type="button" class="btn btn-finalizar" (click)="finalizarCliente(cliente)">Finalizar cliente</button>
-                                    }
-                                </div>
-                            </section>
-                        }
+                            } @empty {
+                                <small class="text-muted text-center d-block">Nenhum cliente na fila do romaneio.</small>
+                            }
+                        </div>
                     </div>
 
-                    <button type="button" class="btn btn-adicionar-cliente mb-4" (click)="adicionarCliente()">+ Adicionar outro cliente</button>
+                    <div class="cliente-card mb-3">
+                        <div class="cliente-card-header">
+                            <h4>Detalhes do Romaneio</h4>
+                        </div>
 
-                    <mdb-form-control>
-                        <select mdbInput id="veiculo" class="form-control mb-3" [(ngModel)]="veiculoSelecionado">
-                            <option value="">Selecione um veículo</option>
-                            @for (veiculo of veiculos; track veiculo.id) {
-                                <option [value]="veiculo.placa">{{veiculo.marca}} {{veiculo.modelo}} - {{veiculo.placa}}</option>
-                            }
-                        </select>
-                        <label mdbLabel class="form-label" for="veiculo">Veículo</label>
-                    </mdb-form-control>
+                        <div class="row g-2">
+                            <div class="col-md-6 mb-2">
+                                <label class="form-label" for="data">Data do romaneio</label>
+                                <input id="data" class="form-control" type="date" [(ngModel)]="dataFormulario" />
+                            </div>
+                            <div class="col-md-6 mb-2">
+                                <label class="form-label" for="horarioRomaneio">Horário do romaneio</label>
+                                <input id="horarioRomaneio" class="form-control" type="time" [(ngModel)]="horarioRomaneio" />
+                            </div>
 
-                    <mdb-form-control>
-                        <select mdbInput id="motorista" class="form-control mb-3" [(ngModel)]="motoristaSelecionado">
-                            <option value="">Selecione um motorista</option>
-                            @for (motorista of motoristas; track motorista.id) {
-                                <option [value]="motorista.nome">{{motorista.nome}}</option>
-                            }
-                        </select>
-                        <label mdbLabel class="form-label" for="motorista">Motorista</label>
-                    </mdb-form-control>
+                            <div class="col-md-6">
+                                <label class="form-label" for="motorista">Motorista</label>
+                                <select id="motorista" class="form-select" [(ngModel)]="motoristaId">
+                                    <option [ngValue]="null">Selecione um motorista</option>
+                                    @for (motorista of motoristas; track motorista.id) {
+                                        <option [ngValue]="motorista.id">{{ motorista.nome }}</option>
+                                    } @empty {
+                                        <option disabled>Nenhum motorista disponível</option>
+                                    }
+                                </select>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label" for="veiculo">Veículo</label>
+                                <select id="veiculo" class="form-select" [(ngModel)]="veiculoId">
+                                    <option [ngValue]="null">Selecione um veículo</option>
+                                    @for (veiculo of veiculos; track veiculo.id) {
+                                        <option [ngValue]="veiculo.id">{{ veiculo.marca }} {{ veiculo.modelo }} - {{ veiculo.placa }}</option>
+                                    } @empty {
+                                        <option disabled>Nenhum veículo disponível</option>
+                                    }
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
 
-                    <button type="button" class="btn btn-cadastro me-2" (click)="salvar()">Salvar</button>
-                    <button type="button" class="btn btn-secondary" (click)="voltar()">Voltar</button>
+                <div class="card-footer bg-white border-top p-3">
+                    <button type="button" class="btn btn-cadastro w-100 py-2 fw-semibold" [disabled]="salvando || carregando" (click)="salvar()">
+                        {{ salvando ? 'Finalizando romaneio...' : 'Finalizar Romaneio' }}
+                    </button>
                 </div>
             </div>
         </div>

@@ -3,81 +3,166 @@
         <div class="col-lg-12">
             <div class="card">
                 <div class="card-body">
-                    <h3>Listagem de entregas</h3>
-                    <div class="direita">
-                        <div class="direita">
-                            @if (authService.ehAdmin) {
-                                <button type="button" class="btn btn-cadastro" routerLink="/admin/romaneios/new">Novo</button>
-                            }
-                        </div>
+                    <div class="d-flex justify-content-between align-items-center">
+                        <h3>Listagem de romaneios</h3>
+
+                        @if (authService.ehAdmin) {
+                            <button
+                                type="button"
+                                class="btn btn-cadastro"
+                                routerLink="/admin/romaneios/new">
+                                Novo
+                            </button>
+                        }
                     </div>
-                    <br>
+                    @if (carregando) {
+                        <p class="mt-4">
+                            Carregando romaneios...
+                        </p>
 
-                    <table class="table">
+                    } @else if (erro) {
 
-                        <thead>
-                            <tr>
-                                <th scope="col">Id</th>
-                                <th scope="col">Motorista</th>
-                                <th scope="col">Veículo</th>
-                                <th scope="col">Quantidade de entregas</th>
-                                <th scope="col">Status</th>
-                                <th scope="col" class="direita">Ações</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @for(entrega of listaPaginada; track entrega.id){
-                            <tr class="romaneio-row" (click)="abrirRomaneio(entrega)" tabindex="0" (keydown.enter)="abrirRomaneio(entrega)">
-                                <td>{{entrega.id}}</td>
-                                <td>{{entrega.motorista || 'Não informado'}}</td>
-                                <td>{{entrega.veiculo || 'Não informado'}}</td>
-                                <td>{{entrega.clientes.length || 0}}</td>
-                                <td><span class="status" [class]="'status-' + entrega.status.toLowerCase().replace(' ', '-')">{{entrega.status}}</span></td>
-                                <td class="direita">
-                                    @if (ehSeuRomaneio(entrega)) {
-                                        <span class="seu-romaneio">SEU ROMANEIO</span>
-                                    }
+                        <div
+                            class="alert alert-danger mt-4"
+                            role="alert">
+                            {{ erro }}
+                        </div>
+
+                        <button
+                            type="button"
+                            class="btn btn-secondary"
+                            (click)="carregarRomaneios()">
+                            Tentar novamente
+                        </button>
+
+                    } @else {
+
+                        <table class="table mt-4">
+
+                            <thead>
+                                <tr>
+                                    <th scope="col">Id</th>
+                                    <th scope="col">Data</th>
+
                                     @if (authService.ehAdmin) {
-                                        <button type="button" class="btn btn-editar me-2" (click)="$event.stopPropagation(); editar(entrega)">Editar</button>
+                                        <th
+                                            scope="col"
+                                            class="direita">
+                                            Ações
+                                        </th>
                                     }
-                                    @if (authService.ehAdmin) {
-                                        <span class="status-controle me-2">
-                                            <button type="button" class="btn btn-status" (click)="$event.stopPropagation(); alternarMenuStatus(entrega)">Status</button>
-                                            @if (statusMenuAberto === entrega.id) {
-                                                <span class="status-menu" (click)="$event.stopPropagation()">
-                                                    <button type="button" (click)="alterarStatus(entrega, 'Em andamento')">Em andamento</button>
-                                                    <button type="button" (click)="alterarStatus(entrega, 'Preparado')">Preparado</button>
-                                                    <button type="button" (click)="alterarStatus(entrega, 'Encerrado')">Encerrado</button>
-                                                </span>
-                                            }
-                                        </span>
-                                    }
-                                    @if (authService.ehAdmin) {
-                                        <button type="button" class="btn btn-excluir" (click)="$event.stopPropagation(); deletar(entrega)">Excluir</button>
-                                    }
-                                </td>
-                            </tr>
-                            }
-                        </tbody>
+                                </tr>
+                            </thead>
 
-                    </table>
-                    <nav aria-label="Page navigation example">
-                        <ul class="pagination justify-content-center">
-                            <a class="page-link" routerLink="/admin/romaneios" tabindex="-1">Previous</a>
-                            <li class="page-item disabled"></li>
+                            <tbody>
 
-                            @for(pagina of paginas; track pagina) {
-                                <li class="page-item" [class.active]="pagina === paginaAtual">
-                                    <a class="page-link" href="#" (click)="$event.preventDefault(); irParaPagina(pagina)">{{pagina}}</a>
+                                @for (
+                                    romaneio of listaPaginada;
+                                    track romaneio.id
+                                ) {
+
+                                    <tr
+                                        class="romaneio-row"
+                                        (click)="abrirRomaneio(romaneio)"
+                                        (keydown.enter)="abrirRomaneio(romaneio)"
+                                        tabindex="0">
+
+                                        <td>
+                                            {{ romaneio.id }}
+                                        </td>
+
+                                        <td>
+                                            {{ romaneio.data | date:'dd/MM/yyyy' }}
+                                        </td>
+
+                                        @if (authService.ehAdmin) {
+
+                                            <td class="direita">
+
+                                                <button
+                                                    type="button"
+                                                    class="btn btn-editar me-2"
+                                                    (click)="$event.stopPropagation(); editar(romaneio)">
+                                                    Editar
+                                                </button>
+
+                                                <button
+                                                    type="button"
+                                                    class="btn btn-excluir"
+                                                    (click)="$event.stopPropagation(); excluir(romaneio)">
+                                                    Excluir
+                                                </button>
+
+                                            </td>
+
+                                        }
+
+                                    </tr>
+
+                                } @empty {
+
+                                    <tr>
+                                        <td
+                                            [attr.colspan]="authService.ehAdmin ? 3 : 2"
+                                            class="text-center">
+                                            Nenhum romaneio cadastrado.
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+
+                        </table>
+                    }
+                    @if (!carregando && !erro && totalPaginas > 1) {
+
+                        <nav aria-label="Paginação dos romaneios">
+
+                            <ul class="pagination justify-content-center">
+
+                                <li
+                                    class="page-item"
+                                    [class.disabled]="paginaAtual === 1">
+
+                                    <button
+                                        type="button"
+                                        class="page-link"
+                                        (click)="paginaAnterior()">
+                                        Anterior
+                                    </button>
+
                                 </li>
-                            }
 
-                            <li class="page-item" [class.disabled]="paginaAtual === totalPaginas">
-                                <a class="page-link" href="#" (click)="$event.preventDefault(); paginaProxima()">Next</a>
-                            </li>
+                                @for (pagina of paginas; track pagina) {
 
-                        </ul>
-                    </nav>
+                                    <li
+                                        class="page-item"
+                                        [class.active]="pagina === paginaAtual">
+
+                                        <button
+                                            type="button"
+                                            class="page-link"
+                                            (click)="irParaPagina(pagina)">
+                                            {{ pagina }}
+                                        </button>
+
+                                    </li>
+                                }
+                                <li
+                                    class="page-item"
+                                    [class.disabled]="paginaAtual === totalPaginas">
+
+                                    <button
+                                        type="button"
+                                        class="page-link"
+                                        (click)="paginaProxima()">
+                                        Próxima
+                                    </button>
+                                </li>
+                            </ul>
+
+                        </nav>
+                    }
+
                 </div>
             </div>
         </div>

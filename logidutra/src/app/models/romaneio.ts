@@ -1,18 +1,16 @@
+export interface ProdutoRomaneio {
+    nome: string;
+    quantidade: number;
+}
+
 export class Romaneio {
+    id: number;
+    data: Date;
+    produtoList: ProdutoRomaneio[];
 
-    id!: number;
-    veiculo!: string;
-    motorista!: string;
-    rota!: string;
-    data!: string;
-    atividade!: string;
-
-    constructor(id: number, veiculo: string, motorista: string, rota: string, data: string, atividade: string) {
+    constructor(id: number, data: Date | string, produtoList: ProdutoRomaneio[]) {
         this.id = id;
-        this.veiculo = veiculo;
-        this.motorista = motorista;
-        this.rota = rota;
-        this.data = data;
-        this.atividade = atividade;
+        this.data = data instanceof Date ? data : new Date(data);
+        this.produtoList = produtoList;
     }
 }

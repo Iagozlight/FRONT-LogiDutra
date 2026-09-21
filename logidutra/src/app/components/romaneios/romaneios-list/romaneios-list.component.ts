@@ -1,73 +1,51 @@
-import { Component, inject } from '@angular/core';
-import { ItemEntrega, StatusRomaneio } from '../../../models/item-entrega';
+import { Component, OnInit, inject, DestroyRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ActivatedRoute, Router, RouterLink } from '@angular/router';
+import { HttpErrorResponse } from '@angular/common/http';
+import { Router, RouterLink } from '@angular/router';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import Swal from 'sweetalert2';
+
+import { Romaneio } from '../../../models/romaneio';
 import { AuthService } from '../../../services/auth.service';
 import { RomaneioService } from '../../../services/romaneio.service';
 
-
 @Component({
   selector: 'app-romaneios-list',
+  standalone: true,
   imports: [CommonModule, RouterLink],
   templateUrl: './romaneios-list.component.html',
   styleUrl: './romaneios-list.component.scss'
 })
-export class RomaneiosListComponent {
-  lista: ItemEntrega[] = [];
-
+export class RomaneiosListComponent implements OnInit {
+  lista: Romaneio[] = [];
   paginaAtual = 1;
-  MaxPag = 6;
-  statusMenuAberto: number | null = null;
+  readonly maxPaginas = 6;
+  carregando = true;
+  erro = '';
 
-  router = inject(Router);
-  route = inject(ActivatedRoute);
-  authService = inject(AuthService);
-  romaneioService = inject(RomaneioService);
+  private readonly router = inject(Router);
+  private readonly destroyRef = inject(DestroyRef);
+  readonly authService = inject(AuthService);
+  private readonly romaneioService = inject(RomaneioService);
 
-  constructor() {
-    this.lista = this.romaneioService.listar();
-
-    let entregaNova = history.state.entregaNova;
-    let entregaEditada = history.state.entregaEditada;
-    let nextId = this.lista.length > 0 ? Math.max(...this.lista.map(item => item.id)) + 1 : 1;
-
-    if (entregaNova) {
-      const onn = this.lista.some(item => item.cliente ===  entregaNova.cliente &&
-        item.endereco === entregaNova.endereco
-      );
-
-      if(!onn) {
-        entregaNova.status = entregaNova.status || 'Preparado';
-        this.romaneioService.adicionar(entregaNova);
-      }
-    }
-
-    if (entregaEditada) {
-      let index = this.lista.findIndex(item => item.id == entregaEditada.id);
-      if (index >= 0) {
-        this.romaneioService.atualizar(entregaEditada);
-      }
-    }
-
-    this.lista = this.romaneioService.listar();
+  ngOnInit(): void {
+    this.carregarRomaneios();
   }
 
-
-  get listaPaginada(): ItemEntrega[] {
-    const inicio = (this.paginaAtual -1) * this.MaxPag;
-    return this.lista.slice(inicio, inicio + this.MaxPag);
+  get listaPaginada(): Romaneio[] {
+    const inicio = (this.paginaAtual - 1) * this.maxPaginas;
+    return this.lista.slice(inicio, inicio + this.maxPaginas);
   }
 
   get totalPaginas(): number {
-    return Math.ceil(this.lista.length / this.MaxPag) || 1;
+    return Math.ceil(this.lista.length / this.maxPaginas) || 1;
   }
 
   get paginas(): number[] {
-    return Array.from({ length: this.totalPaginas }, (_, i) => i + 1);
+    return Array.from({ length: this.totalPaginas }, (_, indice) => indice + 1);
   }
 
-  irParaPagina(pagina: number) {
+  irParaPagina(pagina: number): void {
     if (pagina >= 1 && pagina <= this.totalPaginas) {
       this.paginaAtual = pagina;
     }
@@ -81,67 +59,78 @@ export class RomaneiosListComponent {
     this.irParaPagina(this.paginaAtual + 1);
   }
 
-  editar(entrega: ItemEntrega) {
-    if (!this.authService.ehAdmin) {
-      return;
-    }
-    this.router.navigate(['/admin/romaneios/edit', entrega.id], { state: { entrega } });
+  abrirRomaneio(romaneio: Romaneio): void {
+    const base = this.authService.ehAdmin ? '/admin/romaneios' : '/usuario/romaneios';
+    this.router.navigate([base, romaneio.id], { state: { romaneio } });
   }
 
-  abrirRomaneio(entrega: ItemEntrega) {
-    this.router.navigate([entrega.id], {
-      relativeTo: this.route,
-      state: { entrega }
+  editar(romaneio: Romaneio): void {
+    if (!this.authService.ehAdmin) return;
+
+    this.router.navigate(['/admin/romaneios/edit', romaneio.id], {
+      state: { romaneio }
     });
   }
 
-  alterarStatus(entrega: ItemEntrega, status: StatusRomaneio) {
-    entrega.status = status;
-    this.statusMenuAberto = null;
-    this.romaneioService.atualizarStatus(entrega.id, status);
-  }
+  excluir(romaneio: Romaneio): void {
+    if (!this.authService.ehAdmin) return;
 
-  alternarMenuStatus(entrega: ItemEntrega) {
-    this.statusMenuAberto = this.statusMenuAberto === entrega.id ? null : entrega.id;
-  }
-
-  ehSeuRomaneio(entrega: ItemEntrega): boolean {
-    const usuarioAtual = this.authService.usuarioAtual;
-    return usuarioAtual?.role === 'Motorista' &&
-      this.normalizarNome(usuarioAtual.nome) === this.normalizarNome(entrega.motorista);
-  }
-
-  private normalizarNome(nome: string): string {
-    return nome.trim().toLocaleLowerCase();
-  }
-
-  deletar(entrega: ItemEntrega) {
-    if (!this.authService.ehAdmin) {
-      return;
-    }
     Swal.fire({
       title: 'Tem certeza?',
-      text: 'Essa entrega vai ser excluída.',
+      text: 'Esse romaneio será excluído.',
       icon: 'warning',
       showCancelButton: true,
       confirmButtonText: 'Excluir',
       cancelButtonText: 'Cancelar'
-    }).then((resultado) => {
+    }).then(resultado => {
+      if (!resultado.isConfirmed) return;
 
-    if (resultado.isConfirmed) {
+      this.romaneioService
+        .delete(romaneio.id)
+        .pipe(takeUntilDestroyed(this.destroyRef))
+        .subscribe({
+          next: () => {
+            Swal.fire('Sucesso!', 'Romaneio excluído com sucesso.', 'success');
+            this.carregarRomaneios();
+          },
+          error: () => {
+            this.erro = 'Não foi possível excluir o romaneio.';
+            Swal.fire({
+              title: 'Não foi possível excluir',
+              text: 'O backend não conseguiu excluir este romaneio.',
+              icon: 'error',
+              confirmButtonText: 'Ok'
+            });
+          }
+        });
+    });
+  }
 
-      this.romaneioService.excluir(entrega.id);
-      this.lista = this.romaneioService.listar();
+  carregarRomaneios(): void {
+    this.carregando = true;
+    this.erro = '';
 
-      Swal.fire({
-        title: 'Excluído!',
-        text: 'A entrega foi excluída!!!.',
-        icon: 'success',
-        confirmButtonText: 'Ok'
+    this.romaneioService
+      .listAll()
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        next: (romaneios: Romaneio[]) => {
+          this.lista = romaneios;
+
+          if (this.paginaAtual > this.totalPaginas) {
+            this.paginaAtual = this.totalPaginas;
+          }
+
+          this.carregando = false;
+        },
+        error: (erro: HttpErrorResponse) => {
+          this.lista = [];
+          this.carregando = false;
+          this.erro =
+            erro.status === 0
+              ? 'Não foi possível conectar ao servidor.'
+              : 'Não foi possível carregar os romaneios.';
+        }
       });
-
-    }
-  });
-}
-
+  }
 }

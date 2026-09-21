@@ -1,68 +1,108 @@
 import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
 import { Component, inject } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { ClienteEntrega, ItemEntrega, ProdutoEntrega, StatusRomaneio } from '../../../models/item-entrega';
-import { veiculo } from '../../../models/veiculos';
+import { Romaneio } from '../../../models/romaneio';
 import { AuthService } from '../../../services/auth.service';
 import { RomaneioService } from '../../../services/romaneio.service';
-import { VeiculoService } from '../../../services/veiculo.service';
+
+interface ProdutoCliente {
+  nome: string;
+  quantidade: number;
+}
+
+interface ClienteRomaneio {
+  dados: {
+    nome: string;
+    telefone: string;
+    cpf: string;
+    cep: string;
+    logradouro: string;
+    bairro: string;
+    cidade: string;
+  };
+  produtos: ProdutoCliente[];
+}
+
+interface DetalhesExtras {
+  motoristaNome?: string;
+  veiculoPlaca?: string;
+  horario?: string;
+  clientes?: ClienteRomaneio[];
+  
+}
+
 
 @Component({
   selector: 'app-romaneio-tela-principal',
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule],
   templateUrl: './romaneio-tela-principal.component.html',
   styleUrl: './romaneio-tela-principal.component.scss'
 })
 export class RomaneioTelaPrincipalComponent {
-  private route = inject(ActivatedRoute);
-  private router = inject(Router);
-  readonly authService: AuthService = inject(AuthService);
-  private romaneioService = inject(RomaneioService);
-  private veiculoService = inject(VeiculoService);
+  private readonly route = inject(ActivatedRoute);
+  private readonly router = inject(Router);
+  readonly authService = inject(AuthService);
+  private readonly romaneioService = inject(RomaneioService);
 
-  entrega: ItemEntrega | null = null;
-  veiculoSelecionado: veiculo | null = null;
+  romaneio: Romaneio | null = null;
+  carregando = true;
+  erro = '';
+  motoristaNome = 'Não informado';
+  veiculoPlaca = 'Não informado';
+  horario = 'Não informado';
+  clientes: ClienteRomaneio[] = [];
 
   constructor() {
-    const entregaRecebida = history.state.entrega as ItemEntrega | undefined;
     const id = Number(this.route.snapshot.paramMap.get('id'));
+    const romaneioRecebido = history.state.romaneio as Romaneio | undefined;
 
-    if (entregaRecebida) {
-      this.entrega = this.romaneioService.normalizar(entregaRecebida);
+    if (!Number.isInteger(id) || id <= 0) {
+      this.carregando = false;
+      this.erro = 'Identificador de romaneio inválido.';
+    } else if (romaneioRecebido) {
+      this.romaneio = new Romaneio(
+        romaneioRecebido.id,
+        new Date(romaneioRecebido.data),
+        romaneioRecebido.produtoList || []
+      );
+      this.carregarDetalhesExtras(id);
+      this.carregando = false;
     } else {
-      this.entrega = this.romaneioService.buscarPorId(id) ?? null;
+      this.romaneioService.findById(id).subscribe({
+        next: romaneioEncontrado => {
+          this.romaneio = romaneioEncontrado;
+          this.carregarDetalhesExtras(id);
+          this.carregando = false;
+        },
+        error: () => {
+          this.carregando = false;
+          this.erro = 'Não foi possível carregar o romaneio.';
+        }
+      });
     }
-
-    if (this.entrega && (this.entrega.status as string) === 'Programado') {
-      this.entrega.status = 'Preparado';
-    }
-
-    this.carregarVeiculo();
   }
 
-  private carregarVeiculo() {
-    if (!this.entrega) {
+  private carregarDetalhesExtras(id: number): void {
+    const salvo = localStorage.getItem(`romaneio-detalhes:${id}`);
+    if (!salvo) {
       return;
     }
 
-    this.veiculoSelecionado = this.veiculoService.buscarPorPlaca(this.entrega.veiculo) ?? null;
+    try {
+      const detalhes = JSON.parse(salvo) as DetalhesExtras;
+      this.motoristaNome = detalhes.motoristaNome || 'Não informado';
+      this.veiculoPlaca = detalhes.veiculoPlaca || 'Não informado';
+      this.horario = detalhes.horario || 'Não informado';
+      this.clientes = Array.isArray(detalhes.clientes) ? detalhes.clientes : [];
+    } catch {
+      this.motoristaNome = 'Não informado';
+      this.veiculoPlaca = 'Não informado';
+      this.horario = 'Não informado';
+      this.clientes = [];
+    }
   }
 
-  get clientes(): ClienteEntrega[] {
-    return this.entrega?.clientes ?? [];
-  }
-
-  voltar() {
+  voltar(): void {
     this.router.navigate([this.authService.ehAdmin ? '/admin/romaneios' : '/usuario/romaneios']);
-  }
-
-  alterarStatus(status: StatusRomaneio) {
-    if (!this.authService.ehAdmin || !this.entrega) {
-      return;
-    }
-
-    this.entrega.status = status;
-    this.romaneioService.atualizarStatus(this.entrega.id, status);
   }
 }
