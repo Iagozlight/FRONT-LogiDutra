@@ -199,11 +199,18 @@ export class RomaneiosDetailsComponent {
 
   private carregarOpcoes(): void {
     this.usuarioService.listAll().subscribe({
-      next: usuarios => this.motoristas = usuarios.filter(usuarioAtual => usuarioAtual.role === 'USER'),
+      next: usuarios => {
+        this.motoristas = (Array.isArray(usuarios) ? usuarios : [])
+          .filter(usuarioAtual => usuarioAtual.role === 'USER')
+          .map(usuarioAtual => ({ ...usuarioAtual, id: Number(usuarioAtual.id) }));
+      },
       error: () => this.erro = 'Não foi possível carregar os motoristas.'
     });
     this.veiculoHttpService.listAll().subscribe({
-      next: veiculos => this.veiculos = veiculos,
+      next: veiculos => {
+        this.veiculos = (Array.isArray(veiculos) ? veiculos : [])
+          .map(veiculoAtual => ({ ...veiculoAtual, id: Number(veiculoAtual.id) }));
+      },
       error: () => this.erro = 'Não foi possível carregar os veículos.'
     });
   }
