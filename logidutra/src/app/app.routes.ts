@@ -6,8 +6,6 @@ import { RecuperarSenhaComponent } from './components/layout/recuperar-senha/rec
 import { TelaPrincipalComponent } from './components/layout/tela-principal/tela-principal.component';
 import { UsuariosComponent } from './components/cadastros/usuarios/usuarios.component';
 import { VeiculosComponent } from './components/cadastros/veiculos/veiculos.component';
-import { VeiculosCadastroComponent } from './components/cadastros/veiculos-cadastro/veiculos-cadastro.component';
-import { UsuarioCadastroComponent } from './components/cadastros/usuario-cadastro/usuario-cadastro.component';
 import { RomaneioTelaPrincipalComponent } from './components/romaneios/romaneio-tela-principal/romaneio-tela-principal.component';
 import { adminGuard, authGuard } from './guards/auth.guard';
 
@@ -29,10 +27,8 @@ export const routes: Routes = [
                 canActivate: [adminGuard],
                 children: [
                     { path: 'usuarios', component: UsuariosComponent },
-                    { path: 'usuarios/novo', component: UsuarioCadastroComponent },
-                    { path: 'novo-usuario', component: UsuarioCadastroComponent },
                     { path: 'veiculos', component: VeiculosComponent },
-                    { path: 'novo-veiculo', component: VeiculosCadastroComponent }
+
                 ]
             }
         ]
@@ -49,10 +45,8 @@ export const routes: Routes = [
                 canActivate: [adminGuard],
                 children: [
                     { path: 'usuarios', component: UsuariosComponent },
-                    { path: 'usuarios/novo', component: UsuarioCadastroComponent },
-                    { path: 'novo-usuario', component: UsuarioCadastroComponent },
                     { path: 'veiculos', component: VeiculosComponent },
-                    { path: 'novo-veiculo', component: VeiculosCadastroComponent }
+
                 ]
             }
         ]

@@ -48,61 +48,85 @@
     max-width: 100vw !important;
     margin: 0;
     padding: 0;
-    overflow-x: hidden;
-    overflow-y: hidden;
+    overflow: hidden;
 }
 
-.row,
-.col-lg-5 {
+.row {
     height: 100%;
-    min-height: 100%;
+    margin: 0;
 }
 
 .card {
     display: flex;
     flex-direction: column;
-    height: calc(100% - 24px);
-    min-height: 0;
-    margin-bottom: 24px;
+    height: calc(100vh - 110px);
+    max-height: calc(100vh - 110px);
+    border: none;
+    border-radius: 12px;
     overflow: hidden;
+    background-color: #ffffff;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+}
+
+.card-title {
+    color: #6f4724;
+    font-weight: 700;
 }
 
 .card-body {
     flex: 1 1 auto;
     min-height: 0;
-    height: auto;
-    overflow-x: hidden;
-    overflow-y: scroll;
+    overflow-y: auto;
     overscroll-behavior: contain;
     scrollbar-gutter: stable;
+    padding: 1.25rem;
+
+    &::-webkit-scrollbar {
+        width: 6px;
+    }
+
+    &::-webkit-scrollbar-track {
+        background: #f1e3d2;
+        border-radius: 4px;
+    }
+
+    &::-webkit-scrollbar-thumb {
+        background: #c18a49;
+        border-radius: 4px;
+    }
+
+    &::-webkit-scrollbar-thumb:hover {
+        background: #8a5a2d;
+    }
+}
+
+.card-footer {
+    background-color: #fff;
 }
 
 .btn-cadastro {
     background-color: #8a5a2d;
-    color: #d8b07a;
-}
+    color: #ffffff;
+    border: none;
+    transition: background-color 0.2s ease-in-out;
 
-.btn-cadastro:hover {
-    background-color: #6f4724;
-    color: #d8b07a;
-}
+    &:hover {
+        background-color: #6f4724;
+        color: #ffffff;
+    }
 
-.field-group {
-    margin-bottom: 25px;
-}
-
-.clientes-lista {
-    display: grid;
-    gap: 18px;
-    margin-bottom: 18px;
+    &:disabled {
+        background-color: #b57a39;
+        opacity: 0.7;
+    }
 }
 
 .cliente-card {
-    padding: 20px;
+    padding: 18px;
     border: 1px solid #e3c9aa;
     border-radius: 10px;
     background-color: #fffaf4;
-    box-shadow: 0 3px 10px rgba(111, 71, 36, 0.08);
+    box-shadow: 0 2px 8px rgba(111, 71, 36, 0.05);
 }
 
 .cliente-card-header {
@@ -110,25 +134,33 @@
     align-items: center;
     justify-content: space-between;
     gap: 12px;
-    margin-bottom: 18px;
-}
+    margin-bottom: 14px;
 
-.cliente-card-header h4 {
-    margin: 0;
-    color: #6f4724;
-    font-size: 18px;
-    font-weight: 600;
+    h4 {
+        margin: 0;
+        color: #6f4724;
+        font-size: 16px;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
 }
 
 .btn-adicionar-cliente {
     width: 100%;
+    padding: 8px 12px;
     border: 1px dashed #8a5a2d;
     color: #6f4724;
     background-color: #f8ead9;
-}
+    border-radius: 6px;
+    font-weight: 600;
+    font-size: 14px;
+    transition: all 0.2s;
 
-.btn-adicionar-cliente:hover {
-    background-color: #f1dcc1;
+    &:hover {
+        background-color: #f1dcc1;
+        border-color: #6f4724;
+    }
 }
 
 .btn-remover-cliente {
@@ -136,76 +168,63 @@
     border: 1px solid #d7aaa8;
     color: #842f2d;
     background-color: #fff;
-    font-size: 13px;
-}
-
-.cliente-finalizado {
-    padding: 8px 10px;
-    border-radius: 5px;
-    color: #386641;
-    background-color: #e8f3e5;
-    font-size: 13px;
-}
-
-.cliente-finalizado.incompleto {
-    color: #8a5a2d;
-    background-color: #fff1dc;
-}
-
-.cliente-footer {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 12px;
-}
-
-.btn-finalizar {
-    color: #fff;
-    background-color: #386641;
-    font-size: 13px;
-}
-
-.btn-finalizar:hover {
-    color: #fff;
-    background-color: #2d5234;
-}
-
-.field-group .form-label {
-    display: block;
-    margin-bottom: 8px;
-    color: #6c757d;
-    font-size: 15px;
+    font-size: 12px;
     font-weight: 500;
+    transition: background-color 0.2s;
+
+    &:hover {
+        background-color: #fce8e8;
+    }
+}
+
+.form-label {
+    margin-bottom: 4px;
+    color: #5c4228;
+    font-size: 13px;
+    font-weight: 600;
 }
 
 .tag-list {
     display: flex;
     flex-wrap: wrap;
     gap: 8px;
+    margin-top: 6px;
 }
 
 .quantidade-input {
-    max-width: 92px;
+    max-width: 80px;
 }
 
 .tag {
     display: inline-flex;
     align-items: center;
     gap: 6px;
-    padding: 6px 10px;
+    padding: 4px 10px;
     border-radius: 6px;
-    background-color: #f1e3d2;
-    color: #6f4724;
-    font-size: 14px;
+    background-color: #e3c9aa;
+    color: #482a12;
+    font-size: 13px;
+    font-weight: 500;
+
+    button {
+        border: 0;
+        padding: 0;
+        background: transparent;
+        color: #842f2d;
+        font-size: 16px;
+        font-weight: bold;
+        line-height: 1;
+        cursor: pointer;
+        margin-left: 4px;
+
+        &:hover {
+            color: #b00020;
+        }
+    }
 }
 
-.tag button {
-    border: 0;
-    padding: 0;
-    background: transparent;
-    color: #6f4724;
-    font-size: 18px;
-    line-height: 1;
-    cursor: pointer;
+.clientes-lista {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
 }
-

@@ -7,7 +7,7 @@
 
                         <h3 class="mb-0">Veículos cadastrados</h3>
 
-                        <button type="button" class="btn btn-cadastro" routerLink="../novo-veiculo">Novo Veículo</button>
+                        <button type="button" class="btn btn-cadastro" (click)="abrirModal()">Novo Veículo</button>
                     </div>
                     <div class="table-responsive">
 
@@ -57,3 +57,28 @@
         </div>
     </div>
 </div>
+
+@if (modalAberto) {
+    <div class="modal-backdrop-custom" (click)="fecharModal()">
+        <section class="modal-custom" role="dialog" aria-modal="true" aria-labelledby="tituloModalVeiculo" (click)="$event.stopPropagation()">
+            <div class="modal-custom-header">
+                <h3 id="tituloModalVeiculo">Cadastro de veículo</h3>
+                <button type="button" class="btn-close" aria-label="Fechar" (click)="fecharModal()"></button>
+            </div>
+            <div class="modal-custom-body">
+                <label class="form-label" for="modalVeiculoMarca">Marca</label>
+                <input id="modalVeiculoMarca" class="form-control mb-3" type="text" [(ngModel)]="veiculoEmCadastro.marca" />
+
+                <label class="form-label" for="modalVeiculoModelo">Modelo</label>
+                <input id="modalVeiculoModelo" class="form-control mb-3" type="text" [(ngModel)]="veiculoEmCadastro.modelo" />
+
+                <label class="form-label" for="modalVeiculoPlaca">Placa</label>
+                <input id="modalVeiculoPlaca" class="form-control" type="text" [(ngModel)]="veiculoEmCadastro.placa" />
+            </div>
+            <div class="modal-custom-footer">
+                <button type="button" class="btn btn-secondary" (click)="fecharModal()">Voltar</button>
+                <button type="button" class="btn btn-cadastro" (click)="cadastrar()">Cadastrar</button>
+            </div>
+        </section>
+    </div>
+}
