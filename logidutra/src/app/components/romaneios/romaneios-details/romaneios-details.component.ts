@@ -10,6 +10,7 @@ import { veiculo } from '../../../models/veiculos';
 import { usuario } from '../../../models/usuarios';
 import { AuthService } from '../../../services/auth.service';
 import { ClienteService } from '../../../services/cliente.service';
+import { CpfService } from '../../../services/cpf.service';
 import { RomaneioService } from '../../../services/romaneio.service';
 import { UsuarioServiceService } from '../../../services/usuario-service.service';
 import { VeiculoHttpService } from '../../../services/veiculo-http.service';
@@ -59,6 +60,7 @@ export class RomaneiosDetailsComponent {
   private readonly router = inject(Router);
   private readonly authService = inject(AuthService);
   private readonly clienteService = inject(ClienteService);
+  private readonly cpfService = inject(CpfService);
   private readonly romaneioService = inject(RomaneioService);
   private readonly usuarioService = inject(UsuarioServiceService);
   private readonly veiculoHttpService = inject(VeiculoHttpService);
@@ -109,8 +111,10 @@ export class RomaneiosDetailsComponent {
   adicionarCliente(): boolean {
     if (!this.validarCliente(this.clienteEmCadastro) || !this.clienteEmCadastro.produtos.length) {
       Swal.fire({
-        title: 'Cliente incompleto',
-        text: 'Preencha todos os dados e adicione pelo menos um produto para o cliente.',
+        title: this.cpfService.validarCPF(this.clienteEmCadastro.cpf) ? 'Cliente incompleto' : 'CPF inválido',
+        text: this.cpfService.validarCPF(this.clienteEmCadastro.cpf)
+          ? 'Preencha todos os dados e adicione pelo menos um produto para o cliente.'
+          : 'Informe um CPF válido com 11 dígitos.',
         icon: 'warning',
         confirmButtonText: 'Ok'
       });
@@ -276,7 +280,8 @@ export class RomaneiosDetailsComponent {
       clienteAtual.logradouro,
       clienteAtual.bairro,
       clienteAtual.cidade
-    ].every(campo => campo.trim().length > 0);
+    ].every(campo => campo.trim().length > 0)
+      && this.cpfService.validarCPF(clienteAtual.cpf);
   }
 
   private clienteTemDados(): boolean {
