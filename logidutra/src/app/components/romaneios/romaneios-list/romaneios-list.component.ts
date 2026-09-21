@@ -1,36 +1,34 @@
+import { Component, OnInit, inject, DestroyRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Component, inject } from '@angular/core';
-import { Router, RouterLink } from '@angular/router';
 import { HttpErrorResponse } from '@angular/common/http';
+import { Router, RouterLink } from '@angular/router';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import Swal from 'sweetalert2';
+
 import { Romaneio } from '../../../models/romaneio';
 import { AuthService } from '../../../services/auth.service';
 import { RomaneioService } from '../../../services/romaneio.service';
 
-interface DetalhesExtrasLista {
-  motoristaNome?: string;
-  veiculoPlaca?: string;
-}
-
 @Component({
   selector: 'app-romaneios-list',
+  standalone: true,
   imports: [CommonModule, RouterLink],
   templateUrl: './romaneios-list.component.html',
   styleUrl: './romaneios-list.component.scss'
 })
-export class RomaneiosListComponent {
+export class RomaneiosListComponent implements OnInit {
   lista: Romaneio[] = [];
   paginaAtual = 1;
   readonly maxPaginas = 6;
   carregando = true;
   erro = '';
-  detalhesLocais: Record<number, DetalhesExtrasLista> = {};
 
   private readonly router = inject(Router);
+  private readonly destroyRef = inject(DestroyRef);
   readonly authService = inject(AuthService);
   private readonly romaneioService = inject(RomaneioService);
 
-  constructor() {
+  ngOnInit(): void {
     this.carregarRomaneios();
   }
 
@@ -67,15 +65,15 @@ export class RomaneiosListComponent {
   }
 
   editar(romaneio: Romaneio): void {
-    if (this.authService.ehAdmin) {
-      this.router.navigate(['/admin/romaneios/edit', romaneio.id], { state: { romaneio } });
-    }
+    if (!this.authService.ehAdmin) return;
+
+    this.router.navigate(['/admin/romaneios/edit', romaneio.id], {
+      state: { romaneio }
+    });
   }
 
   excluir(romaneio: Romaneio): void {
-    if (!this.authService.ehAdmin) {
-      return;
-    }
+    if (!this.authService.ehAdmin) return;
 
     Swal.fire({
       title: 'Tem certeza?',
@@ -85,9 +83,14 @@ export class RomaneiosListComponent {
       confirmButtonText: 'Excluir',
       cancelButtonText: 'Cancelar'
     }).then(resultado => {
-      if (resultado.isConfirmed) {
-        this.romaneioService.delete(romaneio.id).subscribe({
+      if (!resultado.isConfirmed) return;
+
+      this.romaneioService
+        .delete(romaneio.id)
+        .pipe(takeUntilDestroyed(this.destroyRef))
+        .subscribe({
           next: () => {
+            Swal.fire('Sucesso!', 'Romaneio excluído com sucesso.', 'success');
             this.carregarRomaneios();
           },
           error: () => {
@@ -100,48 +103,34 @@ export class RomaneiosListComponent {
             });
           }
         });
-      }
     });
   }
 
   carregarRomaneios(): void {
     this.carregando = true;
     this.erro = '';
-    this.romaneioService.listAll().subscribe({
-      next: romaneios => {
-        this.lista = romaneios;
-        this.detalhesLocais = this.carregarDetalhesLocais(romaneios);
-        if (this.paginaAtual > this.totalPaginas) {
-          this.paginaAtual = this.totalPaginas;
-        }
-        this.carregando = false;
-      },
-      error: (erro: HttpErrorResponse) => {
-        this.lista = [];
-        this.carregando = false;
-        this.erro = erro.status === 0
-          ? 'Não foi possível conectar ao servidor.'
-          : 'Não foi possível carregar os romaneios.';
-      }
-    });
-  }
 
-  detalheLocal(id: number): DetalhesExtrasLista {
-    return this.detalhesLocais[id] ?? {};
-  }
+    this.romaneioService
+      .listAll()
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        next: (romaneios: Romaneio[]) => {
+          this.lista = romaneios;
 
-  private carregarDetalhesLocais(romaneios: Romaneio[]): Record<number, DetalhesExtrasLista> {
-    return romaneios.reduce<Record<number, DetalhesExtrasLista>>((detalhes, romaneio) => {
-      const salvo = localStorage.getItem(`romaneio-detalhes:${romaneio.id}`);
-      if (salvo) {
-        try {
-          const extra = JSON.parse(salvo) as DetalhesExtrasLista;
-          detalhes[romaneio.id] = extra;
-        } catch {
-          detalhes[romaneio.id] = {};
+          if (this.paginaAtual > this.totalPaginas) {
+            this.paginaAtual = this.totalPaginas;
+          }
+
+          this.carregando = false;
+        },
+        error: (erro: HttpErrorResponse) => {
+          this.lista = [];
+          this.carregando = false;
+          this.erro =
+            erro.status === 0
+              ? 'Não foi possível conectar ao servidor.'
+              : 'Não foi possível carregar os romaneios.';
         }
-      }
-      return detalhes;
-    }, {});
+      });
   }
 }
