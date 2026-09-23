@@ -5,9 +5,9 @@ import { usuario } from '../models/usuarios';
 export class AuthService {
   private readonly chaveSessao = 'usuarioLogado';
 
-  get usuarioAtual(): usuario | null {
+  get usuarioAtual(): usuario {
     const usuarioSalvo = sessionStorage.getItem(this.chaveSessao);
-    return usuarioSalvo ? JSON.parse(usuarioSalvo) as usuario : null;
+    return usuarioSalvo ? JSON.parse(usuarioSalvo) as usuario : new usuario(0, '', '', 0, '');
   }
 
   get estaAutenticado(): boolean {

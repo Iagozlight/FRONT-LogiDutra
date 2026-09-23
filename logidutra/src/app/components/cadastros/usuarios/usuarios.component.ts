@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { usuario } from '../../../models/usuarios';
 import { UsuarioService } from '../../../services/usuario.service';
 
+
 @Component({
   selector: 'app-usuarios',
   imports: [CommonModule, FormsModule],
@@ -11,6 +12,7 @@ import { UsuarioService } from '../../../services/usuario.service';
   styleUrl: './usuarios.component.scss'
 })
 export class UsuariosComponent {
+
   usuarios: usuario[] = [];
   paginaAtual = 1;
   MaxPag = 6;

@@ -12,7 +12,7 @@ import { AuthService } from '../../../services/auth.service';
 import { ClienteService } from '../../../services/cliente.service';
 import { CpfService } from '../../../services/cpf.service';
 import { RomaneioService } from '../../../services/romaneio.service';
-import { UsuarioServiceService } from '../../../services/usuario-service.service';
+import { UsuarioService } from '../../../services/usuario-service.service';
 import { VeiculoHttpService } from '../../../services/veiculo-http.service';
 
 interface ClienteRomaneio {
@@ -62,7 +62,7 @@ export class RomaneiosDetailsComponent {
   private readonly clienteService = inject(ClienteService);
   private readonly cpfService = inject(CpfService);
   private readonly romaneioService = inject(RomaneioService);
-  private readonly usuarioService = inject(UsuarioServiceService);
+  private readonly usuarioService = inject(UsuarioService);
   private readonly veiculoHttpService = inject(VeiculoHttpService);
 
   constructor() {
@@ -258,7 +258,7 @@ export class RomaneiosDetailsComponent {
     if (!clientesNovos.length) {
       return of([]);
     }
-    return forkJoin(clientesNovos.map(clienteAtual => this.clienteService.create(clienteAtual.dados)));
+    return forkJoin(clientesNovos.map(clienteAtual => this.clienteService.create(clienteAtual.dados, this.authService.usuarioAtual.id)));
   }
 
   private normalizarClienteRomaneio(clienteAtual: ClienteRomaneio | cliente): ClienteRomaneio {
