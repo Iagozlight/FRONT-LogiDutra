@@ -43,6 +43,8 @@
                                 <tr>
                                     <th scope="col">Id</th>
                                     <th scope="col">Data</th>
+                                    <th scope="col">Motorista</th>
+                                    <th scope="col">Veiculo</th>
 
                                     @if (authService.ehAdmin) {
                                         <th
@@ -73,6 +75,14 @@
 
                                         <td>
                                             {{ romaneio.data | date:'dd/MM/yyyy' }}
+                                        </td>
+
+                                        <td>
+                                            {{ romaneio.motorista.nome }}
+                                        </td>
+
+                                        <td>
+                                            {{ romaneio.veiculo.modelo }} Placa: {{ romaneio.veiculo.placa}}
                                         </td>
 
                                         @if (authService.ehAdmin) {

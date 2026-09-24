@@ -28,7 +28,7 @@ interface DetalhesExtras {
   veiculoPlaca?: string;
   horario?: string;
   clientes?: ClienteRomaneio[];
-  
+
 }
 
 
@@ -52,9 +52,13 @@ export class RomaneioTelaPrincipalComponent {
   horario = 'Não informado';
   clientes: ClienteRomaneio[] = [];
 
+
+
   constructor() {
     const id = Number(this.route.snapshot.paramMap.get('id'));
     const romaneioRecebido = history.state.romaneio as Romaneio | undefined;
+
+    this.carregarRomaneio(id);
 
     if (!Number.isInteger(id) || id <= 0) {
       this.carregando = false;
@@ -62,8 +66,11 @@ export class RomaneioTelaPrincipalComponent {
     } else if (romaneioRecebido) {
       this.romaneio = new Romaneio(
         romaneioRecebido.id,
-        new Date(romaneioRecebido.data),
-        romaneioRecebido.produtoList || []
+        romaneioRecebido.data ? new Date(romaneioRecebido.data) : new Date(),
+        romaneioRecebido.produtoList || romaneioRecebido.produtoList || [],
+        romaneioRecebido.veiculo || null,
+        romaneioRecebido.motorista || null,
+        romaneioRecebido.clientes || []
       );
       this.carregarDetalhesExtras(id);
       this.carregando = false;
@@ -100,6 +107,15 @@ export class RomaneioTelaPrincipalComponent {
       this.horario = 'Não informado';
       this.clientes = [];
     }
+  }
+
+  carregarRomaneio(id:number){
+    this.romaneioService.findById(id).subscribe({
+      next: (resposta) => {
+       this.romaneio = resposta;
+       console.log(this.romaneio);
+      }
+    })
   }
 
   voltar(): void {

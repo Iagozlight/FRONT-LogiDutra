@@ -8,7 +8,7 @@ import { produto } from '../models/produto';
 })
 export class ProdutoService {
 
-  private readonly API = '/api/logidutra/produto';
+  private readonly API = 'http://localhost:8080/api/logidutra/produto';
   private readonly http = inject(HttpClient);
 
   listAll(): Observable<produto[]> {

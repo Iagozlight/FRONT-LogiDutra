@@ -8,7 +8,7 @@ import { usuario } from '../models/usuarios';
 })
 export class UsuarioService {
 
-  private readonly API = '/api/logidutra/usuario';
+  private readonly API = 'http://localhost:8080/api/logidutra/usuario';
   private http = inject(HttpClient);
 
   listAll(): Observable<usuario[]> {
@@ -36,6 +36,12 @@ export class UsuarioService {
       .set('id', id)
       .set('usuarioLogadoId', usuarioLogadoId);
     return this.http.patch<usuario>(this.API, usuario, { params });
+  }
+
+  login(nome: string, senha: string): Observable<usuario> {
+  const params = new HttpParams().set('nome', nome).set('senha', senha);
+  return this.http.get<usuario>(`${this.API}/login`, { params });
+
   }
 
   marcarEmRota(id: number): Observable<usuario> {

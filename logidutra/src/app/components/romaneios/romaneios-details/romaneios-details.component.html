@@ -126,10 +126,10 @@
                             </div>
                             <div class="col-md-6">
                                 <label class="form-label" for="veiculo">Veículo</label>
-                                <select id="veiculo" class="form-select" [(ngModel)]="veiculoId">
+                                <select id="veiculo" class="form-select" [(ngModel)]="veiculo">
                                     <option [ngValue]="null">Selecione um veículo</option>
                                     @for (veiculo of veiculos; track veiculo.id) {
-                                        <option [ngValue]="veiculo.id">{{ veiculo.marca }} {{ veiculo.modelo }} - {{ veiculo.placa }}</option>
+                                        <option [ngValue]="veiculo">{{ veiculo.marca }} {{ veiculo.modelo }} - {{ veiculo.placa }}</option>
                                     } @empty {
                                         <option disabled>Nenhum veículo disponível</option>
                                     }

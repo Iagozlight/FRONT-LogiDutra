@@ -3,8 +3,9 @@
         <div class="col-lg-10">
             <div class="card mt-4">
                 <div class="card-body">
-                    <div class="d-flex justify-content-between align-items-center mb-3">
 
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        
                         <h3 class="mb-0">Veículos cadastrados</h3>
 
                         <button type="button" class="btn btn-cadastro" (click)="abrirModal()">Novo Veículo</button>
@@ -14,12 +15,13 @@
                         <table class="table table-hover align-middle mb-0">
 
                             <thead>
+
                                 <tr>
                                     <th scope="col">Id</th>
                                     <th scope="col">Marca</th>
                                     <th scope="col">Modelo</th>
                                     <th scope="col">Placa</th>
-                                    <th scope="col">Disponibilidade</th>
+                                    <th scope="col" class="text-center">Ações</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -29,13 +31,20 @@
                                         <td>{{ veiculo.marca }}</td>
                                         <td>{{ veiculo.modelo }}</td>
                                         <td>{{ veiculo.placa }}</td>
-                                        <td>{{ veiculo.disponibilidade }}</td>
+                                        <td class="text-center">
+                                            <button type="button" class="btn btn-sm btn-outline-primary me-2" (click)="abrirModalEdicao(veiculo)">
+                                                Editar
+                                            </button>
+                                            <button type="button" class="btn btn-sm btn-outline-danger" (click)="excluir(veiculo.id)">
+                                                Excluir
+                                            </button>
+                                        </td>
                                     </tr>
                                 }
                             </tbody>
                         </table>
                     </div>
-                    <nav aria-label="Navegação de veículos">
+                    <nav aria-label="Navegação de veículos" class="mt-3">
                         <ul class="pagination justify-content-center">
                             <li class="page-item" [class.disabled]="paginaAtual === 1">
                                 <a class="page-link" href="#" (click)="$event.preventDefault(); paginaAnterior()">Previous</a>
@@ -62,7 +71,7 @@
     <div class="modal-backdrop-custom" (click)="fecharModal()">
         <section class="modal-custom" role="dialog" aria-modal="true" aria-labelledby="tituloModalVeiculo" (click)="$event.stopPropagation()">
             <div class="modal-custom-header">
-                <h3 id="tituloModalVeiculo">Cadastro de veículo</h3>
+                <h3 id="tituloModalVeiculo">{{ modoEdicao ? 'Editar Veículo' : 'Cadastro de Veículo' }}</h3>
                 <button type="button" class="btn-close" aria-label="Fechar" (click)="fecharModal()"></button>
             </div>
             <div class="modal-custom-body">
@@ -73,11 +82,13 @@
                 <input id="modalVeiculoModelo" class="form-control mb-3" type="text" [(ngModel)]="veiculoEmCadastro.modelo" />
 
                 <label class="form-label" for="modalVeiculoPlaca">Placa</label>
-                <input id="modalVeiculoPlaca" class="form-control" type="text" [(ngModel)]="veiculoEmCadastro.placa" />
+                <input id="modalVeiculoPlaca" class="form-control mb-3" type="text" [(ngModel)]="veiculoEmCadastro.placa" />
             </div>
             <div class="modal-custom-footer">
                 <button type="button" class="btn btn-secondary" (click)="fecharModal()">Voltar</button>
-                <button type="button" class="btn btn-cadastro" (click)="cadastrar()">Cadastrar</button>
+                <button type="button" class="btn btn-cadastro" (click)="salvar()">
+                    {{ modoEdicao ? 'Salvar Alterações' : 'Cadastrar' }}
+                </button>
             </div>
         </section>
     </div>

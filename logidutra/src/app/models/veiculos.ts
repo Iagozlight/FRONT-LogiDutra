@@ -1,4 +1,4 @@
-export class veiculo {
+export class Veiculo {
     id!: number;
     marca!: string;
     modelo!: string;

@@ -14,12 +14,14 @@
                         <table class="table table-hover align-middle mb-0">
 
                             <thead>
+
                                 <tr>
                                     <th scope="col">Id</th>
-                                    <th scope="col">nome</th>
+                                    <th scope="col">Nome</th>
                                     <th scope="col">Idade</th>
-                                    <th scope="col">Status</th>
-                                    <th scope="col">Disponibilidade</th>
+                                    <th scope="col">Perfil (Role)</th>
+                                    <th scope="col">Status Operacional</th>
+                                    <th scope="col" class="text-center">Ações</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -29,13 +31,21 @@
                                         <td>{{ usuario.nome }}</td>
                                         <td>{{ usuario.idade }}</td>
                                         <td>{{ usuario.role }}</td>
-                                        <td>{{ usuario.Disp }}</td>
+                                        <td>{{ traduzirStatus(usuario.status) }}</td>
+                                        <td class="text-center">
+                                            <button type="button" class="btn btn-sm btn-outline-primary me-2" (click)="abrirModalEdicao(usuario)">
+                                                Editar
+                                            </button>
+                                            <button type="button" class="btn btn-sm btn-outline-danger" (click)="excluir(usuario.id)">
+                                                Excluir
+                                            </button>
+                                        </td>
                                     </tr>
                                 }
                             </tbody>
                         </table>
                     </div>
-                    <nav aria-label="Navegação de usuários">
+                    <nav aria-label="Navegação de usuários" class="mt-3">
                         <ul class="pagination justify-content-center">
                             <li class="page-item" [class.disabled]="paginaAtual === 1">
                                 <a class="page-link" href="#" (click)="$event.preventDefault(); paginaAnterior()">Previous</a>
@@ -62,14 +72,16 @@
     <div class="modal-backdrop-custom" (click)="fecharModal()">
         <section class="modal-custom" role="dialog" aria-modal="true" aria-labelledby="tituloModalUsuario" (click)="$event.stopPropagation()">
             <div class="modal-custom-header">
-                <h3 id="tituloModalUsuario">Cadastro de usuário</h3>
+                <h3 id="tituloModalUsuario">{{ modoEdicao ? 'Editar Usuário' : 'Cadastro de Usuário' }}</h3>
                 <button type="button" class="btn-close" aria-label="Fechar" (click)="fecharModal()"></button>
             </div>
             <div class="modal-custom-body">
                 <label class="form-label" for="modalUsuarioNome">Nome</label>
                 <input id="modalUsuarioNome" class="form-control mb-3" type="text" [(ngModel)]="usuarioEmCadastro.nome" />
 
-                <label class="form-label" for="modalUsuarioSenha">Senha</label>
+                <label class="form-label" for="modalUsuarioSenha">
+                    Senha {{ modoEdicao ? '(preencha apenas se quiser alterar)' : '' }}
+                </label>
                 <input id="modalUsuarioSenha" class="form-control mb-3" type="password" [(ngModel)]="usuarioEmCadastro.senha" />
 
                 <label class="form-label" for="modalUsuarioIdade">Idade</label>
@@ -78,14 +90,15 @@
                 <label class="form-label" for="modalUsuarioRole">Role</label>
                 <select id="modalUsuarioRole" class="form-select" [(ngModel)]="usuarioEmCadastro.role">
                     <option value="">Selecione uma role</option>
-                    <option value="None">None</option>
-                    <option value="Admin">Admin</option>
-                    <option value="Motorista">Motorista</option>
+                    <option value="ADMIN">Administrador (ADMIN)</option>
+                    <option value="USER">Usuário Comum (USER)</option>
                 </select>
             </div>
             <div class="modal-custom-footer">
                 <button type="button" class="btn btn-secondary" (click)="fecharModal()">Voltar</button>
-                <button type="button" class="btn btn-cadastro" (click)="cadastrar()">Cadastrar</button>
+                <button type="button" class="btn btn-cadastro" (click)="salvar()">
+                    {{ modoEdicao ? 'Salvar Alterações' : 'Cadastrar' }}
+                </button>
             </div>
         </section>
     </div>

@@ -6,12 +6,12 @@ import Swal from 'sweetalert2';
 import { forkJoin, Observable, of, switchMap } from 'rxjs';
 import { Romaneio, ProdutoRomaneio } from '../../../models/romaneio';
 import { cliente } from '../../../models/cliente';
-import { veiculo } from '../../../models/veiculos';
+import { Veiculo } from '../../../models/veiculos';
 import { usuario } from '../../../models/usuarios';
 import { AuthService } from '../../../services/auth.service';
 import { ClienteService } from '../../../services/cliente.service';
 import { CpfService } from '../../../services/cpf.service';
-import { RomaneioService } from '../../../services/romaneio.service';
+import { RomaneioService, RomaneiosRequestDTO } from '../../../services/romaneio.service';
 import { UsuarioService } from '../../../services/usuario-service.service';
 import { VeiculoHttpService } from '../../../services/veiculo-http.service';
 
@@ -41,7 +41,7 @@ interface ClienteRascunho extends cliente {
 })
 export class RomaneiosDetailsComponent {
   titulo = 'Cadastrar romaneio';
-  romaneio = new Romaneio(0, new Date(), []);
+  romaneio = new Romaneio(0, new Date(), [], new Veiculo(0, '', '', '', false), new usuario(0, ''), []);
   dataFormulario = this.formatarDataInput(this.romaneio.data);
   horarioRomaneio = '';
   nomeProdutoCliente = '';
@@ -50,7 +50,8 @@ export class RomaneiosDetailsComponent {
   salvando = false;
   erro = '';
   motoristas: usuario[] = [];
-  veiculos: veiculo[] = [];
+  veiculos: Veiculo[] = [];
+  veiculo: Veiculo = new Veiculo(0, '', '', '', false);
   motoristaId: number | null = null;
   veiculoId: number | null = null;
   clientesPendentes: ClienteRomaneio[] = [];
@@ -83,7 +84,8 @@ export class RomaneiosDetailsComponent {
             this.carregarDetalhesExtras(id);
             this.carregando = false;
           },
-          error: () => {
+          error: erro => {
+            console.error('Erro ao buscar romaneio:', erro);
             this.carregando = false;
             this.erro = 'Não foi possível carregar o romaneio.';
           }
@@ -109,12 +111,50 @@ export class RomaneiosDetailsComponent {
   }
 
   adicionarCliente(): boolean {
-    if (!this.validarCliente(this.clienteEmCadastro) || !this.clienteEmCadastro.produtos.length) {
+    const c = this.clienteEmCadastro;
+
+    // 1. Validação de campos em branco
+    const camposPreenchidos = [
+      c.nome, c.telefone, c.cpf, c.cep, c.logradouro, c.bairro, c.cidade
+    ].every(campo => campo && campo.trim().length > 0);
+
+    if (!camposPreenchidos) {
       Swal.fire({
-        title: this.cpfService.validarCPF(this.clienteEmCadastro.cpf) ? 'Cliente incompleto' : 'CPF inválido',
-        text: this.cpfService.validarCPF(this.clienteEmCadastro.cpf)
-          ? 'Preencha todos os dados e adicione pelo menos um produto para o cliente.'
-          : 'Informe um CPF válido com 11 dígitos.',
+        title: 'Campos incompletos',
+        text: 'Preencha todos os campos do cliente (Nome, Telefone, CPF, CEP, Endereço).',
+        icon: 'warning',
+        confirmButtonText: 'Ok'
+      });
+      return false;
+    }
+
+    // 2. Validação de CPF
+    if (!this.cpfService.validarCPF(c.cpf)) {
+      Swal.fire({
+        title: 'CPF inválido',
+        text: 'O CPF informado é inválido. Digite um CPF válido com 11 dígitos.',
+        icon: 'error',
+        confirmButtonText: 'Ok'
+      });
+      return false;
+    }
+
+    // 3. Validação de CEP
+    if (!this.validarCEP(c.cep)) {
+      Swal.fire({
+        title: 'CEP inválido',
+        text: 'O CEP deve conter 8 dígitos numéricos (ex: 85884000).',
+        icon: 'error',
+        confirmButtonText: 'Ok'
+      });
+      return false;
+    }
+
+    // 4. Validação de Produtos do Cliente
+    if (!c.produtos.length) {
+      Swal.fire({
+        title: 'Sem produtos',
+        text: 'Adicione pelo menos um produto para este cliente antes de incluí-lo.',
         icon: 'warning',
         confirmButtonText: 'Ok'
       });
@@ -122,7 +162,15 @@ export class RomaneiosDetailsComponent {
     }
 
     const { produtos, ...dados } = this.clienteEmCadastro;
-    this.clientesPendentes.push({ dados: { ...dados, id: 0 }, produtos: [...produtos] });
+
+    // Normaliza o CEP limpando pontuações
+    dados.cep = dados.cep.replace(/\D/g, '');
+
+    this.clientesPendentes.push({
+      dados: { ...dados, id: 0 },
+      produtos: [...produtos]
+    });
+
     this.clienteEmCadastro = this.novoCliente();
     this.nomeProdutoCliente = '';
     this.quantidadeProdutoCliente = 1;
@@ -144,52 +192,96 @@ export class RomaneiosDetailsComponent {
       }
     }
 
-    const data = new Date(`${this.dataFormulario}T00:00:00`);
-    if (Number.isNaN(data.getTime()) || !this.horarioRomaneio || !this.clientesPendentes.length) {
+    const usuarioLogado = this.authService.usuarioAtual;
+    if (!usuarioLogado || !usuarioLogado.id) {
       Swal.fire({
-        title: 'Atenção',
-        text: 'Informe data, horário e pelo menos um cliente completo.',
         icon: 'warning',
-        confirmButtonText: 'Ok'
+        title: 'Sessão inválida',
+        text: 'Usuário logado não identificado. Faça login novamente.'
       });
       return;
     }
 
-    this.romaneio.data = data;
-    this.romaneio.produtoList = this.clientesPendentes.flatMap(clienteAtual => clienteAtual.produtos);
+    if (!this.dataFormulario) {
+      Swal.fire({ title: 'Atenção', text: 'Informe a data do romaneio.', icon: 'warning' });
+      return;
+    }
+
+    if (!this.veiculo) {
+      Swal.fire({ title: 'Atenção', text: 'Selecione um veículo para o romaneio.', icon: 'warning' });
+      return;
+    }
+
+    if (!this.motoristaId) {
+      Swal.fire({ title: 'Atenção', text: 'Selecione um motorista para o romaneio.', icon: 'warning' });
+      return;
+    }
+
+    if (!this.clientesPendentes.length) {
+      Swal.fire({
+        title: 'Atenção',
+        text: 'Informe pelo menos um cliente completo na lista.',
+        icon: 'warning'
+      });
+      return;
+    }
+
+
     this.salvando = true;
     this.erro = '';
 
-    this.salvarClientesPendentes().pipe(
+    this.salvarClientesPendentes(usuarioLogado.id).pipe(
       switchMap(clientesSalvos => {
         if (clientesSalvos.length) {
           let novoClienteIndice = 0;
           this.clientesPendentes = this.clientesPendentes.map(clienteAtual => {
-            if (clienteAtual.dados.id) {
+            if (clienteAtual.dados.id && clienteAtual.dados.id > 0) {
               return clienteAtual;
             }
             const clienteSalvo = clientesSalvos[novoClienteIndice++];
             return { dados: clienteSalvo, produtos: clienteAtual.produtos };
           });
         }
+
+        const clienteIds = this.clientesPendentes
+          .map(c => Number(c.dados.id))
+          .filter(id => id > 0);
+
+        const payload: RomaneiosRequestDTO = {
+          data: this.formatarDataParaBackend(this.dataFormulario),
+          veiculoId: Number(this.veiculo.id),
+          usuarioId: Number(this.motoristaId),
+          clienteId: clienteIds,
+          produtoId: []
+        };
+
         return this.romaneio.id > 0
-          ? this.romaneioService.update(this.romaneio.id, this.romaneio)
-          : this.romaneioService.create(this.romaneio);
+          ? this.romaneioService.update(this.romaneio.id, payload)
+          : this.romaneioService.create(payload);
       })
     ).subscribe({
       next: romaneioSalvo => {
         this.romaneio = romaneioSalvo;
         this.salvarDetalhesExtras(romaneioSalvo.id);
         this.salvando = false;
-        Swal.fire({ title: 'Romaneio finalizado', icon: 'success', confirmButtonText: 'Ok' })
+        Swal.fire({ title: 'Romaneio finalizado!', icon: 'success', confirmButtonText: 'Ok' })
           .then(() => this.voltar());
       },
-      error: () => {
+      error: erro => {
+        console.error('Erro ao finalizar romaneio:', erro);
         this.salvando = false;
-        this.erro = 'Não foi possível finalizar o romaneio.';
+
+        let mensagemDetalhada = 'Verifique as informações e tente novamente.';
+        if (typeof erro?.error === 'string') {
+          mensagemDetalhada = erro.error;
+        } else if (erro?.error?.message) {
+          mensagemDetalhada = erro.error.message;
+        }
+
+        this.erro = mensagemDetalhada;
         Swal.fire({
           title: 'Não foi possível finalizar',
-          text: 'Verifique os dados e tente novamente.',
+          text: mensagemDetalhada,
           icon: 'error',
           confirmButtonText: 'Ok'
         });
@@ -208,14 +300,21 @@ export class RomaneiosDetailsComponent {
           .filter(usuarioAtual => usuarioAtual.role === 'USER')
           .map(usuarioAtual => ({ ...usuarioAtual, id: Number(usuarioAtual.id) }));
       },
-      error: () => this.erro = 'Não foi possível carregar os motoristas.'
+      error: erro => {
+        console.error('Erro ao carregar motoristas:', erro);
+        this.erro = 'Não foi possível carregar os motoristas.';
+      }
     });
+
     this.veiculoHttpService.listAll().subscribe({
       next: veiculos => {
         this.veiculos = (Array.isArray(veiculos) ? veiculos : [])
           .map(veiculoAtual => ({ ...veiculoAtual, id: Number(veiculoAtual.id) }));
       },
-      error: () => this.erro = 'Não foi possível carregar os veículos.'
+      error: erro => {
+        console.error('Erro ao carregar veículos:', erro);
+        this.erro = 'Não foi possível carregar os veículos.';
+      }
     });
   }
 
@@ -245,20 +344,28 @@ export class RomaneiosDetailsComponent {
     const detalhes: DetalhesExtras = {
       motoristaId: this.motoristaId,
       veiculoId: this.veiculoId,
-      motoristaNome: this.motoristas.find(motorista => motorista.id === this.motoristaId)?.nome,
-      veiculoPlaca: this.veiculos.find(veiculo => veiculo.id === this.veiculoId)?.placa,
+      motoristaNome: this.motoristas.find(m => m.id === this.motoristaId)?.nome,
+      veiculoPlaca: this.veiculos.find(v => v.id === this.veiculoId)?.placa,
       horario: this.horarioRomaneio,
       clientes: this.clientesPendentes
     };
     localStorage.setItem(`romaneio-detalhes:${id}`, JSON.stringify(detalhes));
   }
 
-  private salvarClientesPendentes(): Observable<cliente[]> {
-    const clientesNovos = this.clientesPendentes.filter(clienteAtual => !clienteAtual.dados.id);
+  private salvarClientesPendentes(usuarioLogadoId: number): Observable<cliente[]> {
+    const clientesNovos = this.clientesPendentes.filter(clienteAtual => !clienteAtual.dados.id || clienteAtual.dados.id === 0);
     if (!clientesNovos.length) {
       return of([]);
     }
-    return forkJoin(clientesNovos.map(clienteAtual => this.clienteService.create(clienteAtual.dados, this.authService.usuarioAtual.id)));
+
+    return forkJoin(
+      clientesNovos.map(clienteAtual => {
+        const { id, ...dadosParaCriacao } = clienteAtual.dados;
+        // Limpa o CEP garantindo apenas números
+        dadosParaCriacao.cep = (dadosParaCriacao.cep || '').replace(/\D/g, '');
+        return this.clienteService.create(dadosParaCriacao as cliente, usuarioLogadoId);
+      })
+    );
   }
 
   private normalizarClienteRomaneio(clienteAtual: ClienteRomaneio | cliente): ClienteRomaneio {
@@ -271,17 +378,10 @@ export class RomaneiosDetailsComponent {
     return { dados: clienteAtual, produtos: [] };
   }
 
-  private validarCliente(clienteAtual: ClienteRascunho): boolean {
-    return [
-      clienteAtual.nome,
-      clienteAtual.telefone,
-      clienteAtual.cpf,
-      clienteAtual.cep,
-      clienteAtual.logradouro,
-      clienteAtual.bairro,
-      clienteAtual.cidade
-    ].every(campo => campo.trim().length > 0)
-      && this.cpfService.validarCPF(clienteAtual.cpf);
+  private validarCEP(cep: string): boolean {
+    if (!cep) return false;
+    const apenasNumeros = cep.replace(/\D/g, '');
+    return apenasNumeros.length === 8;
   }
 
   private clienteTemDados(): boolean {
@@ -304,14 +404,25 @@ export class RomaneiosDetailsComponent {
   }
 
   private definirRomaneio(romaneio: Romaneio): void {
-    this.romaneio = new Romaneio(romaneio.id, romaneio.data, romaneio.produtoList || []);
+    this.romaneio = new Romaneio(romaneio.id, romaneio.data, romaneio.produtoList || [], this.veiculo, romaneio.motorista, romaneio.clientes || []);
     this.dataFormulario = this.formatarDataInput(this.romaneio.data);
   }
 
   private formatarDataInput(data: Date): string {
-    const ano = data.getFullYear();
-    const mes = String(data.getMonth() + 1).padStart(2, '0');
-    const dia = String(data.getDate()).padStart(2, '0');
+    const d = new Date(data);
+    const ano = d.getFullYear();
+    const mes = String(d.getMonth() + 1).padStart(2, '0');
+    const dia = String(d.getDate()).padStart(2, '0');
     return `${ano}-${mes}-${dia}`;
+  }
+
+  private formatarDataParaBackend(dataStr: string): string {
+    if (!dataStr) return '';
+    const partes = dataStr.split('-');
+    if (partes.length === 3) {
+      const [ano, mes, dia] = partes;
+      return `${dia}/${mes}/${ano}`;
+    }
+    return dataStr;
   }
 }

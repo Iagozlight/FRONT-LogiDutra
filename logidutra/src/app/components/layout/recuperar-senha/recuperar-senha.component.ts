@@ -1,8 +1,10 @@
 import { Component, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { MdbFormsModule } from 'mdb-angular-ui-kit/forms';
+import Swal from 'sweetalert2';
+
 import { usuario } from '../../../models/usuarios';
-import { UsuarioService } from '../../../services/usuario.service';
+import { UsuarioService } from '../../../services/usuario-service.service';
 
 @Component({
   selector: 'app-recuperar-senha',
@@ -11,44 +13,51 @@ import { UsuarioService } from '../../../services/usuario.service';
   styleUrl: './recuperar-senha.component.scss'
 })
 export class RecuperarSenhaComponent {
+
   usuarioService = inject(UsuarioService);
 
   usuario!: string;
   novaSenha!: string;
   confirmarSenha!: string;
 
-  enviarRecuperacao() {
+  enviarRecuperacao(): void {
+
     if (!this.usuario || this.usuario.trim() === '') {
-      alert('Preencha o campo de Usuário!');
+      Swal.fire({
+        icon: 'warning',
+        title: 'Atenção',
+        text: 'Preencha o campo de usuário.'
+      });
       return;
     }
 
     if (!this.novaSenha || !this.confirmarSenha) {
-      alert('Preencha a nova senha e a confirmação!');
+      Swal.fire({
+        icon: 'warning',
+        title: 'Atenção',
+        text: 'Preencha a nova senha e a confirmação.'
+      });
       return;
     }
 
     if (this.novaSenha !== this.confirmarSenha) {
-      alert('As senhas não coincidem!');
+      Swal.fire({
+        icon: 'warning',
+        title: 'Atenção',
+        text: 'As senhas não coincidem.'
+      });
       return;
     }
 
-    const usuarios = this.usuarioService.listarComPadrao();
-    const usuarioEncontrado = usuarios.find(
-      usuarioAtual => usuarioAtual.nome === this.usuario.trim()
-    );
+    const nomeUsuario = this.usuario.trim();
 
-    if (!usuarioEncontrado) {
-      alert('Usuário não encontrado!');
-      return;
-    }
-
-    usuarioEncontrado.senha = this.novaSenha;
-    const usuariosAtualizados = usuarios.filter(
-      (usuarioAtual, indice, lista) => lista.findIndex(item => item.nome === usuarioAtual.nome) === indice
-    );
-    this.usuarioService.salvar(usuariosAtualizados.filter(usuarioAtual => usuarioAtual.nome !== usuario.padrao().nome));
-    alert('Senha atualizada com sucesso!');
+    this.usuarioService.login(nomeUsuario, this.novaSenha).subscribe({
+      next: () => {
+        // ...
+      },
+      error: () => {
+        // ...
+      }
+    });
   }
-
 }

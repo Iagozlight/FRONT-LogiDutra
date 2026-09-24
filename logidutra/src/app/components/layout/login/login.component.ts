@@ -3,10 +3,9 @@ import { Router } from '@angular/router';
 import { MdbCollapseModule } from 'mdb-angular-ui-kit/collapse';
 import { MdbFormsModule } from 'mdb-angular-ui-kit/forms';
 import { FormsModule } from '@angular/forms';
-import { usuario } from '../../../models/usuarios';
+import Swal from 'sweetalert2';
 import { AuthService } from '../../../services/auth.service';
-import { UsuarioService } from '../../../services/usuario.service';
-
+import { UsuarioService } from '../../../services/usuario-service.service';
 
 @Component({
   selector: 'app-login',
@@ -19,26 +18,28 @@ export class LoginComponent {
   usuario!: string;
   senha!: string;
   lembrarUsuario: boolean = false;
-  usuarios: usuario[] = [usuario.padrao()];
+
 
   router = inject(Router);
   authService = inject(AuthService);
   usuarioService = inject(UsuarioService);
 
-  logar() {
-    const todosUsuarios = this.usuarioService.listarComPadrao();
-    const usuarioEncontrado = todosUsuarios.find(
-      usuario => usuario.nome === this.usuario && usuario.senha === this.senha
-    );
-
-    if (!usuarioEncontrado) {
-      alert('Usuario ou Senha incorretos');
+  logar(): void {
+    if (!this.usuario || !this.senha) {
+      Swal.fire({ icon: 'warning', title: 'Atenção', text: 'Preencha usuário e senha.' });
       return;
     }
 
-    this.authService.entrar(usuarioEncontrado);
-    const rota = usuarioEncontrado.role === 'Admin' ? '/admin/romaneios' : '/usuario/romaneios';
-    this.router.navigate([rota]);
+    this.usuarioService.login(this.usuario, this.senha).subscribe({
+      next: (usuarioEncontrado) => {
+        this.authService.entrar(usuarioEncontrado);
+        const rota = usuarioEncontrado.role === 'ADMIN' ? '/admin/romaneios' : '/usuario/romaneios';
+        this.router.navigate([rota]);
+      },
+      error: () => {
+        Swal.fire({ icon: 'error', title: 'Erro', text: 'Usuário ou senha incorretos.' });
+      }
+    });
   }
 
 }

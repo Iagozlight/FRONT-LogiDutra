@@ -31,31 +31,31 @@
             <div class="veiculo-grid p-3">
                 <div class="veiculo-dado">
                     <span>Motorista</span>
-                    <strong>{{ motoristaNome }}</strong>
+                    <strong>{{ romaneio.motorista.nome }}</strong>
                 </div>
                 <div class="veiculo-dado">
                     <span>Veículo</span>
-                    <strong>{{ veiculoPlaca }}</strong>
+                    <strong>{{ romaneio.veiculo.modelo }} PLACA: {{ romaneio.veiculo.placa }}</strong>
                 </div>
             </div>
 
             <div class="clientes-lista">
                 <h2>Clientes</h2>
-                @for (cliente of clientes; track $index) {
+                @for (cliente of romaneio.clientes; track $index) {
                     <article class="cliente-card">
                         <div class="cliente-header">
                             <div class="cliente-info">
                                 <span class="cliente-numero">Cliente {{ $index + 1 }}</span>
-                                <h3>{{ cliente.dados.nome }}</h3>
+                                <h3>{{ cliente.nome }}</h3>
                             </div>
-                            <span class="cliente-entregas">{{ cliente.produtos.length }} produto(s)</span>
+                            <span class="cliente-entregas">{{ clientes.length }} produto(s)</span>
                         </div>
                         <div class="cliente-endereco">
                             <span>Endereço</span>
-                            <p>{{ cliente.dados.logradouro }}, {{ cliente.dados.bairro }} - {{ cliente.dados.cidade }} ({{ cliente.dados.cep }})</p>
+                            <p>{{ cliente.logradouro }}, {{ cliente.bairro }} - {{ cliente.cidade }} ({{ cliente.cep }})</p>
                         </div>
                         <div class="produtos-lista">
-                            @for (produto of cliente.produtos; track $index) {
+                            @for (produto of romaneio.produtoList; track $index) {
                                 <div class="produto-item">
                                     <span class="produto-nome">{{ produto.nome }}</span>
                                     <span class="produto-quantidade">{{ produto.quantidade }}x</span>

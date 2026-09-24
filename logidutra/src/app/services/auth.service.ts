@@ -11,11 +11,12 @@ export class AuthService {
   }
 
   get estaAutenticado(): boolean {
-    return this.usuarioAtual !== null;
+    return !!sessionStorage.getItem(this.chaveSessao);
   }
 
   get ehAdmin(): boolean {
-    return this.usuarioAtual?.role === 'Admin';
+    // Normaliza para maiúsculas para evitar falha entre 'ADMIN' e 'Admin'
+    return this.usuarioAtual?.role?.toUpperCase() === 'ADMIN';
   }
 
   entrar(usuarioLogado: usuario): void {
