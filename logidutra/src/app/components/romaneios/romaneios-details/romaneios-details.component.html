@@ -43,7 +43,7 @@
                             </div>
                             <div class="col-md-6">
                                 <label class="form-label" for="clienteCep">CEP</label>
-                                <input id="clienteCep" class="form-control" type="text" [(ngModel)]="clienteEmCadastro.cep" placeholder="00000-000" />
+                                <input id="clienteCep" class="form-control" type="text" [(ngModel)]="clienteEmCadastro.cep" (input)="buscarCep()" placeholder="00000-000" />
                             </div>
                             <div class="col-md-6">
                                 <label class="form-label" for="clienteLogradouro">Logradouro</label>
@@ -90,7 +90,14 @@
                                         <div class="fw-bold text-dark">{{ cliente.dados.nome }}</div>
                                         <small class="text-muted">{{ cliente.dados.telefone }} • {{ cliente.dados.cidade }} • {{ cliente.produtos.length }} item(ns)</small>
                                     </div>
-                                    <button type="button" class="btn btn-remover-cliente rounded" (click)="removerCliente($index)">Remover</button>
+                                    <div class="d-flex gap-2">
+                                        <button type="button" class="btn btn-outline-primary btn-sm rounded" (click)="editarCliente($index)">
+                                            Editar
+                                        </button>
+                                        <button type="button" class="btn btn-remover-cliente rounded" (click)="removerCliente($index)">
+                                            Remover
+                                        </button>
+                                    </div>
                                 </div>
                             } @empty {
                                 <small class="text-muted text-center d-block">Nenhum cliente na fila do romaneio.</small>
@@ -128,8 +135,8 @@
                                 <label class="form-label" for="veiculo">Veículo</label>
                                 <select id="veiculo" class="form-select" [(ngModel)]="veiculo">
                                     <option [ngValue]="null">Selecione um veículo</option>
-                                    @for (veiculo of veiculos; track veiculo.id) {
-                                        <option [ngValue]="veiculo">{{ veiculo.marca }} {{ veiculo.modelo }} - {{ veiculo.placa }}</option>
+                                    @for (veiculoItem of veiculos; track veiculoItem.id) {
+                                        <option [ngValue]="veiculoItem">{{ veiculoItem.marca }} {{ veiculoItem.modelo }} - {{ veiculoItem.placa }}</option>
                                     } @empty {
                                         <option disabled>Nenhum veículo disponível</option>
                                     }

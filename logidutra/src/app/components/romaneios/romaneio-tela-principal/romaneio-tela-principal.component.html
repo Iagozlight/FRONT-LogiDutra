@@ -1,11 +1,16 @@
 <main class="romaneio-tela">
     @if (carregando) {
         <section class="estado-vazio">
-            <div><p>Carregando romaneio...</p></div>
+            <div>
+                <p>Carregando romaneio...</p>
+            </div>
         </section>
     } @else if (erro) {
         <section class="estado-vazio">
-            <div><p>{{ erro }}</p></div>
+            <div>
+                <p>{{ erro }}</p>
+                <button type="button" class="btn-voltar" (click)="voltar()">Voltar para romaneios</button>
+            </div>
         </section>
     } @else if (romaneio) {
         <header class="romaneio-header">
@@ -14,72 +19,160 @@
                 <h1>#{{ romaneio.id }}</h1>
             </div>
 
-            <button type="button" class="btn-voltar" (click)="voltar()">Voltar</button>
+            <div class="header-acoes">
+                @if (romaneioFinalizado) {
+                    <button type="button" class="btn-reativar-geral" (click)="reativarRomaneio()">Reativar Romaneio</button>
+                } @else {
+                    <button type="button" class="btn-finalizar-geral" (click)="finalizarRomaneio()">Finalizar Geral</button>
+                }
+                <button type="button" class="btn-voltar" (click)="voltar()">Voltar</button>
+            </div>
         </header>
 
-        <section class="clientes-card">
-            <div class="card-header">
-                <div>
-                    <span class="section-label">Data do romaneio</span>
-                    <h2>{{ romaneio.data | date:'dd/MM/yyyy' }}</h2>
+        <div class="romaneio-layout">
+            <section class="clientes-card">
+                <div class="card-header">
+                    <div>
+                        <span class="section-label">Data do romaneio</span>
+                        <h2>{{ romaneio.data | date:'dd/MM/yyyy' }}</h2>
+                    </div>
+                    <div class="clientes-total">
+                        Horário: {{ horario }} · {{ clientes.length }} cliente(s)
+                    </div>
                 </div>
-                <div class="clientes-total">
-                    {{ horario }} · {{ romaneio.produtoList.length }} produto(s)
-                </div>
-            </div>
 
-            <div class="veiculo-grid p-3">
-                <div class="veiculo-dado">
-                    <span>Motorista</span>
-                    <strong>{{ romaneio.motorista.nome }}</strong>
-                </div>
-                <div class="veiculo-dado">
-                    <span>Veículo</span>
-                    <strong>{{ romaneio.veiculo.modelo }} PLACA: {{ romaneio.veiculo.placa }}</strong>
-                </div>
-            </div>
+                <div class="clientes-lista">
+                    @for (cliente of clientes; track $index) {
+                        <article class="cliente-card" [class.cliente-finalizado]="cliente.status === 'finalizado'">
 
-            <div class="clientes-lista">
-                <h2>Clientes</h2>
-                @for (cliente of romaneio.clientes; track $index) {
-                    <article class="cliente-card">
-                        <div class="cliente-header">
-                            <div class="cliente-info">
-                                <span class="cliente-numero">Cliente {{ $index + 1 }}</span>
-                                <h3>{{ cliente.nome }}</h3>
-                            </div>
-                            <span class="cliente-entregas">{{ clientes.length }} produto(s)</span>
-                        </div>
-                        <div class="cliente-endereco">
-                            <span>Endereço</span>
-                            <p>{{ cliente.logradouro }}, {{ cliente.bairro }} - {{ cliente.cidade }} ({{ cliente.cep }})</p>
-                        </div>
-                        <div class="produtos-lista">
-                            @for (produto of romaneio.produtoList; track $index) {
-                                <div class="produto-item">
-                                    <span class="produto-nome">{{ produto.nome }}</span>
-                                    <span class="produto-quantidade">{{ produto.quantidade }}x</span>
+                            <!-- Badges de Status / Entrega -->
+                            @if (cliente.status === 'finalizado') {
+                                <div class="badge-status-entrega finalizada">
+                                    <span>Entrega Feita</span>
+                                </div>
+                            } @else if (cliente.status === 'caminho') {
+                                <div class="badge-status-entrega caminho">
+                                    <span>A Caminho</span>
                                 </div>
                             }
-                        </div>
-                    </article>
-                } @empty {
-                    <p>Nenhum cliente salvo localmente para este romaneio.</p>
-                }
-            </div>
 
-            <div class="produtos-lista">
-                <h2>Produtos do romaneio</h2>
-                @for (produto of romaneio.produtoList; track $index) {
-                    <div class="produto-item">
-                        <span class="produto-nome">{{ produto.nome }}</span>
-                        <span class="produto-quantidade">{{ produto.quantidade }}x</span>
+                            <div class="cliente-header">
+                                <div class="cliente-info">
+                                    <span class="cliente-numero">Cliente {{ $index + 1 }}</span>
+                                    <h3>{{ cliente.dados.nome }}</h3>
+                                </div>
+                                <span class="cliente-entregas">{{ cliente.produtos.length }} item(ns)</span>
+                            </div>
+
+                            <!-- Seletores de Status com a Bolinha (Cinza, Amarelo, Verde) -->
+                            <div class="status-selector-container">
+                                <span class="status-label">Status da entrega:</span>
+                                <div class="status-buttons-group">
+                                    <button
+                                        type="button"
+                                        class="btn-status"
+                                        [class.ativo]="cliente.status === 'espera'"
+                                        (click)="alterarStatusCliente($index, 'espera')">
+                                        <span class="dot dot-espera"></span> Na Espera
+                                    </button>
+
+                                    <button
+                                        type="button"
+                                        class="btn-status"
+                                        [class.ativo]="cliente.status === 'caminho'"
+                                        (click)="alterarStatusCliente($index, 'caminho')">
+                                        <span class="dot dot-caminho"></span> A Caminho
+                                    </button>
+
+                                    <button
+                                        type="button"
+                                        class="btn-status"
+                                        [class.ativo]="cliente.status === 'finalizado'"
+                                        (click)="alterarStatusCliente($index, 'finalizado')">
+                                        <span class="dot dot-finalizado"></span> Finalizado
+                                    </button>
+                                </div>
+                            </div>
+
+                            <div class="cliente-endereco">
+                                <span>Endereço / Telefone</span>
+                                <p>{{ cliente.dados.logradouro }}, {{ cliente.dados.bairro }} - {{ cliente.dados.cidade }} (CEP: {{ cliente.dados.cep }})</p>
+                                <p><strong>Tel:</strong> {{ cliente.dados.telefone }}</p>
+                            </div>
+
+                            <div class="produtos-lista">
+                                @for (produto of cliente.produtos; track $index) {
+                                    <div class="produto-item">
+                                        <span class="produto-nome">{{ produto.nome }}</span>
+                                        <span class="produto-quantidade">{{ produto.quantidade }}x</span>
+                                    </div>
+                                } @empty {
+                                    <p class="text-muted">Nenhum produto associado a este cliente.</p>
+                                }
+                            </div>
+
+                            <div class="cliente-footer-acoes">
+                                @if (cliente.status === 'finalizado') {
+                                    <button
+                                        type="button"
+                                        class="btn-reativar-cliente"
+                                        (click)="reativarCliente($index)">
+                                        Reativar Cliente
+                                    </button>
+                                } @else {
+                                    <button
+                                        type="button"
+                                        class="btn-finalizar-cliente"
+                                        (click)="finalizarCliente($index)">
+                                        Finalizar
+                                    </button>
+                                }
+                            </div>
+                        </article>
+                    } @empty {
+                        <p class="p-3 text-muted text-center">Nenhum cliente cadastrado neste romaneio.</p>
+                    }
+                </div>
+            </section>
+
+            <aside class="romaneio-sidebar">
+                <div class="mapa-card">
+                    <div class="mapa-header">
+                        <h2>Mapa de Entregas</h2>
                     </div>
-                } @empty {
-                    <p>Nenhum produto cadastrado.</p>
-                }
-            </div>
-        </section>
+                    <div class="mapa-placeholder">
+                        <span>...</span>
+                    </div>
+                </div>
+
+                <div class="veiculo-card">
+                    <div class="card-header">
+                        <div>
+                            <span class="section-label">Transporte</span>
+                            <h2>Veículo & Motorista</h2>
+                        </div>
+                    </div>
+                    <div class="veiculo-grid">
+                        <div class="veiculo-dado">
+                            <span>Motorista</span>
+                            <strong>{{ motoristaNome !== 'Não informado' ? motoristaNome : (romaneio.motorista?.nome || 'Não informado') }}</strong>
+                        </div>
+                        <div class="veiculo-dado">
+                            <span>Veículo / Placa</span>
+                            <strong>
+                                @if (veiculoPlaca !== 'Não informado') {
+                                    {{ veiculoPlaca }}
+                                } @else if (romaneio.veiculo) {
+                                    {{ romaneio.veiculo.modelo }} ({{ romaneio.veiculo.placa }})
+                                } @else {
+                                    Não informado
+                                }
+                            </strong>
+                        </div>
+                    </div>
+                </div>
+            </aside>
+        </div>
     } @else {
         <section class="estado-vazio">
             <div>

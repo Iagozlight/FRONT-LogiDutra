@@ -1,4 +1,5 @@
 import { CommonModule } from '@angular/common';
+import { HttpClient } from '@angular/common/http';
 import { Component, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -59,6 +60,7 @@ export class RomaneiosDetailsComponent {
 
   private readonly route = inject(ActivatedRoute);
   private readonly router = inject(Router);
+  private readonly http = inject(HttpClient);
   private readonly authService = inject(AuthService);
   private readonly clienteService = inject(ClienteService);
   private readonly cpfService = inject(CpfService);
@@ -94,6 +96,32 @@ export class RomaneiosDetailsComponent {
     }
   }
 
+  buscarCep(): void {
+    const cepLimpo = (this.clienteEmCadastro.cep || '').replace(/\D/g, '');
+
+    if (cepLimpo.length === 8) {
+      this.http.get<any>(`https://viacep.com.br/ws/${cepLimpo}/json/`).subscribe({
+        next: (dados) => {
+          if (!dados.erro) {
+            this.clienteEmCadastro.logradouro = dados.logradouro ?? '';
+            this.clienteEmCadastro.bairro = dados.bairro ?? '';
+            this.clienteEmCadastro.cidade = dados.localidade ?? '';
+          } else {
+            Swal.fire({
+              title: 'CEP não encontrado',
+              text: 'O CEP informado não existe na base do ViaCEP.',
+              icon: 'warning',
+              confirmButtonText: 'Ok'
+            });
+          }
+        },
+        error: (err) => {
+          console.error('Erro ao consultar ViaCEP:', err);
+        }
+      });
+    }
+  }
+
   adicionarProdutoCliente(): void {
     const nome = this.nomeProdutoCliente.trim();
     const quantidade = Math.floor(Number(this.quantidadeProdutoCliente));
@@ -113,7 +141,7 @@ export class RomaneiosDetailsComponent {
   adicionarCliente(): boolean {
     const c = this.clienteEmCadastro;
 
-    // 1. Validação de campos em branco
+
     const camposPreenchidos = [
       c.nome, c.telefone, c.cpf, c.cep, c.logradouro, c.bairro, c.cidade
     ].every(campo => campo && campo.trim().length > 0);
@@ -128,7 +156,7 @@ export class RomaneiosDetailsComponent {
       return false;
     }
 
-    // 2. Validação de CPF
+
     if (!this.cpfService.validarCPF(c.cpf)) {
       Swal.fire({
         title: 'CPF inválido',
@@ -139,7 +167,7 @@ export class RomaneiosDetailsComponent {
       return false;
     }
 
-    // 3. Validação de CEP
+
     if (!this.validarCEP(c.cep)) {
       Swal.fire({
         title: 'CEP inválido',
@@ -150,7 +178,7 @@ export class RomaneiosDetailsComponent {
       return false;
     }
 
-    // 4. Validação de Produtos do Cliente
+
     if (!c.produtos.length) {
       Swal.fire({
         title: 'Sem produtos',
@@ -163,11 +191,11 @@ export class RomaneiosDetailsComponent {
 
     const { produtos, ...dados } = this.clienteEmCadastro;
 
-    // Normaliza o CEP limpando pontuações
+
     dados.cep = dados.cep.replace(/\D/g, '');
 
     this.clientesPendentes.push({
-      dados: { ...dados, id: 0 },
+      dados: { ...dados },
       produtos: [...produtos]
     });
 
@@ -175,6 +203,20 @@ export class RomaneiosDetailsComponent {
     this.nomeProdutoCliente = '';
     this.quantidadeProdutoCliente = 1;
     return true;
+  }
+
+  editarCliente(indice: number): void {
+    const clienteSelecionado = this.clientesPendentes[indice];
+    if (!clienteSelecionado) {
+      return;
+    }
+
+    this.clienteEmCadastro = {
+      ...clienteSelecionado.dados,
+      produtos: clienteSelecionado.produtos.map(prod => ({ ...prod }))
+    };
+
+    this.clientesPendentes.splice(indice, 1);
   }
 
   removerCliente(indice: number): void {
@@ -207,7 +249,7 @@ export class RomaneiosDetailsComponent {
       return;
     }
 
-    if (!this.veiculo) {
+    if (!this.veiculo || !this.veiculo.id) {
       Swal.fire({ title: 'Atenção', text: 'Selecione um veículo para o romaneio.', icon: 'warning' });
       return;
     }
@@ -361,7 +403,7 @@ export class RomaneiosDetailsComponent {
     return forkJoin(
       clientesNovos.map(clienteAtual => {
         const { id, ...dadosParaCriacao } = clienteAtual.dados;
-        // Limpa o CEP garantindo apenas números
+
         dadosParaCriacao.cep = (dadosParaCriacao.cep || '').replace(/\D/g, '');
         return this.clienteService.create(dadosParaCriacao as cliente, usuarioLogadoId);
       })

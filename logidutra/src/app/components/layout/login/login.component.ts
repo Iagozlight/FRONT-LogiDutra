@@ -9,31 +9,36 @@ import { UsuarioService } from '../../../services/usuario-service.service';
 
 @Component({
   selector: 'app-login',
+  standalone: true,
   imports: [MdbCollapseModule, MdbFormsModule, FormsModule],
   templateUrl: './login.component.html',
   styleUrl: './login.component.scss'
 })
 export class LoginComponent {
-
-  usuario!: string;
-  senha!: string;
-  lembrarUsuario: boolean = false;
-
+  usuario = '';
+  senha = '';
+  lembrarUsuario = false;
 
   router = inject(Router);
   authService = inject(AuthService);
   usuarioService = inject(UsuarioService);
 
   logar(): void {
-    if (!this.usuario || !this.senha) {
+    const usuarioLimpo = this.usuario?.trim();
+    const senhaLimpa = this.senha?.trim();
+
+    if (!usuarioLimpo || !senhaLimpa) {
       Swal.fire({ icon: 'warning', title: 'Atenção', text: 'Preencha usuário e senha.' });
       return;
     }
 
-    this.usuarioService.login(this.usuario, this.senha).subscribe({
+    this.usuarioService.login(usuarioLimpo, senhaLimpa).subscribe({
       next: (usuarioEncontrado) => {
         this.authService.entrar(usuarioEncontrado);
-        const rota = usuarioEncontrado.role === 'ADMIN' ? '/admin/romaneios' : '/usuario/romaneios';
+
+        const ehAdmin = usuarioEncontrado.role?.toUpperCase() === 'ADMIN';
+        const rota = ehAdmin ? '/admin/romaneios' : '/usuario/romaneios';
+
         this.router.navigate([rota]);
       },
       error: () => {
@@ -41,5 +46,4 @@ export class LoginComponent {
       }
     });
   }
-
 }

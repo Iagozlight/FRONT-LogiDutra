@@ -5,11 +5,12 @@
 .btn-cadastro {
   background-color: #8a5a2d;
   color: #d8b07a;
-}
 
-.btn-cadastro:hover {
-  background-color: #6f4724;
-  color: #d8b07a;
+
+  &:hover {
+    background-color: #6f4724;
+    color: #d8b07a;
+  }
 }
 
 .card {
@@ -21,227 +22,188 @@
 
 .card-body {
   padding: 25px;
-}
+  h3 {
+    display: inline-block;
+    margin: 0 0 20px 0;
+    color: #333;
+    font-size: 24px;
+    font-weight: 600;
+  }
 
-.card-body h3 {
-  display: inline-block;
-  margin: 0 0 20px 0;
-  font-size: 24px;
-  font-weight: 600;
-  color: #333;
+  > .direita {
+    display: inline-block;
+    float: right;
+
+
+    .btn {
+      padding: 8px 20px;
+      border-radius: 6px;
+      font-weight: 500;
+    }
+  }
 }
 
 .direita {
   text-align: right;
 }
 
-.card-body > .direita {
-  display: inline-block;
-  float: right;
-}
 
-.card-body > .direita .btn {
-  padding: 8px 20px;
-  border-radius: 6px;
-  font-weight: 500;
-}
+
+
 
 .table {
   width: 100%;
   margin-top: 10px;
   border-collapse: collapse;
+
+
+  thead {
+    background-color: #f5f5f5;
+
+    th {
+      padding: 14px 12px;
+      border-bottom: 2px solid #ddd;
+      color: #444;
+      font-size: 14px;
+      font-weight: 600;
+    }
+  }
+
+  tbody {
+    td {
+      padding: 14px 12px;
+      border-bottom: 1px solid #eee;
+      color: #555;
+      vertical-align: middle;
+    }
+
+    tr {
+      transition: background-color 0.2s ease;
+
+      &:hover {
+        background-color: #f8f9fa;
+      }
+    }
+
+    .romaneio-row {
+      cursor: pointer;
+
+      &:focus-visible {
+        outline: 3px solid #c98d4a;
+        outline-offset: -3px;
+      }
+    }
+  }
+
+  .btn {
+    padding: 7px 14px;
+    border: none;
+    border-radius: 6px;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+
+  .btn-editar {
+    border: 1px solid transparent;
+    background-color: #d8b07a;
+    color: #6f4724;
+    font-weight: 600;
+
+    &:hover {
+      background-color: #c99a5d;
+      color: #fff;
+    }
+  }
+
+  .btn-excluir {
+    border: 1px solid transparent;
+    background-color: #a94442;
+    color: #fff;
+    font-weight: 600;
+
+    &:hover {
+      background-color: #842f2d;
+    }
+  }
 }
 
-.table thead {
-  background-color: #f5f5f5;
-}
-
-.table thead th {
-  padding: 14px 12px;
-  font-size: 14px;
-  font-weight: 600;
-  color: #444;
-  border-bottom: 2px solid #ddd;
-}
-
-.table tbody td {
-  padding: 14px 12px;
-  vertical-align: middle;
-  color: #555;
-  border-bottom: 1px solid #eee;
-}
-
-.table tbody tr {
-  transition: background-color 0.2s ease;
-}
-
-.table tbody tr:hover {
-  background-color: #f8f9fa;
-}
-
-.table tbody .romaneio-row {
-  cursor: pointer;
-}
-
-.table tbody .romaneio-row:focus-visible {
-  outline: 3px solid #c98d4a;
-  outline-offset: -3px;
-}
-
-.table .btn {
-  border: none;
-  border-radius: 6px;
-  padding: 7px 14px;
-  font-size: 14px;
-  font-weight: 500;
-  cursor: pointer;
-  transition: all 0.2s ease;
-}
-
-.table .btn-warning {
-  color: #fff;
-}
-
-.table .btn-editar,
-.table .btn-status,
-.table .btn-excluir {
-  border: 1px solid transparent;
-  font-weight: 600;
-}
-
-.table .btn-status {
-  border-color: #c9a875;
-  background-color: #fff8ed;
-  color: #6f4724;
-  cursor: pointer;
-}
-
-.seu-romaneio {
-  display: inline-block;
-  margin-right: 10px;
-  color: #2f7d32;
-  font-size: 12px;
-  font-weight: 800;
-  letter-spacing: 0.04em;
-  white-space: nowrap;
-}
-
-.table .btn-status:hover {
-  background-color: #f1dcc1;
-}
-
-.status-controle {
-  position: relative;
-  display: inline-block;
-}
-
-.status-menu {
-  position: absolute;
-  z-index: 10;
-  top: calc(100% + 6px);
-  right: 0;
-  display: grid;
-  min-width: 150px;
-  padding: 5px;
-  border: 1px solid #e1d2c1;
-  border-radius: 7px;
-  background: #fff;
-  box-shadow: 0 7px 18px rgba(52, 39, 28, 0.16);
-}
-
-.status-menu button {
-  padding: 8px 10px;
-  border: 0;
-  border-radius: 4px;
-  background: transparent;
-  color: #6f4724;
-  font-size: 12px;
-  font-weight: 600;
-  text-align: left;
-  white-space: nowrap;
-}
-
-.status-menu button:hover {
-  background: #f5eee7;
-}
-
-.table .btn-editar {
-  background-color: #d8b07a;
-  color: #6f4724;
-}
-
-.table .btn-editar:hover {
-  background-color: #c99a5d;
-  color: #fff;
-}
-
-.table .btn-excluir {
-  background-color: #a94442;
-  color: #fff;
-}
-
-.table .btn-excluir:hover {
-  background-color: #842f2d;
-}
-
-.status {
-  display: inline-block;
-  min-width: 108px;
-  padding: 6px 10px;
-  border-radius: 999px;
-  font-size: 12px;
+/* Badges de Status */
+.badge-status {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 10px;
+  border-radius: 20px;
+  font-size: 11px;
   font-weight: 700;
-  text-align: center;
-}
+  letter-spacing: 0.02em;
 
-.status-em-andamento {
-  color: #7a4a00;
-  background-color: #ffe6a8;
-}
+  .dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+  }
 
-.status-encerrado {
-  color: #24552b;
-  background-color: #ccebd1;
-}
+  &.status-pendente {
+    border: 1px solid #e5e7eb;
+    background-color: #f3f4f6;
+    color: #4b5563;
 
-.status-preparado {
-  color: #245078;
-  background-color: #cfe5f5;
-}
+    .dot {
+      background-color: #9ca3af;
+    }
+  }
 
-.table .btn-warning:hover {
-  transform: translateY(-1px);
-}
+  &.status-em-rota {
+    border: 1px solid #fde68a;
+    background-color: #fef3c7;
+    color: #92400e;
 
-.table .btn-danger:hover {
-  transform: translateY(-1px);
+    .dot {
+      background-color: #f59e0b;
+    }
+  }
+
+  &.status-concluido {
+    border: 1px solid #a7f3d0;
+    background-color: #d1fae5;
+    color: #065f46;
+
+    .dot {
+      background-color: #10b981;
+    }
+  }
 }
 
 @media (max-width: 768px) {
   .card-body {
     padding: 15px;
-  }
 
-  .card-body h3 {
-    display: block;
-    font-size: 20px;
-    margin-bottom: 15px;
-  }
 
-  .card-body > .direita {
-    display: block;
-    float: none;
-    margin-bottom: 15px;
+    h3 {
+      display: block;
+      margin-bottom: 15px;
+      font-size: 20px;
+    }
+
+    > .direita {
+      display: block;
+      float: none;
+      margin-bottom: 15px;
+    }
   }
 
   .table {
     display: block;
     overflow-x: auto;
     white-space: nowrap;
-  }
 
-  .table thead th,
-  .table tbody td {
-    padding: 10px;
+
+    thead th,
+    tbody td {
+      padding: 10px;
+    }
   }
 }

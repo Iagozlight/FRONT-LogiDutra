@@ -9,6 +9,8 @@ import { Romaneio } from '../../../models/romaneio';
 import { AuthService } from '../../../services/auth.service';
 import { RomaneioService } from '../../../services/romaneio.service';
 
+export type StatusRomaneio = 'PENDENTE' | 'EM_ROTA' | 'CONCLUIDO';
+
 @Component({
   selector: 'app-romaneios-list',
   standalone: true,
@@ -90,6 +92,8 @@ export class RomaneiosListComponent implements OnInit {
         .pipe(takeUntilDestroyed(this.destroyRef))
         .subscribe({
           next: () => {
+            localStorage.removeItem(`romaneio-status:${romaneio.id}`);
+            localStorage.removeItem(`romaneio-detalhes:${romaneio.id}`);
             Swal.fire('Sucesso!', 'Romaneio excluído com sucesso.', 'success');
             this.carregarRomaneios();
           },
@@ -132,5 +136,54 @@ export class RomaneiosListComponent implements OnInit {
               : 'Não foi possível carregar os romaneios.';
         }
       });
+  }
+
+  obterStatusRomaneio(id: number): StatusRomaneio {
+    const statusDireto = localStorage.getItem(`romaneio-status:${id}`) as StatusRomaneio;
+    if (statusDireto) {
+      return statusDireto;
+    }
+
+    const detalhesSalvos = localStorage.getItem(`romaneio-detalhes:${id}`);
+    if (detalhesSalvos) {
+      try {
+        const detalhes = JSON.parse(detalhesSalvos);
+        if (detalhes.clientes && detalhes.clientes.length > 0) {
+          const todosFinalizados = detalhes.clientes.every((c: any) => c.status === 'finalizado');
+          if (todosFinalizados) return 'CONCLUIDO';
+
+          const algumEmAndamento = detalhes.clientes.some(
+            (c: any) => c.status === 'caminho' || c.status === 'finalizado'
+          );
+          if (algumEmAndamento) return 'EM_ROTA';
+        }
+      } catch (e) {
+        console.error('Erro ao ler detalhes do romaneio', e);
+      }
+    }
+
+    return 'PENDENTE';
+  }
+
+  obterLabelStatus(status: StatusRomaneio): string {
+    switch (status) {
+      case 'CONCLUIDO':
+        return 'Concluído';
+      case 'EM_ROTA':
+        return 'Em Rota';
+      default:
+        return 'Pendente';
+    }
+  }
+
+  obterClasseStatus(status: StatusRomaneio): string {
+    switch (status) {
+      case 'CONCLUIDO':
+        return 'status-concluido';
+      case 'EM_ROTA':
+        return 'status-em-rota';
+      default:
+        return 'status-pendente';
+    }
   }
 }
