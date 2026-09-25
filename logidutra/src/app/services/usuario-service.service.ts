@@ -44,6 +44,14 @@ export class UsuarioService {
 
   }
 
+  redefinirSenha(nome: string, novaSenha: string): Observable<void> {
+  const params = new HttpParams()
+    .set('nome', nome)
+    .set('novaSenha', novaSenha);
+
+  return this.http.patch<void>(`${this.API}/recuperar-senha`, {}, { params });
+}
+
   marcarEmRota(id: number): Observable<usuario> {
     return this.http.patch<usuario>(`${this.API}/${id}/em-rota`, {});
   }
