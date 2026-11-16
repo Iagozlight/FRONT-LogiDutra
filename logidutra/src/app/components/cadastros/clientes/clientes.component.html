@@ -1,0 +1,101 @@
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-lg-10">
+            <div class="card mt-4">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <h3 class="mb-0">Clientes cadastrados</h3>
+                        <button type="button" class="btn btn-cadastro" (click)="abrirModal()">Novo Cliente</button>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="table table-hover align-middle mb-0">
+                            <thead>
+                                <tr>
+                                    <th scope="col">Id</th>
+                                    <th scope="col">Nome</th>
+                                    <th scope="col">CPF</th>
+                                    <th scope="col">CEP</th>
+                                    <th scope="col">Cidade</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                 @for (cliente of clientesPaginados; track cliente.id) {
+                                     <tr>
+                                         <th scope="row">{{ cliente.id }}</th>
+                                         <td>{{ cliente.nome }}</td>
+                                         <td>{{ cliente.cpf }}</td>
+                                         <td>{{ cliente.cep }}</td>
+                                         <td>{{ cliente.cidade }}</td>
+                                     </tr>
+                                 } @empty{
+                                     <tr>
+                                         <td colspan="5" class="text-center text-muted">
+                                             {{ carregando ? 'Carregando clientes...' : 'Nenhum cliente cadastrado.' }}
+                                         </td>
+                                     </tr>
+                                 }
+                            </tbody>
+                        </table>
+                    </div>
+                    <nav aria-label="Navegação de clientes">
+                        <ul class="pagination justify-content-center">
+                            <li class="page-item" [class.disabled]="paginaAtual === 1">
+                                <a class="page-link" href="#" (click)="$event.preventDefault(); paginaAnterior()">Anterior</a>
+                            </li>
+
+                            @for (pagina of paginas; track pagina) {
+                                <li class="page-item" [class.active]="pagina === paginaAtual">
+                                    <a class="page-link" href="#" (click)="$event.preventDefault(); irParaPagina(pagina)">{{pagina}}</a>
+                                </li>
+                            }
+
+                            <li class="page-item" [class.disabled]="paginaAtual === totalPaginas">
+                                <a class="page-link" href="#" (click)="$event.preventDefault(); paginaProxima()">Próxima</a>
+                            </li>
+                        </ul>
+                    </nav>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@if (modalAberto) {
+    <div class="modal-backdrop-custom" (click)="fecharModal()">
+        <section class="modal-custom" role="dialog" aria-modal="true" aria-labelledby="tituloModalCliente" (click)="$event.stopPropagation()">
+            <div class="modal-custom-header">
+                <h3 id="tituloModalCliente">Cadastro de cliente</h3>
+                <button type="button" class="btn-close" aria-label="Fechar" (click)="fecharModal()"></button>
+            </div>
+            <div class="modal-custom-body">
+                <label class="form-label" for="modalClienteNome">Nome</label>
+                <input id="modalClienteNome" class="form-control mb-3" type="text" [(ngModel)]="clienteEmCadastro.nome" />
+
+                <label class="form-label" for="modalClienteTelefone">Telefone</label>
+                <input id="modalClienteTelefone" class="form-control mb-3" type="tel" [(ngModel)]="clienteEmCadastro.telefone" />
+
+                <label class="form-label" for="modalClienteCpf">CPF</label>
+                <input id="modalClienteCpf" class="form-control mb-3" type="text" [(ngModel)]="clienteEmCadastro.cpf" />
+
+                <label class="form-label" for="modalClienteCep">CEP</label>
+                <input id="modalClienteCep" class="form-control mb-3" type="text" [(ngModel)]="clienteEmCadastro.cep" (input)="buscarCep()" />
+
+                <label class="form-label" for="modalClienteLogradouro">Logradouro</label>
+                <input id="modalClienteLogradouro" class="form-control mb-3" type="text" [(ngModel)]="clienteEmCadastro.logradouro" />
+
+                <label class="form-label" for="modalClienteBairro">Bairro</label>
+                <input id="modalClienteBairro" class="form-control mb-3" type="text" [(ngModel)]="clienteEmCadastro.bairro" />
+
+                <label class="form-label" for="modalClienteCidade">Cidade</label>
+                <input id="modalClienteCidade" class="form-control" type="text" [(ngModel)]="clienteEmCadastro.cidade" />
+            </div>
+            <div class="modal-custom-footer">
+                <button type="button" class="btn btn-secondary" (click)="fecharModal()">Voltar</button>
+                <button type="button" class="btn btn-cadastro" [disabled]="salvando" (click)="cadastrar()">
+                    {{ salvando ? 'Cadastrando...' : 'Cadastrar' }}
+                </button>
+            </div>
+        </section>
+    </div>
+}
+
