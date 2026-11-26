@@ -4,6 +4,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { Romaneio } from '../../../models/romaneio';
 import { AuthService } from '../../../services/auth.service';
 import { RomaneioService } from '../../../services/romaneio.service';
+import { MapComponent } from '../map/map.component';
 
 export type StatusCliente = 'espera' | 'caminho' | 'finalizado';
 
@@ -12,7 +13,7 @@ interface ProdutoCliente {
   quantidade: number;
 }
 
-interface ClienteRomaneio {
+export interface ClienteRomaneio {
   dados: {
     nome: string;
     telefone: string;
@@ -39,7 +40,7 @@ interface DetalhesExtras {
 @Component({
   selector: 'app-romaneio-tela-principal',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, MapComponent],
   templateUrl: './romaneio-tela-principal.component.html',
   styleUrl: './romaneio-tela-principal.component.scss'
 })
