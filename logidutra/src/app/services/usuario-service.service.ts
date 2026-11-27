@@ -46,11 +46,16 @@ export class UsuarioService {
     return this.http.patch<usuario>(this.API, usuario, { params });
   }
 
-  login(nome: string, senha: string): Observable<usuario> {
-  const params = new HttpParams().set('nome', nome).set('senha', senha);
-  return this.http.get<usuario>(`${this.API}/login`, { params });
 
-  }
+login(nome: string, senha: string): Observable<LoginResponse> {
+  return this.http.post<LoginResponse>(
+    'http://localhost:8080/auth/login',
+    {
+      login: nome,
+      senha: senha
+    }
+  );
+}
 
   redefinirSenha(nome: string, novaSenha: string): Observable<void> {
   const params = new HttpParams()
