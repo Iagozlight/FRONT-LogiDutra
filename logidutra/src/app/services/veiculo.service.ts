@@ -1,24 +1,24 @@
 import { Injectable } from '@angular/core';
-import { veiculo } from '../models/veiculos';
+import { Veiculo } from '../models/veiculos';
 
 @Injectable({ providedIn: 'root' })
 export class VeiculoService {
   private readonly chave = 'veiculos';
 
-  listar(): veiculo[] {
+  listar(): Veiculo[] {
     const salvo = sessionStorage.getItem(this.chave);
-    return salvo ? JSON.parse(salvo) as veiculo[] : [];
+    return salvo ? JSON.parse(salvo) as Veiculo[] : [];
   }
 
-  buscarPorPlaca(placa: string): veiculo | undefined {
+  buscarPorPlaca(placa: string): Veiculo | undefined {
     return this.listar().find(item => item.placa === placa);
   }
 
-  salvar(veiculos: veiculo[]): void {
+  salvar(veiculos: Veiculo[]): void {
     sessionStorage.setItem(this.chave, JSON.stringify(veiculos));
   }
 
-  adicionar(novoVeiculo: veiculo): void {
+  adicionar(novoVeiculo: Veiculo): void {
     const veiculos = this.listar();
     veiculos.push(novoVeiculo);
     this.salvar(veiculos);
