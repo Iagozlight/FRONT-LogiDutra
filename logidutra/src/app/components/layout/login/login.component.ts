@@ -7,27 +7,6 @@ import Swal from 'sweetalert2';
 import { AuthService } from '../../../services/auth.service';
 import { UsuarioService } from '../../../services/usuario-service.service';
 
-
-export class usuario {
-  login: Login = new Login();
-}
-
-router = inject(Router);
-usuarioService = inject(UsuarioService);
-
-logar() {
-    this.usuarioService.login(
-    this.usuario.login.nome,
-    this.usuario.login.senha
-  ).subscribe({
-    next: resposta => {
-      this.authService.entrar(resposta);
-    },
-    error: erro => {
-      alert('Usuário ou senha incorretos');
-    }
-  });
-}
 @Component({
   selector: 'app-login',
   standalone: true,
@@ -35,7 +14,6 @@ logar() {
   templateUrl: './login.component.html',
   styleUrl: './login.component.scss'
 })
-
 export class LoginComponent {
   usuario = '';
   senha = '';
