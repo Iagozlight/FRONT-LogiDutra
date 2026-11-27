@@ -22,7 +22,4 @@ export class usuario {
     this.status = status;
   }
 
-  static padrao(): usuario {
-    return new usuario(1, 'admin', 'admin', 0, 'Admin', 'DISPONIVEL');
-  }
 }
