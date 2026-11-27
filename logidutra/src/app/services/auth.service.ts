@@ -20,8 +20,13 @@ export class AuthService {
     return this.usuarioAtual?.role?.toUpperCase() === 'ADMIN';
   }
 
-  entrar(usuarioLogado: usuario): void {
+  entrar(usuarioLogado: LoginResponse): void {
     sessionStorage.setItem(this.chaveSessao, JSON.stringify(usuarioLogado));
+  }
+
+  get token(): string | null {
+    const usuarioSalvo = sessionStorage.getItem(this.chaveSessao);
+    return usuarioSalvo ? (JSON.parse(usuarioSalvo) as LoginResponse).token : null;
   }
 
   sair(): void {
