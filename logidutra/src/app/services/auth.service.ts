@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { usuario } from '../models/usuarios';
+import { LoginResponse } from './usuario-service.service';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {

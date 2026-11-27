@@ -5,7 +5,7 @@ import { usuario } from '../models/usuarios';
 
 //interfaace que define os dados que o backend retorna quando fazer login
 //incluindo o token JWT e informações do usuário
-interface LoginResponse {
+export interface LoginResponse {
   token: string;
   id: number;
   nome: string;
