@@ -16,8 +16,8 @@ export class Rota {
     jobs:Job[] = []
     options = {g: true};
 
-    constructor(veiculo:Veiculo, entregasCords:[number, number][]){
-        this.vehicles.push({"id":veiculo.id, "profile":"driving-hgv", "start":[entregasCords[0][1], entregasCords[0][0]]});
+    constructor(veiculo:Veiculo, entregasCords:[number, number][], posicaoInicial:[number, number]){
+        this.vehicles.push({"id":veiculo.id, "profile":"driving-hgv", "start":posicaoInicial});
 
         for(let i = 0; i < entregasCords.length; i++){
             this.jobs.push({"id": i, "location": [entregasCords[i][1], entregasCords[i][0]]});

@@ -49,10 +49,20 @@ export class MapComponent implements AfterViewInit{
     }
   }
 
+  private async getGeolocalizacao() {
+    return new Promise((resolve, reject) => {
+      navigator.geolocation.getCurrentPosition((posicao) => {
+        resolve(posicao.coords);
+      })
+    })
+  }
+
   private async desenharRota(){
     await this.getCordenadas();
 
-    this.vroomService.getRotaOtimizada(new Rota(this.veiculo, this.entregasCords)).subscribe({
+    const posicao = (await this.getGeolocalizacao() as {latitude:number, longitude:number});
+
+    this.vroomService.getRotaOtimizada(new Rota(this.veiculo, this.entregasCords, [posicao.longitude, posicao.latitude])).subscribe({
       next: (rotaOtimizada)=>{
         const cordenadas = polyline.decode(rotaOtimizada.routes[0].geometry);
 
